@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C59680EA-F37C-4C48-87BE-71B8ED2AAEA6}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WMILab</RootNamespace>
+    <AssemblyName>WMILab</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>WmiStudio.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>WMILab.Program</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMain.Designer.cs">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="System\Management\ManagementExtensions.cs" />
+    <Compile Include="System\Windows\Forms\RichTextBoxEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <EmbeddedResource Include="frmMain.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Warning.bmp" />
+    <None Include="Resources\Control_TreeView.bmp" />
+    <None Include="Resources\VSObject_Method_Friend.bmp" />
+    <None Include="Resources\ActualSize.bmp" />
+    <None Include="Resources\Search.bmp" />
+    <None Include="Resources\saveHS.png" />
+    <None Include="Resources\BuilderDialog_RemoveAll.bmp" />
+    <None Include="Resources\RepeatHS.png" />
+    <None Include="Resources\Output.bmp" />
+    <None Include="Resources\Options.bmp" />
+    <None Include="Resources\OK.bmp" />
+    <None Include="Resources\Note.bmp" />
+    <None Include="Resources\VSObject_Method.bmp" />
+    <None Include="Resources\chrome[1].gif" />
+    <None Include="Resources\112_LeftArrowShort_Blue_16x16_72.png" />
+    <None Include="Resources\InsertHyperlink.bmp" />
+    <None Include="Resources\Information.bmp" />
+    <None Include="Resources\Favorites1.bmp" />
+    <None Include="Resources\DataContainer_MoveDown.bmp" />
+    <None Include="Resources\FormRunHS.png" />
+    <None Include="Resources\EntityDataModel_ComplexTypePropertyTool.bmp" />
+    <None Include="Resources\genericInternet.bmp" />
+    <None Include="Resources\112_DownArrowShort_Blue_16x16_72.png" />
+    <None Include="Resources\DeleteHS.png" />
+    <None Include="Resources\Control_ErrorProvider.bmp" />
+    <None Include="Resources\Copy.bmp" />
+    <None Include="Resources\PublishToWebHS1.png" />
+    <None Include="Resources\DataContainer_MoveNext.bmp" />
+    <None Include="Resources\Alert.bmp" />
+    <None Include="Resources\AddToFavorites.bmp" />
+    <None Include="Resources\PublishToWebHS.png" />
+    <Content Include="WmiStudio.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
