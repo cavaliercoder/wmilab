@@ -586,7 +586,7 @@
                 return;
             }
 
-            this.queryInProgress = false;
+            this.QueryInProgress = false;
         }
 
         private void OnQueryResultReady(object sender, ObjectReadyEventArgs e)
@@ -641,6 +641,9 @@
 
         private void InitQueryResults(ManagementBaseObject result)
         {
+            var scope = new ManagementScope(result.ClassPath, this.conOpts);
+            ManagementClass c = new ManagementClass(result.ClassPath, classObjGetOpts);
+
             // Create count colIndex
             DataGridViewTextBoxColumn colIndex = new DataGridViewTextBoxColumn();
             colIndex.Name = colIndex.HeaderText = "#";
@@ -682,10 +685,10 @@
                     colProperty.DefaultCellStyle.ForeColor = SystemColors.InfoText;
                 }
 
-                if (this.CurrentClass.IsAssociation())
+                if (c.IsAssociation())
                     colProperty.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 else
-                    colProperty.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                    colProperty.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
 
                 this.dataGridView1.Columns.Add(colProperty);
             }
