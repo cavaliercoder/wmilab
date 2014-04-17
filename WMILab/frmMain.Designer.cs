@@ -38,21 +38,31 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.listViewClasses = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ImageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.menuStrip3 = new System.Windows.Forms.MenuStrip();
+            this.txtClassFilter = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnToggleSystemClasses = new System.Windows.Forms.ToolStripMenuItem();
             this.treeViewNamespaces = new System.Windows.Forms.TreeView();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabClassMembers = new System.Windows.Forms.TabPage();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.treeViewClassMembers = new System.Windows.Forms.TreeView();
-            this.txtClassMemberDetail = new System.Windows.Forms.RichTextBoxEx();
             this.tabQuery = new System.Windows.Forms.TabPage();
+            this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+            this.txtQuery = new System.Windows.Forms.TextBox();
+            this.menuStrip2 = new System.Windows.Forms.MenuStrip();
+            this.btnExecuteQuery = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnCancelQuery = new System.Windows.Forms.ToolStripMenuItem();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.Code = new System.Windows.Forms.TabPage();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.txtClassMemberDetail = new System.Windows.Forms.RichTextBoxEx();
             this.menuStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -60,11 +70,18 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.menuStrip3.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabClassMembers.SuspendLayout();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
+            this.tabQuery.SuspendLayout();
+            this.splitContainer4.Panel1.SuspendLayout();
+            this.splitContainer4.Panel2.SuspendLayout();
+            this.splitContainer4.SuspendLayout();
+            this.menuStrip2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -76,6 +93,21 @@
             this.menuStrip1.Size = new System.Drawing.Size(985, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exitToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "&File";
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
+            this.exitToolStripMenuItem.Text = "E&xit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -107,6 +139,7 @@
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.Controls.Add(this.listViewClasses);
+            this.splitContainer2.Panel1.Controls.Add(this.menuStrip3);
             // 
             // splitContainer2.Panel2
             // 
@@ -124,10 +157,10 @@
             this.listViewClasses.FullRowSelect = true;
             this.listViewClasses.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.listViewClasses.HideSelection = false;
-            this.listViewClasses.Location = new System.Drawing.Point(0, 0);
+            this.listViewClasses.Location = new System.Drawing.Point(0, 27);
             this.listViewClasses.MultiSelect = false;
             this.listViewClasses.Name = "listViewClasses";
-            this.listViewClasses.Size = new System.Drawing.Size(275, 294);
+            this.listViewClasses.Size = new System.Drawing.Size(275, 267);
             this.listViewClasses.SmallImageList = this.ImageList1;
             this.listViewClasses.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listViewClasses.TabIndex = 0;
@@ -165,6 +198,46 @@
             this.ImageList1.Images.SetKeyName(18, "ClassAssoc");
             this.ImageList1.Images.SetKeyName(19, "Performance");
             this.ImageList1.Images.SetKeyName(20, "StaticMethod");
+            // 
+            // menuStrip3
+            // 
+            this.menuStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.txtClassFilter,
+            this.toolStripMenuItem1,
+            this.btnToggleSystemClasses});
+            this.menuStrip3.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip3.Name = "menuStrip3";
+            this.menuStrip3.Size = new System.Drawing.Size(275, 27);
+            this.menuStrip3.TabIndex = 1;
+            this.menuStrip3.Text = "menuStrip3";
+            // 
+            // txtClassFilter
+            // 
+            this.txtClassFilter.Name = "txtClassFilter";
+            this.txtClassFilter.Size = new System.Drawing.Size(200, 23);
+            this.txtClassFilter.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtClassFilter_KeyUp);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripMenuItem1.Image = global::WMILab.Properties.Resources.Search;
+            this.toolStripMenuItem1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(28, 23);
+            this.toolStripMenuItem1.Text = "Filter";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            // 
+            // btnToggleSystemClasses
+            // 
+            this.btnToggleSystemClasses.CheckOnClick = true;
+            this.btnToggleSystemClasses.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnToggleSystemClasses.Image = global::WMILab.Properties.Resources.ShowHidden;
+            this.btnToggleSystemClasses.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnToggleSystemClasses.Name = "btnToggleSystemClasses";
+            this.btnToggleSystemClasses.Size = new System.Drawing.Size(28, 23);
+            this.btnToggleSystemClasses.Text = "Toggle system classes";
+            this.btnToggleSystemClasses.ToolTipText = "Toggle system classes";
+            this.btnToggleSystemClasses.Click += new System.EventHandler(this.btnToggleSystemClasses_Click);
             // 
             // treeViewNamespaces
             // 
@@ -237,20 +310,9 @@
             this.treeViewClassMembers.TabIndex = 0;
             this.treeViewClassMembers.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewClassMembers_AfterSelect);
             // 
-            // txtClassMemberDetail
-            // 
-            this.txtClassMemberDetail.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtClassMemberDetail.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtClassMemberDetail.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtClassMemberDetail.Location = new System.Drawing.Point(0, 0);
-            this.txtClassMemberDetail.Name = "txtClassMemberDetail";
-            this.txtClassMemberDetail.Size = new System.Drawing.Size(462, 459);
-            this.txtClassMemberDetail.TabIndex = 0;
-            this.txtClassMemberDetail.Text = "";
-            this.txtClassMemberDetail.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.txtClassMemberDetail_LinkClicked);
-            // 
             // tabQuery
             // 
+            this.tabQuery.Controls.Add(this.splitContainer4);
             this.tabQuery.ImageKey = "Query";
             this.tabQuery.Location = new System.Drawing.Point(4, 23);
             this.tabQuery.Name = "tabQuery";
@@ -259,6 +321,82 @@
             this.tabQuery.TabIndex = 1;
             this.tabQuery.Text = "Query";
             this.tabQuery.UseVisualStyleBackColor = true;
+            // 
+            // splitContainer4
+            // 
+            this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer4.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer4.Location = new System.Drawing.Point(3, 3);
+            this.splitContainer4.Name = "splitContainer4";
+            this.splitContainer4.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer4.Panel1
+            // 
+            this.splitContainer4.Panel1.Controls.Add(this.txtQuery);
+            this.splitContainer4.Panel1.Controls.Add(this.menuStrip2);
+            // 
+            // splitContainer4.Panel2
+            // 
+            this.splitContainer4.Panel2.Controls.Add(this.dataGridView1);
+            this.splitContainer4.Size = new System.Drawing.Size(692, 459);
+            this.splitContainer4.SplitterDistance = 80;
+            this.splitContainer4.TabIndex = 0;
+            // 
+            // txtQuery
+            // 
+            this.txtQuery.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtQuery.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtQuery.Location = new System.Drawing.Point(0, 24);
+            this.txtQuery.Multiline = true;
+            this.txtQuery.Name = "txtQuery";
+            this.txtQuery.Size = new System.Drawing.Size(692, 56);
+            this.txtQuery.TabIndex = 0;
+            // 
+            // menuStrip2
+            // 
+            this.menuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnExecuteQuery,
+            this.btnCancelQuery});
+            this.menuStrip2.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip2.Name = "menuStrip2";
+            this.menuStrip2.Size = new System.Drawing.Size(692, 24);
+            this.menuStrip2.TabIndex = 1;
+            this.menuStrip2.Text = "menuStrip2";
+            // 
+            // btnExecuteQuery
+            // 
+            this.btnExecuteQuery.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btnExecuteQuery.Image = global::WMILab.Properties.Resources.Execute;
+            this.btnExecuteQuery.Name = "btnExecuteQuery";
+            this.btnExecuteQuery.ShortcutKeyDisplayString = "";
+            this.btnExecuteQuery.Size = new System.Drawing.Size(98, 20);
+            this.btnExecuteQuery.Text = "Execute (F5)";
+            this.btnExecuteQuery.Click += new System.EventHandler(this.executeToolStripMenuItem_Click);
+            // 
+            // btnCancelQuery
+            // 
+            this.btnCancelQuery.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btnCancelQuery.Image = global::WMILab.Properties.Resources.Delete;
+            this.btnCancelQuery.Name = "btnCancelQuery";
+            this.btnCancelQuery.Size = new System.Drawing.Size(71, 20);
+            this.btnCancelQuery.Text = "&Cancel";
+            this.btnCancelQuery.Visible = false;
+            this.btnCancelQuery.Click += new System.EventHandler(this.btnCancelQuery_Click);
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.AllowUserToResizeRows = false;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
+            this.dataGridView1.RowHeadersVisible = false;
+            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView1.Size = new System.Drawing.Size(692, 375);
+            this.dataGridView1.TabIndex = 0;
             // 
             // Code
             // 
@@ -271,20 +409,17 @@
             this.Code.Text = "Code";
             this.Code.UseVisualStyleBackColor = true;
             // 
-            // fileToolStripMenuItem
+            // txtClassMemberDetail
             // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exitToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "&File";
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.exitToolStripMenuItem.Text = "E&xit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            this.txtClassMemberDetail.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtClassMemberDetail.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtClassMemberDetail.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtClassMemberDetail.Location = new System.Drawing.Point(0, 0);
+            this.txtClassMemberDetail.Name = "txtClassMemberDetail";
+            this.txtClassMemberDetail.Size = new System.Drawing.Size(462, 459);
+            this.txtClassMemberDetail.TabIndex = 0;
+            this.txtClassMemberDetail.Text = "";
+            this.txtClassMemberDetail.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.txtClassMemberDetail_LinkClicked);
             // 
             // frmMain
             // 
@@ -294,23 +429,36 @@
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "frmMain";
             this.Text = "WMI Lab";
             this.Shown += new System.EventHandler(this.frmMain_Shown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.frmMain_KeyUp);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
+            this.menuStrip3.ResumeLayout(false);
+            this.menuStrip3.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabClassMembers.ResumeLayout(false);
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
             this.splitContainer3.ResumeLayout(false);
+            this.tabQuery.ResumeLayout(false);
+            this.splitContainer4.Panel1.ResumeLayout(false);
+            this.splitContainer4.Panel1.PerformLayout();
+            this.splitContainer4.Panel2.ResumeLayout(false);
+            this.splitContainer4.ResumeLayout(false);
+            this.menuStrip2.ResumeLayout(false);
+            this.menuStrip2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -334,6 +482,16 @@
         private System.Windows.Forms.TreeView treeViewClassMembers;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.SplitContainer splitContainer4;
+        private System.Windows.Forms.TextBox txtQuery;
+        private System.Windows.Forms.MenuStrip menuStrip2;
+        private System.Windows.Forms.ToolStripMenuItem btnExecuteQuery;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.ToolStripMenuItem btnCancelQuery;
+        private System.Windows.Forms.MenuStrip menuStrip3;
+        private System.Windows.Forms.ToolStripTextBox txtClassFilter;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem btnToggleSystemClasses;
     }
 }
 

@@ -18,8 +18,12 @@
 
             // Observer event handlers
             nsTreeObserver.ObjectReady += new ObjectReadyEventHandler(OnNamespaceReady);
+
             classListObserver.ObjectReady += new ObjectReadyEventHandler(OnClassReady);
             classListObserver.Completed += new CompletedEventHandler(OnClassSearchCompleted);
+
+            queryObserver.ObjectReady += new ObjectReadyEventHandler(OnQueryResultReady);
+            queryObserver.Completed += new CompletedEventHandler(OnQueryCompleted);
 
             // Build local namespace tree
             RefreshNamespaceTree();
@@ -41,7 +45,13 @@
 
         private TreeNode nsTreeRootNode;
 
+        private ManagementObjectSearcher querySearcher;
+
         private ManagementOperationObserver nsTreeObserver = new ManagementOperationObserver();
+
+        private ManagementOperationObserver classListObserver = new ManagementOperationObserver();
+
+        private ManagementOperationObserver queryObserver = new ManagementOperationObserver();
 
         private static ObjectGetOptions nsObjGetOpts = new ObjectGetOptions();
 
@@ -51,11 +61,15 @@
 
         private static EnumerationOptions classListEnumOpts = new EnumerationOptions();
 
-        private ManagementOperationObserver classListObserver = new ManagementOperationObserver();
-
         private List<ListViewItem> classListItems = new List<ListViewItem>();
 
         private bool updatingNavigation = false;
+
+        private Boolean queryInProgress = false;
+
+        private int queryResultsReturned = 0;
+
+        private Boolean showSystemClasses = false;
 
         #endregion
 
@@ -99,6 +113,24 @@
             {
                 this.currentClass = value;
                 RefreshClassView();
+            }
+        }
+
+        private Boolean QueryInProgress
+        {
+            get { return this.queryInProgress; }
+
+            set
+            {
+                if (queryInProgress && value)
+                    throw new InvalidOperationException("Query already in progress");
+
+                if (queryInProgress == value)
+                    return;
+
+                this.queryInProgress = value;
+
+                this.OnQueryInProgressChanged(this, EventArgs.Empty);
             }
         }
 
@@ -220,10 +252,21 @@
         {
             this.listViewClasses.Items.Clear();
 
+            var filter = this.txtClassFilter.Text;
             var displayList = new List<ListViewItem>(classListItems.Count);
             for (int i = 0; i < classListItems.Count; i++)
             {
-                if (!classListItems[i].Text.StartsWith("__"))
+                var className = classListItems[i].Text;
+
+                if (!String.IsNullOrEmpty(filter))
+                {
+                    if(className.ToLowerInvariant().Contains(filter.ToLowerInvariant()))
+                    {
+                        displayList.Add(classListItems[i]);
+                    }
+                }
+                
+                else if (this.showSystemClasses || !classListItems[i].Text.StartsWith("__"))
                 {
                     displayList.Add(classListItems[i]);
                 }
@@ -312,8 +355,11 @@
         {
             this.SelectClassListViewItem(this.CurrentClass.ClassPath.ClassName);
 
-            RefreshClassMembersListView(this.CurrentClass);
-            RefreshClassMembersDetailView(this.CurrentClass);
+            var c = this.CurrentClass;
+
+            RefreshClassMembersListView(c);
+            RefreshClassMembersDetailView(c);
+            RefreshQueryView(c);
         }
 
         private void RefreshClassMembersListView(ManagementClass c)
@@ -511,6 +557,140 @@
             }
         }
 
+        private void RefreshQueryView(ManagementClass c)
+        {
+            var query = String.Format("SELECT * FROM {0}", c.ClassPath.ClassName);
+            this.txtQuery.Text = query;
+        }
+
+        #endregion
+
+        #region Queries
+
+        private void ExecuteQuery(String query)
+        {
+            // Reset UI
+            this.QueryInProgress = true;
+
+            // Execute
+            var scope = new ManagementScope(this.CurrentNamespacePath, this.conOpts);
+            this.querySearcher = new ManagementObjectSearcher(scope, new ObjectQuery(query));
+            this.querySearcher.Get(this.queryObserver);
+        }
+
+        private void OnQueryCompleted(object sender, CompletedEventArgs e)
+        {
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new CompletedEventHandler(this.OnQueryCompleted), sender, e);
+                return;
+            }
+
+            this.queryInProgress = false;
+        }
+
+        private void OnQueryResultReady(object sender, ObjectReadyEventArgs e)
+        {
+            if (this.Disposing)
+                return;
+
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new ObjectReadyEventHandler(this.OnQueryResultReady), sender, e);
+                return;
+            }
+
+            // Init the datagrid if required
+            if (0 == this.queryResultsReturned)
+                this.InitQueryResults(e.NewObject);
+
+            this.queryResultsReturned++;
+
+            // Build an array of values
+            var i = 0;
+            var values = new String[e.NewObject.Properties.Count + 3];
+
+            values[i++] = this.queryResultsReturned.ToString();
+            values[i++] = null;
+
+            foreach (PropertyData p in e.NewObject.Properties)
+            {
+                values[i++] = p.Value == null ? String.Empty : p.Value.ToString();
+            }
+
+            this.dataGridView1.Rows.Add(values);
+        }
+
+        private void OnQueryInProgressChanged(object sender, EventArgs e)
+        {
+            this.btnExecuteQuery.Visible = !this.QueryInProgress;
+            this.btnCancelQuery.Visible = this.QueryInProgress;
+
+            this.txtQuery.ReadOnly = this.QueryInProgress;
+            
+            this.tabQuery.Cursor = this.QueryInProgress ? Cursors.WaitCursor : Cursors.Default;
+
+            if (this.QueryInProgress)
+            {
+                this.queryResultsReturned = 0;
+                this.dataGridView1.Rows.Clear();
+                this.dataGridView1.Columns.Clear();
+            }
+
+        }
+
+        private void InitQueryResults(ManagementBaseObject result)
+        {
+            // Create count colIndex
+            DataGridViewTextBoxColumn colIndex = new DataGridViewTextBoxColumn();
+            colIndex.Name = colIndex.HeaderText = "#";
+            colIndex.DefaultCellStyle.BackColor = SystemColors.ControlLight;
+            colIndex.DefaultCellStyle.ForeColor = SystemColors.ControlDark;
+            colIndex.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+
+            // Create result inspector colIndex
+            DataGridViewImageColumn colInspector = new DataGridViewImageColumn();
+            colInspector.Image = this.ImageList1.Images["Property"];
+            colInspector.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+
+            this.dataGridView1.Columns.AddRange(colIndex, colInspector);
+
+            // Add property columns
+            foreach (PropertyData p in result.Properties)
+            {
+                DataGridViewColumn colProperty;
+
+                // Create hyperlink columns for objects
+                if (p.Type == CimType.Object || p.Type == CimType.Reference)
+                {
+                    colProperty = new DataGridViewLinkColumn();
+                    DataGridViewLinkColumn link = (DataGridViewLinkColumn)colProperty;
+                    link.LinkBehavior = LinkBehavior.HoverUnderline;
+                    link.VisitedLinkColor = link.LinkColor;
+                    link.ActiveLinkColor = link.LinkColor;
+                }
+
+                else
+                {
+                    colProperty = new DataGridViewTextBoxColumn();
+                }
+
+                colProperty.Name = colProperty.HeaderText = p.Name;
+                if (p.IsKey())
+                {
+                    colProperty.DefaultCellStyle.BackColor = SystemColors.Info;
+                    colProperty.DefaultCellStyle.ForeColor = SystemColors.InfoText;
+                }
+
+                if (this.CurrentClass.IsAssociation())
+                    colProperty.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                else
+                    colProperty.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+
+                this.dataGridView1.Columns.Add(colProperty);
+            }
+        }
+
         #endregion
 
         #region UI Management
@@ -535,7 +715,9 @@
             if (this.updatingNavigation)
                 return;
 
+            this.Cursor = Cursors.WaitCursor;
             this.CurrentNamespacePath = (String)e.Node.Tag;
+            this.Cursor = Cursors.Default;
         }
 
         private void listViewClasses_SelectedIndexChanged(object sender, EventArgs e)
@@ -543,7 +725,9 @@
             if (this.updatingNavigation || this.listViewClasses.SelectedItems.Count != 1)
                 return;
 
+            this.Cursor = Cursors.WaitCursor;
             this.CurrentClassPath = (String) this.listViewClasses.SelectedItems[0].Tag;
+            this.Cursor = Cursors.Default;
         }
 
         private void treeViewClassMembers_AfterSelect(object sender, TreeViewEventArgs e)
@@ -553,7 +737,9 @@
 
             if (null != treeViewClassMembers.SelectedNode && null != treeViewClassMembers.SelectedNode.Tag)
             {
+                this.Cursor = Cursors.WaitCursor;
                 this.RefreshClassMembersDetailView(treeViewClassMembers.SelectedNode.Tag);
+                this.Cursor = Cursors.Default;
             }
         }
 
@@ -568,6 +754,40 @@
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void executeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ExecuteQuery(this.txtQuery.Text);
+        }
+
+        private void btnCancelQuery_Click(object sender, EventArgs e)
+        {
+            this.queryObserver.Cancel();
+            this.querySearcher.Dispose();
+        }
+
+        private void frmMain_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyValue == 116)
+                this.ExecuteQuery(this.txtQuery.Text);
+        }
+
+        private void txtClassFilter_KeyUp(object sender, KeyEventArgs e)
+        {
+            this.RefreshClassListFilter();
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            this.RefreshClassListFilter();
+        }
+
+        private void btnToggleSystemClasses_Click(object sender, EventArgs e)
+        {
+            this.btnToggleSystemClasses.Checked = !this.btnToggleSystemClasses.Checked;
+            this.showSystemClasses = this.btnToggleSystemClasses.Checked;
+            this.RefreshClassListFilter();
         }
 
         #endregion
