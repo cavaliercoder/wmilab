@@ -1,6 +1,7 @@
 ﻿namespace System.Management
 {
     using System;
+    using System.Text;
 
     public static class ManagementExtensions
     {
@@ -41,6 +42,18 @@
         #endregion
 
         #region ManagementBaseObject
+
+        /// <summary>
+        /// Returns a System.String representation of the specified ManagementBaseObjects instance.
+        /// </summary>
+        /// <param name="obj">The System.Management.ManagementBaseObject to be assessed.</param>
+        /// <returns>A System.String representation of the specified ManagementBaseObjects instance.</returns>
+        public static string GetRelativePath(this ManagementBaseObject obj)
+        {
+            if (obj.SystemProperties["__RELPATH"].Value != null)
+                return obj.SystemProperties["__RELPATH"].Value.ToString();
+            return obj.ClassPath.RelativePath;
+        }
 
         /// <summary>
         /// Return true if the specified qualifier name exists in the specified ManagementBaseObject's qualifier collection.
@@ -203,6 +216,69 @@
             }
 
             return String.Empty;
+        }
+
+        public static string ValueToString(this PropertyData prop)
+        {
+            // Format value as string
+            if (prop.Value == null)
+            {
+                return String.Empty;
+            }
+
+            else
+            {
+                // Is the value an array?
+                if (prop.Value.GetType().IsArray)
+                {
+                    if (prop.Value.GetType().IsAssignableFrom(typeof(Byte)))
+                        return ("byte[]");
+
+                    // Expand Array
+                    StringBuilder s = new StringBuilder();
+                    s.AppendFormat("{0}[] {{", prop.Type);
+                    try
+                    {
+                        object[] objects = (object[])prop.Value;
+                        string[] values = new string[objects.Length];
+                        for (int i = 0; i < objects.Length; i++)
+                        {
+                            values[i] = objects[i].ToString();
+                        }
+
+                        s.Append(String.Join(", ", values));
+                    }
+                    catch (InvalidCastException)
+                    {
+                        return (prop.Value.GetType().Name);
+                    }
+
+                    s.Append("}");
+                    return s.ToString();
+                }
+
+                else
+                {
+                    // Is a reference to another management class?
+                    if (prop.Value.GetType().IsAssignableFrom(typeof(ManagementBaseObject)))
+                    {
+                        // Expand object
+                        return ((ManagementBaseObject)prop.Value).ClassPath.Path;
+                    }
+
+                    else if (prop.Type == CimType.DateTime)
+                    {
+                        DateTime datetime = ManagementDateTimeConverter.ToDateTime(prop.Value.ToString());
+                        return datetime.ToString();
+                    }
+
+                    else
+                    {
+                        // Plain old string!
+                        return prop.Value.ToString();
+                    }
+                }
+            }
         }
 
         #endregion

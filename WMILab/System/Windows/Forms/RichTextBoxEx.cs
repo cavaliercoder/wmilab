@@ -10,7 +10,8 @@ namespace System.Windows.Forms
 {
     public class RichTextBoxEx : RichTextBox
     {
-        #region Interop-Defines
+        #region Win32 API
+
         [StructLayout(LayoutKind.Sequential)]
         private struct CHARFORMAT2_STRUCT
         {
@@ -49,6 +50,7 @@ namespace System.Windows.Forms
         private const int SCF_ALL = 0x0004;
 
         #region CHARFORMAT2 Flags
+
         private const UInt32 CFE_BOLD = 0x0001;
         private const UInt32 CFE_ITALIC = 0x0002;
         private const UInt32 CFE_UNDERLINE = 0x0004;
@@ -213,7 +215,6 @@ namespace System.Windows.Forms
             IntPtr wpar = new IntPtr(SCF_SELECTION);
             IntPtr lpar = Marshal.AllocCoTaskMem(Marshal.SizeOf(cf));
             Marshal.StructureToPtr(cf, lpar, false);
-
             IntPtr res = SendMessage(Handle, EM_SETCHARFORMAT, wpar, lpar);
 
             Marshal.FreeCoTaskMem(lpar);

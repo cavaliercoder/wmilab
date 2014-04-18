@@ -22,9 +22,6 @@
             classListObserver.ObjectReady += new ObjectReadyEventHandler(OnClassReady);
             classListObserver.Completed += new CompletedEventHandler(OnClassSearchCompleted);
 
-            queryObserver.ObjectReady += new ObjectReadyEventHandler(OnQueryResultReady);
-            queryObserver.Completed += new CompletedEventHandler(OnQueryCompleted);
-
             // Build local namespace tree
             RefreshNamespaceTree();
 
@@ -37,7 +34,9 @@
 
         private ConnectionOptions conOpts = new ConnectionOptions();
 
-        private String currentNamespace;
+        private String currentNamespacePath;
+
+        private ManagementScope currentNamespaceScope;
 
         private ManagementClass currentClass;
 
@@ -45,13 +44,9 @@
 
         private TreeNode nsTreeRootNode;
 
-        private ManagementObjectSearcher querySearcher;
-
         private ManagementOperationObserver nsTreeObserver = new ManagementOperationObserver();
 
         private ManagementOperationObserver classListObserver = new ManagementOperationObserver();
-
-        private ManagementOperationObserver queryObserver = new ManagementOperationObserver();
 
         private static ObjectGetOptions nsObjGetOpts = new ObjectGetOptions();
 
@@ -65,11 +60,11 @@
 
         private bool updatingNavigation = false;
 
-        private Boolean queryInProgress = false;
-
-        private int queryResultsReturned = 0;
+        private Int32 queryResultCount = 0;
 
         private Boolean showSystemClasses = false;
+
+        private ManagementQueryBroker queryBroker;
 
         #endregion
 
@@ -79,18 +74,25 @@
         {
             get
             {
-                return currentNamespace;
+                return currentNamespacePath;
             }
 
             set
             {
-                if (!String.IsNullOrEmpty(currentNamespace) && currentNamespace.Equals(value))
+                if (!String.IsNullOrEmpty(currentNamespacePath) && currentNamespacePath.Equals(value))
                     return;
 
-                currentNamespace = value;
+                currentNamespacePath = value;
+                this.currentNamespaceScope = new ManagementScope(this.currentNamespacePath, this.conOpts);
+                this.CurrentNamespaceScope.Connect();
 
                 RefreshClassList();
             }
+        }
+
+        private ManagementScope CurrentNamespaceScope
+        {
+            get { return this.currentNamespaceScope; }
         }
 
         private String CurrentClassPath
@@ -113,24 +115,6 @@
             {
                 this.currentClass = value;
                 RefreshClassView();
-            }
-        }
-
-        private Boolean QueryInProgress
-        {
-            get { return this.queryInProgress; }
-
-            set
-            {
-                if (queryInProgress && value)
-                    throw new InvalidOperationException("Query already in progress");
-
-                if (queryInProgress == value)
-                    return;
-
-                this.queryInProgress = value;
-
-                this.OnQueryInProgressChanged(this, EventArgs.Empty);
             }
         }
 
@@ -233,9 +217,8 @@
             this.listViewClasses.Items.Clear();
 
             var path = new ManagementPath(this.CurrentNamespacePath);
-            var scope = new ManagementScope(path, this.conOpts);
 
-            var ns = new ManagementClass(scope, path, nsObjGetOpts);
+            var ns = new ManagementClass(this.CurrentNamespaceScope, path, nsObjGetOpts);
             try
             {
                 ns.GetSubclasses(classListObserver, classListEnumOpts);
@@ -567,15 +550,23 @@
 
         #region Queries
 
+        /// <summary>
+        /// Prepares the Query UI and executes a WQL query via a new ManagementQueryBroker.
+        /// </summary>
+        /// <param name="query">The WQL query to execute.</param>
         private void ExecuteQuery(String query)
         {
             // Reset UI
-            this.QueryInProgress = true;
+            this.ResetQueryResults();
+            this.ToggleQueryUI(true);
 
             // Execute
             var scope = new ManagementScope(this.CurrentNamespacePath, this.conOpts);
-            this.querySearcher = new ManagementObjectSearcher(scope, new ObjectQuery(query));
-            this.querySearcher.Get(this.queryObserver);
+            this.queryBroker = new ManagementQueryBroker(this.txtQuery.Text, this.CurrentNamespaceScope);
+            this.queryBroker.ObjectReady += new ObjectReadyEventHandler(this.OnQueryResultReady);
+            this.queryBroker.Completed += new CompletedEventHandler(this.OnQueryCompleted);
+
+            this.queryBroker.ExecuteAsync();
         }
 
         private void OnQueryCompleted(object sender, CompletedEventArgs e)
@@ -586,7 +577,7 @@
                 return;
             }
 
-            this.QueryInProgress = false;
+            this.ToggleQueryUI(false);
         }
 
         private void OnQueryResultReady(object sender, ObjectReadyEventArgs e)
@@ -600,49 +591,58 @@
                 return;
             }
 
-            // Init the datagrid if required
-            if (0 == this.queryResultsReturned)
-                this.InitQueryResults(e.NewObject);
+            this.queryResultCount++;
 
-            this.queryResultsReturned++;
+            // Init the datagrid if required
+            if (1 == this.queryBroker.ResultCount)
+                this.InitQueryResults(e.NewObject);
 
             // Build an array of values
             var i = 0;
             var values = new String[e.NewObject.Properties.Count + 3];
 
-            values[i++] = this.queryResultsReturned.ToString();
+            values[i++] = this.queryResultCount.ToString();
             values[i++] = null;
 
-            foreach (PropertyData p in e.NewObject.Properties)
+            if (WqlQueryType.Select == this.queryBroker.QueryType)
             {
-                values[i++] = p.Value == null ? String.Empty : p.Value.ToString();
+                foreach (PropertyData p in e.NewObject.Properties)
+                {
+                    values[i++] = p.Value == null ? String.Empty : p.Value.ToString();
+                }
             }
 
-            this.dataGridView1.Rows.Add(values);
+            else
+            {
+                values[i++] = e.NewObject.GetRelativePath();
+            }
+
+            this.gridQueryResults.Rows.Add(values);
         }
 
-        private void OnQueryInProgressChanged(object sender, EventArgs e)
+        /// <summary>
+        /// Reset the query UI by removing previous results and resetting counters.
+        /// </summary>
+        private void ResetQueryResults()
         {
-            this.btnExecuteQuery.Visible = !this.QueryInProgress;
-            this.btnCancelQuery.Visible = this.QueryInProgress;
-
-            this.txtQuery.ReadOnly = this.QueryInProgress;
-            
-            this.tabQuery.Cursor = this.QueryInProgress ? Cursors.WaitCursor : Cursors.Default;
-
-            if (this.QueryInProgress)
-            {
-                this.queryResultsReturned = 0;
-                this.dataGridView1.Rows.Clear();
-                this.dataGridView1.Columns.Clear();
-            }
-
+            this.queryResultCount = 0;
+            this.gridQueryResults.Rows.Clear();
+            this.gridQueryResults.Columns.Clear();
         }
 
+        /// <summary>
+        /// Initializes the Query UI to receive new results for the specified ManagementObject type.
+        /// </summary>
+        /// <param name="result">The first result returned by a query.</param>
         private void InitQueryResults(ManagementBaseObject result)
         {
-            var scope = new ManagementScope(result.ClassPath, this.conOpts);
-            ManagementClass c = new ManagementClass(result.ClassPath, classObjGetOpts);
+            var c = this.queryBroker.ResultClass;
+
+            // Configure result context menu
+            this.btnGetAssociatorsOf.Visible =
+                this.btnGetReferencesOf.Visible =
+                this.btnResultPropertiesSeparater.Visible =
+                this.queryBroker.QueryType == WqlQueryType.Select;
 
             // Create count colIndex
             DataGridViewTextBoxColumn colIndex = new DataGridViewTextBoxColumn();
@@ -656,47 +656,146 @@
             colInspector.Image = this.ImageList1.Images["Property"];
             colInspector.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
-            this.dataGridView1.Columns.AddRange(colIndex, colInspector);
+            this.gridQueryResults.Columns.AddRange(colIndex, colInspector);
 
-            // Add property columns
-            foreach (PropertyData p in result.Properties)
+            if (WqlQueryType.Select == this.queryBroker.QueryType)
             {
-                DataGridViewColumn colProperty;
-
-                // Create hyperlink columns for objects
-                if (p.Type == CimType.Object || p.Type == CimType.Reference)
+                // Add property columns
+                foreach (PropertyData p in result.Properties)
                 {
-                    colProperty = new DataGridViewLinkColumn();
-                    DataGridViewLinkColumn link = (DataGridViewLinkColumn)colProperty;
-                    link.LinkBehavior = LinkBehavior.HoverUnderline;
-                    link.VisitedLinkColor = link.LinkColor;
-                    link.ActiveLinkColor = link.LinkColor;
+                    DataGridViewColumn colProperty;
+
+                    // Create hyperlink columns for objects
+                    if (p.Type == CimType.Object || p.Type == CimType.Reference)
+                    {
+                        colProperty = new DataGridViewLinkColumn();
+                        DataGridViewLinkColumn link = (DataGridViewLinkColumn)colProperty;
+                        link.LinkBehavior = LinkBehavior.HoverUnderline;
+                        link.VisitedLinkColor = link.LinkColor;
+                        link.ActiveLinkColor = link.LinkColor;
+                    }
+
+                    else
+                    {
+                        colProperty = new DataGridViewTextBoxColumn();
+                    }
+
+                    colProperty.Name = colProperty.HeaderText = p.Name;
+                    if (p.IsKey())
+                    {
+                        colProperty.DefaultCellStyle.BackColor = SystemColors.Info;
+                        colProperty.DefaultCellStyle.ForeColor = SystemColors.InfoText;
+                    }
+
+                    if (c.IsAssociation())
+                        colProperty.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                    else
+                        colProperty.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
+
+                    this.gridQueryResults.Columns.Add(colProperty);
                 }
-
-                else
-                {
-                    colProperty = new DataGridViewTextBoxColumn();
-                }
-
-                colProperty.Name = colProperty.HeaderText = p.Name;
-                if (p.IsKey())
-                {
-                    colProperty.DefaultCellStyle.BackColor = SystemColors.Info;
-                    colProperty.DefaultCellStyle.ForeColor = SystemColors.InfoText;
-                }
-
-                if (c.IsAssociation())
-                    colProperty.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                else
-                    colProperty.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
-
-                this.dataGridView1.Columns.Add(colProperty);
             }
+
+            else
+            {
+                DataGridViewLinkColumn col = new DataGridViewLinkColumn();
+                col.LinkBehavior = LinkBehavior.HoverUnderline;
+                col.VisitedLinkColor = col.LinkColor;
+                col.ActiveLinkColor = col.LinkColor;
+                col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+                switch (this.queryBroker.QueryType)
+                {
+                    case WqlQueryType.AssociatorsOf:
+                        col.Name = "Association";
+                        break;
+
+                    case WqlQueryType.ReferencesOf:
+                        col.Name = "Reference";
+                        break;
+                }
+
+                this.gridQueryResults.Columns.Add(col);
+            }
+        }
+
+        /// <summary>
+        /// Toggles the query UI to feedback query status to the user.
+        /// </summary>
+        /// <param name="inProgress">Determines the state of UI components.</param>
+        private void ToggleQueryUI(Boolean inProgress)
+        {
+            this.btnExecuteQuery.Visible = !inProgress;
+            this.btnCancelQuery.Visible = inProgress;
+
+            this.txtQuery.ReadOnly = inProgress;
+
+            this.tabQuery.Cursor = inProgress ? Cursors.WaitCursor : Cursors.Default;
+        }
+
+        private void ShowInspector(ManagementBaseObject managementObject, Point location)
+        {
+            this.gridQueryResults.Cursor = Cursors.WaitCursor;
+
+            // Create form
+            ManagementObjectInspectorForm popup = new ManagementObjectInspectorForm();
+            popup.Scope = this.CurrentNamespaceScope;
+            popup.ManagementObject = managementObject;
+
+            // Offset location to screen bounds
+            Rectangle bounds = Screen.FromControl(this).WorkingArea;
+            location.X = Math.Min(location.X, bounds.Width - popup.Width);
+            location.Y = Math.Min(location.Y, bounds.Height - popup.Height);
+            popup.Location = location;
+
+            // Show
+            this.gridQueryResults.Cursor = Cursors.Default;
+            popup.Show(this);
+        }
+
+        private void ShowInspectorForLinkedObject(DataGridViewCellEventArgs e)
+        {
+            Boolean selectMode = this.queryBroker.QueryType == WqlQueryType.Select;
+
+            // A hyperlinked object was click. Get target object
+            ManagementBaseObject mObject = null;
+            if (selectMode)
+            {
+                string propertyName = this.gridQueryResults.Columns[e.ColumnIndex].HeaderText;
+
+                if (this.queryBroker.ResultClass.Properties[propertyName].Type == CimType.Reference)
+                {
+                    // Link was a reference to an instance. Fetch the instance
+                    string objectPath = this.queryBroker.Results[e.RowIndex].Properties[propertyName].Value.ToString();
+
+                    var scope = new ManagementScope(this.CurrentNamespacePath, this.conOpts);
+                    mObject = new ManagementObject(scope, new ManagementPath(objectPath), new ObjectGetOptions());
+                }
+
+                else
+                {
+                    // Link was to an object instance
+                    mObject = (ManagementBaseObject)this.queryBroker.Results[e.RowIndex].Properties[propertyName].Value;
+                }
+            }
+
+            else
+            {
+                // Select the whole object for 'Assoc' and 'Ref' queries
+                mObject = this.queryBroker.Results[e.RowIndex];
+            }
+
+            // Get cell location
+            Rectangle cell = this.gridQueryResults.GetCellDisplayRectangle(selectMode ? e.ColumnIndex : 1, e.RowIndex, true);
+            Point location = this.gridQueryResults.PointToScreen(new Point(cell.Right, cell.Bottom));
+
+            // Show object inspector
+            this.ShowInspector(mObject, location);
         }
 
         #endregion
 
-        #region UI Management
+        #region UI Event Handlers
 
         private void frmMain_Shown(object sender, EventArgs e)
         {
@@ -766,8 +865,7 @@
 
         private void btnCancelQuery_Click(object sender, EventArgs e)
         {
-            this.queryObserver.Cancel();
-            this.querySearcher.Dispose();
+            this.queryBroker.Cancel();
         }
 
         private void frmMain_KeyUp(object sender, KeyEventArgs e)
@@ -793,6 +891,108 @@
             this.RefreshClassListFilter();
         }
 
+        private void gridQueryResults_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex == -1 || e.ColumnIndex == -1) return;
+
+            if (this.gridQueryResults.Rows[e.RowIndex].Cells[e.ColumnIndex].GetType() == typeof(DataGridViewImageCell))
+                this.gridQueryResults.Cursor = Cursors.Hand;
+            else
+                this.gridQueryResults.Cursor = Cursors.Default;
+        }
+
+        private void gridQueryResults_CellClicked(object sender, DataGridViewCellEventArgs e)
+        {
+            // Capture expand button clicks
+            Type cellType = this.gridQueryResults.Rows[e.RowIndex].Cells[e.ColumnIndex].GetType();
+
+            if (e.ColumnIndex == 1)
+            {
+                // The properties button was clicked
+                this.gridQueryResults_CellDoubleClicked(sender, e);
+            }
+
+            else if (cellType == typeof(DataGridViewLinkCell))
+            {
+                ShowInspectorForLinkedObject(e);
+            }
+            
+        }
+
+        private void gridQueryResults_CellDoubleClicked(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                return;
+
+            // Highlight row
+            this.gridQueryResults.ClearSelection();
+            this.gridQueryResults.Rows[e.RowIndex].Selected = true;
+
+            // Show inspector in place
+            Rectangle cell = this.gridQueryResults.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true);
+            Point location = this.gridQueryResults.PointToScreen(new Point(cell.Right, cell.Bottom));
+
+            this.ShowInspector(this.queryBroker.Results[e.RowIndex], location);
+        }
+
+        private void gridQueryResults_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                if (e.RowIndex >= 0 && e.RowIndex >= 0)
+                {
+                    // Select a row on right click
+                    this.gridQueryResults.Rows[e.RowIndex].Selected = true;
+
+                    // Get bounds for result context menu
+                    var loc = this.gridQueryResults.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true);
+                    loc.X += e.X;
+                    loc.Y += e.Y;
+
+                    // Show context menu
+                    this.menuQueryRow.Show(this.gridQueryResults.PointToScreen(loc.Location));
+                }
+            }
+        }
+
+        private void btnResultProperies_Click(object sender, EventArgs e)
+        {
+            if (this.gridQueryResults.SelectedRows.Count == 1)
+            {
+                // Find location of top right of the 'property' button for the selected row
+                var index = this.gridQueryResults.SelectedRows[0].Index;
+                var rect = this.gridQueryResults.GetCellDisplayRectangle(1, index, true);
+                var loc = this.gridQueryResults.PointToScreen(new Point(rect.Right, rect.Top));
+
+                // Display object inspector
+                this.ShowInspector(this.queryBroker.Results[index], loc);
+            }
+        }
+
         #endregion
+
+        private void btnGetAssociatorsOf_Click(object sender, EventArgs e)
+        {
+            if (this.gridQueryResults.SelectedRows.Count == 1)
+            {
+                // Execute 'Associators Of' query for selected result
+                var obj = this.queryBroker.Results[this.gridQueryResults.SelectedRows[0].Index];
+                var query = String.Format("ASSOCIATORS OF {{{0}}}", obj.GetRelativePath());
+                this.txtQuery.Text = query;
+                this.ExecuteQuery(query);
+            }
+        }
+
+        private void btnGetReferencesOf_Click(object sender, EventArgs e)
+        {
+            if (this.gridQueryResults.SelectedRows.Count == 1)
+            {
+                // Execute 'Associators Of' query for selected result
+                var obj = this.queryBroker.Results[this.gridQueryResults.SelectedRows[0].Index];
+                var query = String.Format("REFERENCES OF {{{0}}}", obj.GetRelativePath());
+                this.txtQuery.Text = query;
+                this.ExecuteQuery(query);
+            }
+        }
     }
 }

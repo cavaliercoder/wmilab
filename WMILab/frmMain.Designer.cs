@@ -37,7 +37,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menuMain = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -45,7 +45,7 @@
             this.listViewClasses = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ImageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.menuStrip3 = new System.Windows.Forms.MenuStrip();
+            this.menuClassList = new System.Windows.Forms.MenuStrip();
             this.txtClassFilter = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.btnToggleSystemClasses = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,20 +57,25 @@
             this.tabQuery = new System.Windows.Forms.TabPage();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.txtQuery = new System.Windows.Forms.TextBox();
-            this.menuStrip2 = new System.Windows.Forms.MenuStrip();
+            this.menuQuery = new System.Windows.Forms.MenuStrip();
             this.btnExecuteQuery = new System.Windows.Forms.ToolStripMenuItem();
             this.btnCancelQuery = new System.Windows.Forms.ToolStripMenuItem();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.gridQueryResults = new System.Windows.Forms.DataGridView();
             this.Code = new System.Windows.Forms.TabPage();
+            this.menuQueryRow = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.btnGetAssociatorsOf = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnGetReferencesOf = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnResultPropertiesSeparater = new System.Windows.Forms.ToolStripSeparator();
+            this.btnResultProperies = new System.Windows.Forms.ToolStripMenuItem();
             this.txtClassMemberDetail = new System.Windows.Forms.RichTextBoxEx();
-            this.menuStrip1.SuspendLayout();
+            this.menuMain.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            this.menuStrip3.SuspendLayout();
+            this.menuClassList.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabClassMembers.SuspendLayout();
             this.splitContainer3.Panel1.SuspendLayout();
@@ -80,19 +85,19 @@
             this.splitContainer4.Panel1.SuspendLayout();
             this.splitContainer4.Panel2.SuspendLayout();
             this.splitContainer4.SuspendLayout();
-            this.menuStrip2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.menuQuery.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridQueryResults)).BeginInit();
+            this.menuQueryRow.SuspendLayout();
             this.SuspendLayout();
             // 
-            // menuStrip1
+            // menuMain
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(985, 24);
-            this.menuStrip1.TabIndex = 0;
-            this.menuStrip1.Text = "menuStrip1";
+            this.menuMain.Location = new System.Drawing.Point(0, 0);
+            this.menuMain.Name = "menuMain";
+            this.menuMain.Size = new System.Drawing.Size(985, 24);
+            this.menuMain.TabIndex = 0;
             // 
             // fileToolStripMenuItem
             // 
@@ -139,7 +144,7 @@
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.Controls.Add(this.listViewClasses);
-            this.splitContainer2.Panel1.Controls.Add(this.menuStrip3);
+            this.splitContainer2.Panel1.Controls.Add(this.menuClassList);
             // 
             // splitContainer2.Panel2
             // 
@@ -199,17 +204,17 @@
             this.ImageList1.Images.SetKeyName(19, "Performance");
             this.ImageList1.Images.SetKeyName(20, "StaticMethod");
             // 
-            // menuStrip3
+            // menuClassList
             // 
-            this.menuStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuClassList.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.txtClassFilter,
             this.toolStripMenuItem1,
             this.btnToggleSystemClasses});
-            this.menuStrip3.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip3.Name = "menuStrip3";
-            this.menuStrip3.Size = new System.Drawing.Size(275, 27);
-            this.menuStrip3.TabIndex = 1;
-            this.menuStrip3.Text = "menuStrip3";
+            this.menuClassList.Location = new System.Drawing.Point(0, 0);
+            this.menuClassList.Name = "menuClassList";
+            this.menuClassList.Size = new System.Drawing.Size(275, 27);
+            this.menuClassList.TabIndex = 1;
+            this.menuClassList.Text = "menuClassFilter";
             // 
             // txtClassFilter
             // 
@@ -333,11 +338,11 @@
             // splitContainer4.Panel1
             // 
             this.splitContainer4.Panel1.Controls.Add(this.txtQuery);
-            this.splitContainer4.Panel1.Controls.Add(this.menuStrip2);
+            this.splitContainer4.Panel1.Controls.Add(this.menuQuery);
             // 
             // splitContainer4.Panel2
             // 
-            this.splitContainer4.Panel2.Controls.Add(this.dataGridView1);
+            this.splitContainer4.Panel2.Controls.Add(this.gridQueryResults);
             this.splitContainer4.Size = new System.Drawing.Size(692, 459);
             this.splitContainer4.SplitterDistance = 80;
             this.splitContainer4.TabIndex = 0;
@@ -352,16 +357,16 @@
             this.txtQuery.Size = new System.Drawing.Size(692, 56);
             this.txtQuery.TabIndex = 0;
             // 
-            // menuStrip2
+            // menuQuery
             // 
-            this.menuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuQuery.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnExecuteQuery,
             this.btnCancelQuery});
-            this.menuStrip2.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(692, 24);
-            this.menuStrip2.TabIndex = 1;
-            this.menuStrip2.Text = "menuStrip2";
+            this.menuQuery.Location = new System.Drawing.Point(0, 0);
+            this.menuQuery.Name = "menuQuery";
+            this.menuQuery.Size = new System.Drawing.Size(692, 24);
+            this.menuQuery.TabIndex = 1;
+            this.menuQuery.Text = "menuQuery";
             // 
             // btnExecuteQuery
             // 
@@ -383,20 +388,25 @@
             this.btnCancelQuery.Visible = false;
             this.btnCancelQuery.Click += new System.EventHandler(this.btnCancelQuery_Click);
             // 
-            // dataGridView1
+            // gridQueryResults
             // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.AllowUserToResizeRows = false;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.RowHeadersVisible = false;
-            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(692, 375);
-            this.dataGridView1.TabIndex = 0;
+            this.gridQueryResults.AllowUserToAddRows = false;
+            this.gridQueryResults.AllowUserToDeleteRows = false;
+            this.gridQueryResults.AllowUserToResizeRows = false;
+            this.gridQueryResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridQueryResults.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridQueryResults.Location = new System.Drawing.Point(0, 0);
+            this.gridQueryResults.MultiSelect = false;
+            this.gridQueryResults.Name = "gridQueryResults";
+            this.gridQueryResults.ReadOnly = true;
+            this.gridQueryResults.RowHeadersVisible = false;
+            this.gridQueryResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridQueryResults.Size = new System.Drawing.Size(692, 375);
+            this.gridQueryResults.TabIndex = 0;
+            this.gridQueryResults.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridQueryResults_CellClicked);
+            this.gridQueryResults.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridQueryResults_CellDoubleClicked);
+            this.gridQueryResults.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridQueryResults_CellMouseEnter);
+            this.gridQueryResults.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridQueryResults_CellMouseUp);
             // 
             // Code
             // 
@@ -408,6 +418,44 @@
             this.Code.TabIndex = 2;
             this.Code.Text = "Code";
             this.Code.UseVisualStyleBackColor = true;
+            // 
+            // menuQueryRow
+            // 
+            this.menuQueryRow.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnGetAssociatorsOf,
+            this.btnGetReferencesOf,
+            this.btnResultPropertiesSeparater,
+            this.btnResultProperies});
+            this.menuQueryRow.Name = "menuQueryRow";
+            this.menuQueryRow.Size = new System.Drawing.Size(172, 76);
+            // 
+            // btnGetAssociatorsOf
+            // 
+            this.btnGetAssociatorsOf.Name = "btnGetAssociatorsOf";
+            this.btnGetAssociatorsOf.Size = new System.Drawing.Size(171, 22);
+            this.btnGetAssociatorsOf.Text = "Get Associators Of";
+            this.btnGetAssociatorsOf.Click += new System.EventHandler(this.btnGetAssociatorsOf_Click);
+            // 
+            // btnGetReferencesOf
+            // 
+            this.btnGetReferencesOf.Name = "btnGetReferencesOf";
+            this.btnGetReferencesOf.Size = new System.Drawing.Size(171, 22);
+            this.btnGetReferencesOf.Text = "Get References Of";
+            this.btnGetReferencesOf.Click += new System.EventHandler(this.btnGetReferencesOf_Click);
+            // 
+            // btnResultPropertiesSeparater
+            // 
+            this.btnResultPropertiesSeparater.Name = "btnResultPropertiesSeparater";
+            this.btnResultPropertiesSeparater.Size = new System.Drawing.Size(168, 6);
+            // 
+            // btnResultProperies
+            // 
+            this.btnResultProperies.Image = global::WMILab.Properties.Resources.Properties;
+            this.btnResultProperies.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnResultProperies.Name = "btnResultProperies";
+            this.btnResultProperies.Size = new System.Drawing.Size(171, 22);
+            this.btnResultProperies.Text = "Properties";
+            this.btnResultProperies.Click += new System.EventHandler(this.btnResultProperies_Click);
             // 
             // txtClassMemberDetail
             // 
@@ -427,16 +475,16 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(985, 516);
             this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.menuMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
-            this.MainMenuStrip = this.menuStrip1;
+            this.MainMenuStrip = this.menuMain;
             this.Name = "frmMain";
             this.Text = "WMI Lab";
             this.Shown += new System.EventHandler(this.frmMain_Shown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.frmMain_KeyUp);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.menuMain.ResumeLayout(false);
+            this.menuMain.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
@@ -444,8 +492,8 @@
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
-            this.menuStrip3.ResumeLayout(false);
-            this.menuStrip3.PerformLayout();
+            this.menuClassList.ResumeLayout(false);
+            this.menuClassList.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabClassMembers.ResumeLayout(false);
             this.splitContainer3.Panel1.ResumeLayout(false);
@@ -456,9 +504,10 @@
             this.splitContainer4.Panel1.PerformLayout();
             this.splitContainer4.Panel2.ResumeLayout(false);
             this.splitContainer4.ResumeLayout(false);
-            this.menuStrip2.ResumeLayout(false);
-            this.menuStrip2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.menuQuery.ResumeLayout(false);
+            this.menuQuery.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridQueryResults)).EndInit();
+            this.menuQueryRow.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -466,7 +515,7 @@
 
         #endregion
 
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip menuMain;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.ListView listViewClasses;
@@ -484,14 +533,19 @@
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer4;
         private System.Windows.Forms.TextBox txtQuery;
-        private System.Windows.Forms.MenuStrip menuStrip2;
+        private System.Windows.Forms.MenuStrip menuQuery;
         private System.Windows.Forms.ToolStripMenuItem btnExecuteQuery;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView gridQueryResults;
         private System.Windows.Forms.ToolStripMenuItem btnCancelQuery;
-        private System.Windows.Forms.MenuStrip menuStrip3;
+        private System.Windows.Forms.MenuStrip menuClassList;
         private System.Windows.Forms.ToolStripTextBox txtClassFilter;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem btnToggleSystemClasses;
+        private System.Windows.Forms.ContextMenuStrip menuQueryRow;
+        private System.Windows.Forms.ToolStripMenuItem btnGetAssociatorsOf;
+        private System.Windows.Forms.ToolStripMenuItem btnGetReferencesOf;
+        private System.Windows.Forms.ToolStripSeparator btnResultPropertiesSeparater;
+        private System.Windows.Forms.ToolStripMenuItem btnResultProperies;
     }
 }
 
