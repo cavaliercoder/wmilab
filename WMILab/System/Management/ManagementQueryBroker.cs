@@ -145,8 +145,11 @@
         /// </summary>
         public void Cancel()
         {
-            this.queryObserver.Cancel();
-            this.querySearcher.Dispose();
+            if(this.queryObserver != null)
+                this.queryObserver.Cancel();
+
+            if(this.querySearcher != null)
+                this.querySearcher.Dispose();
 
             if (this.queryWatcher != null)
             {

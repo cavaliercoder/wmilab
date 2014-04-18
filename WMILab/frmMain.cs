@@ -4,8 +4,9 @@
     using System.Collections.Generic;
     using System.Drawing;
     using System.Management;
-    using System.Windows.Forms;
     using System.Runtime.InteropServices;
+    using System.Windows.Forms;
+    using WMILab.Localization;
 
     public partial class frmMain : Form
     {
@@ -81,11 +82,20 @@
                 if (!String.IsNullOrEmpty(currentNamespacePath) && currentNamespacePath.Equals(value))
                     return;
 
-                currentNamespacePath = value;
-                this.currentNamespaceScope = new ManagementScope(this.currentNamespacePath, this.conOpts);
-                this.CurrentNamespaceScope.Connect();
+                try
+                {
+                    this.currentNamespaceScope = new ManagementScope(value, this.conOpts);
+                    this.CurrentNamespaceScope.Connect();
 
-                RefreshClassList();
+                    currentNamespacePath = value;
+
+                    RefreshClassList();
+                }
+
+                catch (ManagementException e)
+                {
+                    this.Log(LogLevel.Critical, String.Format("Error connecting to \"{0}\": {1}", value, e.Message));
+                }
             }
         }
 
@@ -101,8 +111,16 @@
             set
             {
                 var path = new ManagementPath(value);
-                var scope = new ManagementScope(path, this.conOpts);
-                this.CurrentClass = new ManagementClass(path, classObjGetOpts);
+
+                try
+                {
+                    this.CurrentClass = new ManagementClass(this.CurrentNamespaceScope, path, classObjGetOpts);
+                    this.Log(LogLevel.Information, String.Format("Loaded class: {0}", value));
+                }
+                catch (ManagementException e)
+                {
+                    this.Log(LogLevel.Critical, String.Format("Unable to load class: {0}", value));
+                }
             }
         }
 
@@ -215,18 +233,20 @@
             classListItems.Clear();
             this.listViewClasses.Items.Clear();
 
-            var path = new ManagementPath(this.CurrentNamespacePath);
+            this.Log(LogLevel.Information, String.Format("Loading class for path: {0}", this.currentNamespacePath));
 
+            var path = new ManagementPath(this.CurrentNamespacePath);
             var ns = new ManagementClass(this.CurrentNamespaceScope, path, nsObjGetOpts);
             try
             {
                 ns.GetSubclasses(classListObserver, classListEnumOpts);
+                this.Log(LogLevel.Information, "Finished loading classes.");
             }
 
             catch (ManagementException e)
             {
                 var msg = String.Format("An error occurred listing classes in {0}:\r\n\r\n{1}", this.CurrentNamespacePath, e.Message);
-                MessageBox.Show(this, msg, "WMI Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Log(LogLevel.Critical, msg);
             }
         }
 
@@ -335,6 +355,7 @@
 
         private void RefreshClassView()
         {
+
             this.SelectClassListViewItem(this.CurrentClass.ClassPath.ClassName);
 
             var c = this.CurrentClass;
@@ -569,20 +590,28 @@
             this.ResetQueryResults();
             this.ToggleQueryUI(true);
 
-            // Execute
-            var scope = new ManagementScope(this.CurrentNamespacePath, this.conOpts);
-            this.queryBroker = new ManagementQueryBroker(this.txtQuery.Text, this.CurrentNamespaceScope);
-            this.queryBroker.ObjectReady += new BrokerObjectReadyEventHandler(this.OnQueryResultReady);
-            this.queryBroker.Completed += new BrokerCompletedEventHandler(this.OnQueryCompleted);
+            this.Log(LogLevel.Information, String.Format("Executing query: {0}", query));
 
             try
             {
+                // Execute
+                var scope = new ManagementScope(this.CurrentNamespacePath, this.conOpts);
+                this.queryBroker = new ManagementQueryBroker(this.txtQuery.Text, this.CurrentNamespaceScope);
+                this.queryBroker.ObjectReady += new BrokerObjectReadyEventHandler(this.OnQueryResultReady);
+                this.queryBroker.Completed += new BrokerCompletedEventHandler(this.OnQueryCompleted);
+
                 this.queryBroker.ExecuteAsync();
             }
 
             catch (COMException e)
             {
-                this.ShowWmiError(e);
+                this.LogComException(e);
+            }
+
+            catch (Exception e)
+            {
+                this.LogException(e);
+                this.ToggleQueryUI(false);
             }
         }
 
@@ -595,6 +624,16 @@
             }
 
             this.ToggleQueryUI(false);
+
+            if (e.Success)
+            {
+                this.Log(LogLevel.Information, String.Format("Query completed with {0} results.", this.queryBroker.ResultCount));
+            }
+
+            else
+            {
+                this.Log(LogLevel.Warning, String.Format("Query failed with status \"{0}\".", e.Status.ToString()));
+            }
         }
 
         private void OnQueryResultReady(object sender, BrokerObjectReadyEventArgs e)
@@ -809,29 +848,49 @@
 
         #endregion
 
-        #region COM/WMI Errors
+        #region Logging
 
-        private void ShowWmiError(COMException exception)
+        private void LogManagementException(ManagementException e)
         {
-            String msg;
-            UInt32 code = (UInt32)exception.ErrorCode;
+            UInt32 code = (UInt32) e.ErrorCode;
+            this.Log(LogLevel.Critical, String.Format("WMI Exception {0:G} (0x{0:X})", code));
+        }
+
+        private void LogComException(COMException e)
+        {
+            UInt32 code = (UInt32) e.ErrorCode;
+            String constant = "Unknown";
 
             if (Enum.IsDefined(typeof(ManagementError), code))
             {
+                // Log an error with known error info
                 ManagementError error = (ManagementError)code;
-                msg = String.Format(
-                    "Error constant:\t{0}\r\nDecimal:\t\t{1:G}\r\nHexidecimal:\t0x{1:X}",
-                    error.ToString(),
-                    code);
-            }
-            else
-            {
-                msg = String.Format(
-                    "Error constant:\tUnknown\r\nDecimal:\t\t{0:G}\r\nHexidecimal:\t0x{0:X}",
-                    code);
+                this.Log(LogLevel.Critical, String.Format("COM Exception {0:G} (0x{0:X}) {1}", code, error.ToString()));
+
+                // Attempt to get an error description
+                var description = ErrorCodes.ResourceManager.GetString(constant);
+                if (!String.IsNullOrEmpty(description))
+                    this.Log(LogLevel.Information, description);
             }
 
-            MessageBox.Show(msg, "WMI Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            else
+            {
+                this.Log(LogLevel.Critical, String.Format("COM Exception {0:G} (0x{0:X})", code));
+            }
+        }
+
+        private void LogException(Exception e)
+        {
+            this.Log(LogLevel.Critical, e.Message);
+        }
+
+        private void Log(LogLevel level, String message)
+        {
+            var item = new ListViewItem(message);
+            item.ImageKey = level.ToString();
+
+            this.listViewLog.Items.Add(item);
+            item.EnsureVisible();
         }
 
         #endregion
@@ -1039,5 +1098,12 @@
         }
 
         #endregion
+    }
+
+    internal enum LogLevel
+    {
+        Information,
+        Warning,
+        Critical
     }
 }

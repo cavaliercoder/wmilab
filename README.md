@@ -14,6 +14,7 @@ __Requirements:__
 
 * Line ending ignored in member descriptors
 * Query must be cancelled before changing to another class
+* Queries fail for classes after the selected namespace changes
 
 ### Todo
 

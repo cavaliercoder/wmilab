@@ -340,7 +340,7 @@ namespace System.Windows.Forms
 
 		internal protected virtual void SiteNode(TreeGridNode node)
 		{
-			//TODO: Raise exception if parent node is not the root or is not sited.
+			//TODO: Raise e if parent node is not the root or is not sited.
 			int rowIndex = -1;
 			TreeGridNode currentRow;
 			node._grid = this;
