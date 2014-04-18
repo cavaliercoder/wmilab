@@ -54,6 +54,7 @@
             this.tabClassMembers = new System.Windows.Forms.TabPage();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.treeViewClassMembers = new System.Windows.Forms.TreeView();
+            this.txtClassMemberDetail = new System.Windows.Forms.RichTextBoxEx();
             this.tabQuery = new System.Windows.Forms.TabPage();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.txtQuery = new System.Windows.Forms.TextBox();
@@ -67,7 +68,6 @@
             this.btnGetReferencesOf = new System.Windows.Forms.ToolStripMenuItem();
             this.btnResultPropertiesSeparater = new System.Windows.Forms.ToolStripSeparator();
             this.btnResultProperies = new System.Windows.Forms.ToolStripMenuItem();
-            this.txtClassMemberDetail = new System.Windows.Forms.RichTextBoxEx();
             this.menuMain.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -315,6 +315,18 @@
             this.treeViewClassMembers.TabIndex = 0;
             this.treeViewClassMembers.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewClassMembers_AfterSelect);
             // 
+            // txtClassMemberDetail
+            // 
+            this.txtClassMemberDetail.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtClassMemberDetail.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtClassMemberDetail.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtClassMemberDetail.Location = new System.Drawing.Point(0, 0);
+            this.txtClassMemberDetail.Name = "txtClassMemberDetail";
+            this.txtClassMemberDetail.Size = new System.Drawing.Size(462, 459);
+            this.txtClassMemberDetail.TabIndex = 0;
+            this.txtClassMemberDetail.Text = "";
+            this.txtClassMemberDetail.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.txtClassMemberDetail_LinkClicked);
+            // 
             // tabQuery
             // 
             this.tabQuery.Controls.Add(this.splitContainer4);
@@ -404,6 +416,7 @@
             this.gridQueryResults.Size = new System.Drawing.Size(692, 375);
             this.gridQueryResults.TabIndex = 0;
             this.gridQueryResults.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridQueryResults_CellClicked);
+            this.gridQueryResults.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridQueryResults_CellContentClick);
             this.gridQueryResults.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridQueryResults_CellDoubleClicked);
             this.gridQueryResults.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridQueryResults_CellMouseEnter);
             this.gridQueryResults.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridQueryResults_CellMouseUp);
@@ -456,18 +469,6 @@
             this.btnResultProperies.Size = new System.Drawing.Size(171, 22);
             this.btnResultProperies.Text = "Properties";
             this.btnResultProperies.Click += new System.EventHandler(this.btnResultProperies_Click);
-            // 
-            // txtClassMemberDetail
-            // 
-            this.txtClassMemberDetail.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtClassMemberDetail.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtClassMemberDetail.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtClassMemberDetail.Location = new System.Drawing.Point(0, 0);
-            this.txtClassMemberDetail.Name = "txtClassMemberDetail";
-            this.txtClassMemberDetail.Size = new System.Drawing.Size(462, 459);
-            this.txtClassMemberDetail.TabIndex = 0;
-            this.txtClassMemberDetail.Text = "";
-            this.txtClassMemberDetail.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.txtClassMemberDetail_LinkClicked);
             // 
             // frmMain
             // 

@@ -5,6 +5,7 @@
     using System.Drawing;
     using System.Management;
     using System.Windows.Forms;
+    using System.Runtime.InteropServices;
 
     public partial class frmMain : Form
     {
@@ -59,8 +60,6 @@
         private List<ListViewItem> classListItems = new List<ListViewItem>();
 
         private bool updatingNavigation = false;
-
-        private Int32 queryResultCount = 0;
 
         private Boolean showSystemClasses = false;
 
@@ -542,7 +541,17 @@
 
         private void RefreshQueryView(ManagementClass c)
         {
-            var query = String.Format("SELECT * FROM {0}", c.ClassPath.ClassName);
+            String query;
+            if (c.IsEvent())
+            {
+                query = String.Format("SELECT * FROM {0} WITHIN 30", c.ClassPath.ClassName);
+            }
+
+            else
+            {
+                query = String.Format("SELECT * FROM {0}", c.ClassPath.ClassName);
+            }
+
             this.txtQuery.Text = query;
         }
 
@@ -563,35 +572,41 @@
             // Execute
             var scope = new ManagementScope(this.CurrentNamespacePath, this.conOpts);
             this.queryBroker = new ManagementQueryBroker(this.txtQuery.Text, this.CurrentNamespaceScope);
-            this.queryBroker.ObjectReady += new ObjectReadyEventHandler(this.OnQueryResultReady);
-            this.queryBroker.Completed += new CompletedEventHandler(this.OnQueryCompleted);
+            this.queryBroker.ObjectReady += new BrokerObjectReadyEventHandler(this.OnQueryResultReady);
+            this.queryBroker.Completed += new BrokerCompletedEventHandler(this.OnQueryCompleted);
 
-            this.queryBroker.ExecuteAsync();
+            try
+            {
+                this.queryBroker.ExecuteAsync();
+            }
+
+            catch (COMException e)
+            {
+                this.ShowWmiError(e);
+            }
         }
 
-        private void OnQueryCompleted(object sender, CompletedEventArgs e)
+        private void OnQueryCompleted(object sender, BrokerCompletedEventArgs e)
         {
             if (this.InvokeRequired)
             {
-                this.BeginInvoke(new CompletedEventHandler(this.OnQueryCompleted), sender, e);
+                this.BeginInvoke(new BrokerCompletedEventHandler(this.OnQueryCompleted), sender, e);
                 return;
             }
 
             this.ToggleQueryUI(false);
         }
 
-        private void OnQueryResultReady(object sender, ObjectReadyEventArgs e)
+        private void OnQueryResultReady(object sender, BrokerObjectReadyEventArgs e)
         {
             if (this.Disposing)
                 return;
 
             if (this.InvokeRequired)
             {
-                this.BeginInvoke(new ObjectReadyEventHandler(this.OnQueryResultReady), sender, e);
+                this.BeginInvoke(new BrokerObjectReadyEventHandler(this.OnQueryResultReady), sender, e);
                 return;
             }
-
-            this.queryResultCount++;
 
             // Init the datagrid if required
             if (1 == this.queryBroker.ResultCount)
@@ -601,7 +616,7 @@
             var i = 0;
             var values = new String[e.NewObject.Properties.Count + 3];
 
-            values[i++] = this.queryResultCount.ToString();
+            values[i++] = e.Index.ToString();
             values[i++] = null;
 
             if (WqlQueryType.Select == this.queryBroker.QueryType)
@@ -625,7 +640,6 @@
         /// </summary>
         private void ResetQueryResults()
         {
-            this.queryResultCount = 0;
             this.gridQueryResults.Rows.Clear();
             this.gridQueryResults.Columns.Clear();
         }
@@ -795,6 +809,33 @@
 
         #endregion
 
+        #region COM/WMI Errors
+
+        private void ShowWmiError(COMException exception)
+        {
+            String msg;
+            UInt32 code = (UInt32)exception.ErrorCode;
+
+            if (Enum.IsDefined(typeof(ManagementError), code))
+            {
+                ManagementError error = (ManagementError)code;
+                msg = String.Format(
+                    "Error constant:\t{0}\r\nDecimal:\t\t{1:G}\r\nHexidecimal:\t0x{1:X}",
+                    error.ToString(),
+                    code);
+            }
+            else
+            {
+                msg = String.Format(
+                    "Error constant:\tUnknown\r\nDecimal:\t\t{0:G}\r\nHexidecimal:\t0x{0:X}",
+                    code);
+            }
+
+            MessageBox.Show(msg, "WMI Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+        }
+
+        #endregion
+
         #region UI Event Handlers
 
         private void frmMain_Shown(object sender, EventArgs e)
@@ -903,20 +944,24 @@
 
         private void gridQueryResults_CellClicked(object sender, DataGridViewCellEventArgs e)
         {
-            // Capture expand button clicks
             Type cellType = this.gridQueryResults.Rows[e.RowIndex].Cells[e.ColumnIndex].GetType();
 
+            // Handle 'properties' button clicks
             if (e.ColumnIndex == 1)
             {
-                // The properties button was clicked
                 this.gridQueryResults_CellDoubleClicked(sender, e);
             }
+        }
 
-            else if (cellType == typeof(DataGridViewLinkCell))
+        private void gridQueryResults_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            Type cellType = this.gridQueryResults.Rows[e.RowIndex].Cells[e.ColumnIndex].GetType();
+
+            // Handle hyperlink clicks
+            if (cellType == typeof(DataGridViewLinkCell))
             {
                 ShowInspectorForLinkedObject(e);
             }
-            
         }
 
         private void gridQueryResults_CellDoubleClicked(object sender, DataGridViewCellEventArgs e)
@@ -969,8 +1014,6 @@
             }
         }
 
-        #endregion
-
         private void btnGetAssociatorsOf_Click(object sender, EventArgs e)
         {
             if (this.gridQueryResults.SelectedRows.Count == 1)
@@ -994,5 +1037,7 @@
                 this.ExecuteQuery(query);
             }
         }
+
+        #endregion
     }
 }

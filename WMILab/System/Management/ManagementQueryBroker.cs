@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
-namespace System.Management
+﻿namespace System.Management
 {
+    using System.Collections.Generic;
+    using System.Text.RegularExpressions;
+
     /// <summary>
     /// Acts as a broker for managing a single WQL query and subsequent executions.
     /// </summary>
@@ -22,8 +24,19 @@ namespace System.Management
             this.results = new List<ManagementBaseObject>();
 
             this.queryObserver = new ManagementOperationObserver();
-            this.queryObserver.ObjectReady += new ObjectReadyEventHandler(OnObjectReady);
-            this.queryObserver.Completed += new CompletedEventHandler(OnQueryCompleted);
+            this.queryObserver.ObjectReady += new ObjectReadyEventHandler(queryObserver_ObjectReady);
+            this.queryObserver.Completed += new CompletedEventHandler(queryObserver_Completed);
+
+            // Extract class name from query
+            MatchCollection matches = Regex.Matches(query, @"(select.*from\s+|references\s+of\s+{|associators\s+of\s+{)([A-Za-z0-9_]+)", RegexOptions.IgnoreCase);
+            if (matches.Count != 1 || !matches[0].Groups[2].Success)
+                throw new ArgumentException("Could not determine class name from query.");
+
+            var className = matches[0].Groups[2];
+            var classPath = new ManagementPath(String.Format("\\\\{0}\\{1}:{2}", scope.Path.Server, scope.Path.NamespacePath, className));
+
+            // Get class descriptor to assist with queries
+            this.resultClass = new ManagementClass(this.scope, classPath, new ObjectGetOptions());
         }
 
         #endregion
@@ -39,6 +52,8 @@ namespace System.Management
         private ManagementObjectSearcher querySearcher;
 
         private ManagementOperationObserver queryObserver;
+
+        private ManagementEventWatcher queryWatcher;
 
         private Int32 resultCount;
 
@@ -86,18 +101,7 @@ namespace System.Management
 
         public ManagementClass ResultClass
         {
-            get
-            {
-                if (this.resultCount < 1)
-                    return null;
-
-                if (this.resultClass == null)
-                {
-                    this.resultClass = new ManagementClass(this.scope, this.results[0].ClassPath, new ObjectGetOptions());
-                }
-
-                return this.resultClass;
-            }
+            get { return this.resultClass; }
         }
 
         #endregion
@@ -113,8 +117,21 @@ namespace System.Management
 
             try
             {
-                this.querySearcher = new ManagementObjectSearcher(this.scope, new ObjectQuery(query));
-                this.querySearcher.Get(this.queryObserver);
+                if (this.ResultClass.IsEvent())
+                {
+                    // Start an event watcher
+                    this.queryWatcher = new ManagementEventWatcher(this.scope, new EventQuery(this.query));
+                    this.queryWatcher.EventArrived += new EventArrivedEventHandler(queryWatcher_EventArrived);
+                    this.queryWatcher.Stopped += new StoppedEventHandler(queryWatcher_Stopped);
+                    this.queryWatcher.Start();
+                }
+
+                else
+                {
+                    // Start a standard async query
+                    this.querySearcher = new ManagementObjectSearcher(this.scope, new ObjectQuery(query));
+                    this.querySearcher.Get(this.queryObserver);
+                }
             }
 
             catch (ManagementException)
@@ -131,6 +148,13 @@ namespace System.Management
             this.queryObserver.Cancel();
             this.querySearcher.Dispose();
 
+            if (this.queryWatcher != null)
+            {
+                this.queryWatcher.Stop();
+                this.queryWatcher.Dispose();
+                this.queryWatcher = null;
+            }
+
             // ? this.OnQueryCompleted(this, EventArgs.Empty);
         }
 
@@ -139,30 +163,55 @@ namespace System.Management
             this.resultCount = 0;
             this.results.Clear();
 
-            if (this.resultClass != null)
-                this.resultClass.Dispose();
-            this.resultClass = null;
-
             this.inProgress = true;
 
             if (this.Started != null)
                 this.Started(sender, e);
         }
 
-        protected virtual void OnQueryCompleted(object sender, CompletedEventArgs e)
+        protected virtual void OnQueryCompleted(object sender, BrokerCompletedEventArgs e)
         {
             this.inProgress = false;
+
             if (null != this.Completed)
                 this.Completed(sender, e);
         }
 
-        protected virtual void OnObjectReady(object sender, ObjectReadyEventArgs e)
+        protected virtual void OnObjectReady(object sender, BrokerObjectReadyEventArgs e)
         {
             this.resultCount++;
             this.results.Add(e.NewObject);
             
             if (null != this.ObjectReady)
                 this.ObjectReady(sender, e);
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+        void queryObserver_Completed(object sender, CompletedEventArgs e)
+        {
+            var args = new BrokerCompletedEventArgs(e.Status == ManagementStatus.NoError, e.StatusObject, e.Status);
+            this.OnQueryCompleted(sender, args);
+        }
+
+        void queryObserver_ObjectReady(object sender, ObjectReadyEventArgs e)
+        {
+            var args = new BrokerObjectReadyEventArgs(e.NewObject, this.ResultCount + 1);
+            this.OnObjectReady(sender, args);
+        }
+
+        void queryWatcher_Stopped(object sender, StoppedEventArgs e)
+        {
+            var args = new BrokerCompletedEventArgs(e.Status == ManagementStatus.NoError, null, e.Status);
+            this.OnQueryCompleted(this, args);
+        }
+
+        void queryWatcher_EventArrived(object sender, EventArrivedEventArgs e)
+        {
+            var args = new BrokerObjectReadyEventArgs(e.NewEvent, this.resultCount + 1);
+            this.OnObjectReady(this, args);
         }
 
         #endregion
@@ -177,13 +226,46 @@ namespace System.Management
         /// <summary>
         /// Occurs when a new object is available.
         /// </summary>
-        public event ObjectReadyEventHandler ObjectReady;
+        public event BrokerObjectReadyEventHandler ObjectReady;
 
         /// <summary>
         /// Occurs when an operation has completed.
         /// </summary>
-        public event CompletedEventHandler Completed;
+        public event BrokerCompletedEventHandler Completed;
 
         #endregion
+    }
+
+    public delegate void BrokerObjectReadyEventHandler(object sender, BrokerObjectReadyEventArgs e);
+
+    public delegate void BrokerCompletedEventHandler(object sender, BrokerCompletedEventArgs e);
+
+    public class BrokerObjectReadyEventArgs : EventArgs
+    {
+        internal BrokerObjectReadyEventArgs(ManagementBaseObject newObject, Int32 index)
+        {
+            this.NewObject = newObject;
+            this.Index = index;
+        }
+
+        public ManagementBaseObject NewObject { get; private set; }
+
+        public Int32 Index { get; private set; }
+    }
+
+    public class BrokerCompletedEventArgs : EventArgs
+    {
+        internal BrokerCompletedEventArgs(Boolean success, ManagementBaseObject statusObject, ManagementStatus status)
+        {
+            this.Success = success;
+            this.StatusObject = statusObject;
+            this.Status = status;
+        }
+
+        public Boolean Success { get; private set; }
+
+        public ManagementBaseObject StatusObject { get; private set; }
+
+        public ManagementStatus Status { get; private set; }
     }
 }
