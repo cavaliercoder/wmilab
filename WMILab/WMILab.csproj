@@ -99,6 +99,7 @@
     <EmbeddedResource Include="Localization\ErrorCodes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ErrorCodes.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

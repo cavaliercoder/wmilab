@@ -602,14 +602,39 @@
                 this.queryBroker.ExecuteAsync();
             }
 
-            catch (COMException e)
-            {
-                this.LogComException(e);
-            }
-
             catch (Exception e)
             {
-                this.LogException(e);
+                bool hasCode = false;
+                UInt32 code = 0;
+
+                if (e.GetType() == typeof(COMException))
+                {
+                    hasCode = true;
+                    code = (UInt32) ((COMException)e).ErrorCode;
+                }
+
+                else if(e.GetType() == typeof(ManagementException))
+                {
+                    hasCode = true;
+                    code = (UInt32) ((ManagementException)e).ErrorCode;
+                }
+
+                if (hasCode && Enum.IsDefined(typeof(ManagementError), code))
+                {
+                    var constant = ((ManagementError)code).ToString();
+                    this.Log(LogLevel.Critical, String.Format("Query execution failed with {0:G} (0x{0:X}) {1}", code, constant));
+                    
+                    var description = ErrorCodes.ResourceManager.GetString(constant);
+                    if (!String.IsNullOrEmpty(description))
+                        this.Log(LogLevel.Information, description);
+                }
+
+                else
+                {
+                    this.Log(LogLevel.Critical, String.Format("Query execution failed with: {0}", e.Message));
+                }
+
+                // Generic exceptions may not trigger a 'Completed' event
                 this.ToggleQueryUI(false);
             }
         }
@@ -631,7 +656,21 @@
 
             else
             {
-                this.Log(LogLevel.Warning, String.Format("Query failed with status \"{0}\".", e.Status.ToString()));
+                var code = (UInt32)e.Status;
+                if(Enum.IsDefined(typeof(ManagementError), code))
+                {
+                    var constant = ((ManagementError)code).ToString();
+                    this.Log(LogLevel.Critical, String.Format("Query failed after {0} with {1:G} (0x{1:X}) {2}", this.queryBroker.ExecutionTime, code, constant));
+
+                    var description = ErrorCodes.ResourceManager.GetString(constant);
+                    if (!String.IsNullOrEmpty(description))
+                        this.Log(LogLevel.Information, description);
+                }
+
+                else
+                {
+                    this.Log(LogLevel.Critical, String.Format("Query failed after {0} with {1:G} (0x{1:X}).", this.queryBroker.ExecutionTime, code));
+                }
             }
         }
 

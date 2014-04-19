@@ -117,7 +117,834 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="WBEMESS_E_REGISTRATION_TOO_PRECISE" xml:space="preserve">
-    <value>A WITHIN clause was not used in this query.</value>
-  </data>
+  
+  <!-- Common Windows error constants -->
+  
+  	<data name="S_OK" xml:space="preserve">
+		<value>Operation successful</value>
+	</data>
+
+	<data name="E_NOTIMPL" xml:space="preserve">
+		<value>Not implemented</value>
+	</data>
+
+	<data name="E_NOINTERFACE" xml:space="preserve">
+		<value>No such interface supported</value>
+	</data>
+
+	<data name="E_POINTER" xml:space="preserve">
+		<value>Pointer that is not valid</value>
+	</data>
+
+	<data name="E_ABORT" xml:space="preserve">
+		<value>Operation aborted</value>
+	</data>
+
+	<data name="E_FAIL" xml:space="preserve">
+		<value>Unspecified failure</value>
+	</data>
+
+	<data name="E_UNEXPECTED" xml:space="preserve">
+		<value>Unexpected failure</value>
+	</data>
+
+	<data name="E_ACCESSDENIED" xml:space="preserve">
+		<value>General access denied error</value>
+	</data>
+
+	<data name="E_HANDLE" xml:space="preserve">
+		<value>Handle that is not valid</value>
+	</data>
+
+	<data name="E_OUTOFMEMORY" xml:space="preserve">
+		<value>Failed to allocate necessary memory</value>
+	</data>
+
+	<data name="E_INVALIDARG" xml:space="preserve">
+		<value>One or more arguments are not valid</value>
+	</data>
+	
+	<!-- WMI Non-error constants -->
+	<data name="WBEM_S_NO_ERROR" xml:space="preserve">
+		<value>The operation was successful.</value>
+	</data>
+	<data name="WBEM_S_FALSE" xml:space="preserve">
+		<value>No more objects are available, the number of objects returned is less than the number requested, or this is the end of an enumeration. This value is also returned when this method is called with a value of 0 for the uCount parameter.</value>
+	</data>
+	<data name="WBEM_S_ALREADY_EXISTS" xml:space="preserve">
+		<value>An attempt was made to create an object or class that already exists.</value>
+	</data>
+	<data name="WBEM_S_RESET_TO_DEFAULT" xml:space="preserve">
+		<value>An overridden property was deleted. This value is returned to signal that the original non-overridden value has been restored as a result of the deletion.</value>
+	</data>
+	<data name="WBEM_S_DIFFERENT" xml:space="preserve">
+		<value>The items (objects, classes, and so on) that are being compared are not identical.</value>
+	</data>
+	<data name="WBEM_S_TIMEDOUT" xml:space="preserve">
+		<value>A call timed out. This is not an error condition. Therefore, some results may have also been returned.</value>
+	</data>
+	<data name="WBEM_S_NO_MORE_DATA" xml:space="preserve">
+		<value>No more data is available from the enumeration, and the user must terminate the enumeration.</value>
+	</data>
+	<data name="WBEM_S_OPERATION_CANCELLED" xml:space="preserve">
+		<value>The operation was intentionally or unintentionally canceled.</value>
+	</data>
+	<data name="WBEM_S_PENDING" xml:space="preserve">
+		<value>A request is still in progress, and the results are not yet available.</value>
+	</data>
+	<data name="WBEM_S_DUPLICATE_OBJECTS" xml:space="preserve">
+		<value>More than one copy of the same object was detected in the result set of an enumeration.</value>
+	</data>
+	<data name="WBEM_S_ACCESS_DENIED" xml:space="preserve">
+		<value>The user was denied access to some but not all resources.</value>
+	</data>
+	<data name="WBEM_S_PARTIAL_RESULTS" xml:space="preserve">
+		<value>The user did not receive all of the objects requested due to inaccessible resources (other than security violations).</value>
+	</data>
+	<data name="WBEM_S_LIMITED_SERVICE" xml:space="preserve">
+		<value>The provider is capable of limited service.</value>
+	</data>
+	<data name="WBEM_S_INDIRECTLY_UPDATED" xml:space="preserve">
+		<value>Reserved for future use.</value>
+	</data>
+	
+	<!-- WMI error constants -->
+	<data name="WBEM_E_FAILED" xml:space="preserve">
+	  <value>Call failed.</value>
+	</data>
+
+	<data name="WBEM_E_NOT_FOUND" xml:space="preserve">
+		<value>Object cannot be found. Check the class defined in your query exists.</value>
+	</data>
+
+	<data name="WBEM_E_ACCESS_DENIED" xml:space="preserve">
+		<value>Current user does not have permission to perform the action.</value>
+	</data>
+
+	<data name="WBEM_E_PROVIDER_FAILURE" xml:space="preserve">
+		<value>Provider has failed at some time other than during initialization.</value>
+	</data>
+
+	<data name="WBEM_E_TYPE_MISMATCH" xml:space="preserve">
+		<value>Type mismatch occurred.</value>
+	</data>
+
+	<data name="WBEM_E_OUT_OF_MEMORY" xml:space="preserve">
+		<value>Not enough memory for the operation.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_CONTEXT" xml:space="preserve">
+		<value>The IWbemContext object is not valid.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_PARAMETER" xml:space="preserve">
+		<value>One of the parameters to the call is not correct.</value>
+	</data>
+
+	<data name="WBEM_E_NOT_AVAILABLE" xml:space="preserve">
+		<value>Resource, typically a remote server, is not currently available.</value>
+	</data>
+
+	<data name="WBEM_E_CRITICAL_ERROR" xml:space="preserve">
+		<value>Internal, critical, and unexpected error occurred. Report the error to Microsoft Technical Support.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_STREAM" xml:space="preserve">
+		<value>One or more network packets were corrupted during a remote session.</value>
+	</data>
+
+	<data name="WBEM_E_NOT_SUPPORTED" xml:space="preserve">
+		<value>Feature or operation is not supported.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_SUPERCLASS" xml:space="preserve">
+		<value>Parent class specified is not valid.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_NAMESPACE" xml:space="preserve">
+		<value>Namespace specified cannot be found.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_OBJECT" xml:space="preserve">
+		<value>Specified instance is not valid.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_CLASS" xml:space="preserve">
+		<value>Specified class is not valid.</value>
+	</data>
+
+	<data name="WBEM_E_PROVIDER_NOT_FOUND" xml:space="preserve">
+		<value>Provider referenced in the schema does not have a corresponding registration.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_PROVIDER_REGISTRATION" xml:space="preserve">
+		<value>
+		Provider referenced in the schema has an incorrect or incomplete registration.
+		This error may be caused by many conditions, including the following:
+		A missing #pragma namespace command in the Managed Object Format (MOF) file used to register the provider. The provider may be registered in the wrong WMI namespace.
+		Failure to retrieve the COM registration.
+		Hosting model is not valid. For more information, see Provider Hosting and Security.
+		An class specified in the registration is not valid.
+		Failure to create an instance of or inherit from the __Win32Provider class to create the provider registration in the MOF file.
+		</value>
+	</data>
+
+	<data name="WBEM_E_PROVIDER_LOAD_FAILURE" xml:space="preserve">
+		<value>
+		COM cannot locate a provider referenced in the schema.
+		This error may be caused by many conditions, including the following:
+		Provider is using a WMI DLL that does not match the .lib file used when the provider was built.
+		Provider's DLL, or any of the DLLs on which it depends, is corrupt.
+		Provider failed to export DllRegisterServer.
+		In-process provider was not registered using the regsvr32 command.
+		Out-of-process provider was not registered using the /regserver switch. For example, myprog.exe /regserver.
+		</value>
+	</data>
+
+
+	<data name="WBEM_E_INITIALIZATION_FAILURE" xml:space="preserve">
+		<value>Component, such as a provider, failed to initialize for internal reasons.</value>
+	</data>
+
+	<data name="WBEM_E_TRANSPORT_FAILURE" xml:space="preserve">
+		<value>Networking error that prevents normal operation has occurred.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_OPERATION" xml:space="preserve">
+		<value>Requested operation is not valid. This error usually applies to invalid attempts to delete classes or properties.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_QUERY" xml:space="preserve">
+
+	<data name="WBEM_E_INVALID_QUERY_TYPE" xml:space="preserve">
+		<value>Query was not syntactically valid.</value>
+	</data>
+	<data name="WBEM_E_ALREADY_EXISTS" xml:space="preserve">
+		<value>Requested query language is not supported.</value>
+	</data>
+	<data name="WBEM_E_PROPAGATED_QUALIFIER" xml:space="preserve">
+		<value>In a put operation, the wbemChangeFlagCreateOnly flag was specified, but the instance already exists.</value>
+	</data>
+
+	<data name="WBEM_E_OVERRIDE_NOT_ALLOWED" xml:space="preserve">
+		<value>Not possible to perform the add operation on this qualifier because the owning object does not permit overrides.</value>
+	</data>
+
+		<value>User attempted to delete a qualifier that was not owned. The qualifier was inherited from a parent class.</value>
+	</data>
+
+	<data name="WBEM_E_PROPAGATED_PROPERTY" xml:space="preserve">
+		<value>User attempted to delete a property that was not owned. The property was inherited from a parent class.</value>
+	</data>
+
+	<data name="WBEM_E_UNEXPECTED" xml:space="preserve">
+		<value>Client made an unexpected and illegal sequence of calls, such as calling EndEnumeration before calling BeginEnumeration.</value>
+	</data>
+
+	<data name="WBEM_E_ILLEGAL_OPERATION" xml:space="preserve">
+		<value>User requested an illegal operation, such as spawning a class from an instance.</value>
+	</data>
+
+	<data name="WBEM_E_CANNOT_BE_KEY" xml:space="preserve">
+		<value>Illegal attempt to specify a key qualifier on a property that cannot be a key. The keys are specified in the class definition for an object and cannot be altered on a per-instance basis.</value>
+	</data>
+
+	<data name="WBEM_E_INCOMPLETE_CLASS" xml:space="preserve">
+		<value>Current object is not a valid class definition. Either it is incomplete or it has not been registered with WMI using SWbemObject.Put_.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_SYNTAX" xml:space="preserve">
+		<value>Query is syntactically not valid.</value>
+	</data>
+
+	<data name="WBEM_E_NONDECORATED_OBJECT" xml:space="preserve">
+		<value>Reserved for future use.</value>
+	</data>
+
+	<data name="WBEM_E_READ_ONLY" xml:space="preserve">
+		<value>An attempt was made to modify a read-only property.</value>
+	</data>
+
+	<data name="WBEM_E_PROVIDER_NOT_CAPABLE" xml:space="preserve">
+		<value>Provider cannot perform the requested operation. This can include a query that is too complex, retrieving an instance, creating or updating a class, deleting a class, or enumerating a class.</value>
+	</data>
+
+	<data name="WBEM_E_CLASS_HAS_CHILDREN" xml:space="preserve">
+		<value>Attempt was made to make a change that invalidates a subclass.</value>
+	</data>
+
+	<data name="WBEM_E_CLASS_HAS_INSTANCES" xml:space="preserve">
+		<value>Attempt was made to delete or modify a class that has instances.</value>
+	</data>
+
+	<data name="WBEM_E_QUERY_NOT_IMPLEMENTED" xml:space="preserve">
+		<value>Reserved for future use.</value>
+	</data>
+
+	<data name="WBEM_E_ILLEGAL_NULL" xml:space="preserve">
+		<value>Value of Nothing/NULL was specified for a property that must have a value, such as one that is marked by a Key, Indexed, or Not_Null qualifier.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_QUALIFIER_TYPE" xml:space="preserve">
+		<value>Variant value for a qualifier was provided that is not a legal qualifier type.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_PROPERTY_TYPE" xml:space="preserve">
+		<value>CIM type specified for a property is not valid.</value>
+	</data>
+
+	<data name="WBEM_E_VALUE_OUT_OF_RANGE" xml:space="preserve">
+		<value>Request was made with an out-of-range value or it is incompatible with the type.</value>
+	</data>
+
+	<data name="WBEM_E_CANNOT_BE_SINGLETON" xml:space="preserve">
+		<value>Illegal attempt was made to make a class singleton, such as when the class is derived from a non-singleton class.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_CIM_TYPE" xml:space="preserve">
+		<value>CIM type specified is not valid.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_METHOD" xml:space="preserve">
+		<value>Requested method is not available.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_METHOD_PARAMETERS" xml:space="preserve">
+		<value>Parameters provided for the method are not valid.</value>
+	</data>
+
+	<data name="WBEM_E_SYSTEM_PROPERTY" xml:space="preserve">
+		<value>There was an attempt to get qualifiers on a system property.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_PROPERTY" xml:space="preserve">
+		<value>Property type is not recognized.</value>
+	</data>
+
+	<data name="WBEM_E_CALL_CANCELLED" xml:space="preserve">
+		<value>Asynchronous process has been canceled internally or by the user. Note that due to the timing and nature of the asynchronous operation, the operation may not have been truly canceled.</value>
+	</data>
+
+	<data name="WBEM_E_SHUTTING_DOWN" xml:space="preserve">
+		<value>User has requested an operation while WMI is in the process of shutting down.</value>
+	</data>
+
+	<data name="WBEM_E_PROPAGATED_METHOD" xml:space="preserve">
+		<value>Attempt was made to reuse an existing method name from a parent class and the signatures do not match.</value>
+	</data>
+
+	<data name="WBEM_E_UNSUPPORTED_PARAMETER" xml:space="preserve">
+		<value>One or more parameter values, such as a query text, is too complex or unsupported. WMI is therefore requested to retry the operation with simpler parameters.</value>
+	</data>
+
+	<data name="WBEM_E_MISSING_PARAMETER_ID" xml:space="preserve">
+		<value>Parameter was missing from the method call.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_PARAMETER_ID" xml:space="preserve">
+		<value>Method parameter has an ID qualifier that is not valid.</value>
+	</data>
+
+	<data name="WBEM_E_NONCONSECUTIVE_PARAMETER_IDS" xml:space="preserve">
+		<value>One or more of the method parameters have ID qualifiers that are out of sequence.</value>
+	</data>
+
+	<data name="WBEM_E_PARAMETER_ID_ON_RETVAL" xml:space="preserve">
+		<value>Return value for a method has an ID qualifier.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_OBJECT_PATH" xml:space="preserve">
+		<value>Specified object path was not valid.</value>
+	</data>
+
+	<data name="WBEM_E_OUT_OF_DISK_SPACE" xml:space="preserve">
+		<value>
+		Disk is out of space or the 4 GB limit on WMI repository (CIM repository) size is reached.
+		Windows XP:  Disk is out of space.
+		</value>
+	</data>
+
+	<data name="WBEM_E_BUFFER_TOO_SMALL" xml:space="preserve">
+		<value>Supplied buffer was too small to hold all of the objects in the enumerator or to read a string property.</value>
+	</data>
+
+	<data name="WBEM_E_UNSUPPORTED_PUT_EXTENSION" xml:space="preserve">
+		<value>Provider does not support the requested put operation.</value>
+	</data>
+
+	<data name="WBEM_E_UNKNOWN_OBJECT_TYPE" xml:space="preserve">
+		<value>Object with an incorrect type or version was encountered during marshaling.</value>
+	</data>
+
+	<data name="WBEM_E_UNKNOWN_PACKET_TYPE" xml:space="preserve">
+		<value>Packet with an incorrect type or version was encountered during marshaling.</value>
+	</data>
+
+	<data name="WBEM_E_MARSHAL_VERSION_MISMATCH" xml:space="preserve">
+		<value>Packet has an unsupported version.</value>
+	</data>
+
+	<data name="WBEM_E_MARSHAL_INVALID_SIGNATURE" xml:space="preserve">
+		<value>Packet appears to be corrupt.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_QUALIFIER" xml:space="preserve">
+		<value>Attempt was made to mismatch qualifiers, such as putting [key] on an object instead of a property.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_DUPLICATE_PARAMETER" xml:space="preserve">
+		<value>Duplicate parameter was declared in a CIM method.</value>
+	</data>
+
+	<data name="WBEM_E_TOO_MUCH_DATA" xml:space="preserve">
+		<value>Reserved for future use.</value>
+	</data>
+
+	<data name="WBEM_E_SERVER_TOO_BUSY" xml:space="preserve">
+		<value>Call to IWbemObjectSink::Indicate has failed. The provider can refire the event.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_FLAVOR" xml:space="preserve">
+		<value>Specified qualifier flavor was not valid.</value>
+	</data>
+
+	<data name="WBEM_E_CIRCULAR_REFERENCE" xml:space="preserve">
+		<value>Attempt was made to create a reference that is circular (for example, deriving a class from itself).</value>
+	</data>
+
+	<data name="WBEM_E_UNSUPPORTED_CLASS_UPDATE" xml:space="preserve">
+		<value>Specified class is not supported.</value>
+	</data>
+
+	<data name="WBEM_E_CANNOT_CHANGE_KEY_INHERITANCE" xml:space="preserve">
+		<value>Attempt was made to change a key when instances or subclasses are already using the key.</value>
+	</data>
+
+	<data name="WBEM_E_CANNOT_CHANGE_INDEX_INHERITANCE" xml:space="preserve">
+		<value>An attempt was made to change an index when instances or subclasses are already using the index.</value>
+	</data>
+
+	<data name="WBEM_E_TOO_MANY_PROPERTIES" xml:space="preserve">
+		<value>Attempt was made to create more properties than the current version of the class supports.</value>
+	</data>
+
+	<data name="WBEM_E_UPDATE_TYPE_MISMATCH" xml:space="preserve">
+		<value>Property was redefined with a conflicting type in a derived class.</value>
+	</data>
+
+	<data name="WBEM_E_UPDATE_OVERRIDE_NOT_ALLOWED" xml:space="preserve">
+		<value>Attempt was made in a derived class to override a qualifier that cannot be overridden.</value>
+	</data>
+
+	<data name="WBEM_E_UPDATE_PROPAGATED_METHOD" xml:space="preserve">
+		<value>Method was re-declared with a conflicting signature in a derived class.</value>
+	</data>
+
+	<data name="WBEM_E_METHOD_NOT_IMPLEMENTED" xml:space="preserve">
+		<value>Attempt was made to execute a method not marked with [implemented] in any relevant class.</value>
+	</data>
+
+	<data name="WBEM_E_REFRESHER_BUSY" xml:space="preserve">
+		<value>Refresher is busy with another operation.</value>
+	</data>
+	<data name="WBEM_E_METHOD_DISABLED" xml:space="preserve">
+		<value>Attempt was made to execute a method marked with [disabled].</value>
+	</data>
+
+	<data name="WBEM_E_UNPARSABLE_QUERY" xml:space="preserve">
+		<value>Filtering query is syntactically not valid.</value>
+	</data>
+
+	<data name="WBEM_E_NOT_EVENT_CLASS" xml:space="preserve">
+		<value>The FROM clause of a filtering query references a class that is not an event class (not derived from __Event).</value>
+	</data>
+
+	<data name="WBEM_E_MISSING_GROUP_WITHIN" xml:space="preserve">
+		<value>A GROUP BY clause was used without the corresponding GROUP WITHIN clause.</value>
+	</data>
+
+	<data name="WBEM_E_MISSING_AGGREGATION_LIST" xml:space="preserve">
+		<value>A GROUP BY clause was used. Aggregation on all properties is not supported.</value>
+	</data>
+
+	<data name="WBEM_E_PROPERTY_NOT_AN_OBJECT" xml:space="preserve">
+		<value>Dot notation was used on a property that is not an embedded object.</value>
+	</data>
+
+	<data name="WBEM_E_AGGREGATING_BY_OBJECT" xml:space="preserve">
+		<value>A GROUP BY clause references a property that is an embedded object without using dot notation.</value>
+	</data>
+
+	<data name="WBEM_E_UNINTERPRETABLE_PROVIDER_QUERY" xml:space="preserve">
+		<value>Event provider registration query (__EventProviderRegistration) did not specify the classes for which events were provided.</value>
+	</data>
+
+	<data name="WBEM_E_BACKUP_RESTORE_WINMGMT_RUNNING" xml:space="preserve">
+		<value>Request was made to back up or restore the repository while it was in use by WinMgmt.exe, or by the SVCHOST process that contains the WMI service.</value>
+	</data>
+
+	<data name="WBEM_E_QUEUE_OVERFLOW" xml:space="preserve">
+		<value>Asynchronous delivery queue overflowed from the event consumer being too slow.</value>
+	</data>
+
+	<data name="WBEM_E_PRIVILEGE_NOT_HELD" xml:space="preserve">
+		<value>Operation failed because the client did not have the necessary security privilege.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_OPERATOR" xml:space="preserve">
+		<value>Operator is not valid for this property type.</value>
+	</data>
+
+	<data name="WBEM_E_LOCAL_CREDENTIALS" xml:space="preserve">
+		<value>User specified a username/password/authority on a local connection. The user must use a blank username/password and rely on default security.</value>
+	</data>
+
+	<data name="WBEM_E_CANNOT_BE_ABSTRACT" xml:space="preserve">
+		<value>Class was made abstract when its parent class is not abstract.</value>
+	</data>
+
+	<data name="WBEM_E_AMENDED_OBJECT" xml:space="preserve">
+		<value>Amended object was written without the WBEM_FLAG_USE_AMENDED_QUALIFIERS flag being specified.</value>
+	</data>
+
+	<data name="WBEM_E_CLIENT_TOO_SLOW" xml:space="preserve">
+		<value>Client did not retrieve objects quickly enough from an enumeration. This constant is returned when a client creates an enumeration object, but does not retrieve objects from the enumerator in a timely fashion, causing the enumerator's object caches to back up.</value>
+	</data>
+
+	<data name="WBEM_E_NULL_SECURITY_DESCRIPTOR" xml:space="preserve">
+		<value>Null security descriptor was used.</value>
+	</data>
+
+	<data name="WBEM_E_TIMED_OUT" xml:space="preserve">
+		<value>Operation timed out.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_ASSOCIATION" xml:space="preserve">
+		<value>Association is not valid.</value>
+	</data>
+
+	<data name="WBEM_E_AMBIGUOUS_OPERATION" xml:space="preserve">
+		<value>Operation was ambiguous.</value>
+	</data>
+
+	<data name="WBEM_E_QUOTA_VIOLATION" xml:space="preserve">
+		<value>WMI is taking up too much memory. This can be caused by low memory availability or excessive memory consumption by WMI.</value>
+	</data>
+
+	<data name="WBEM_E_TRANSACTION_CONFLICT" xml:space="preserve">
+		<value>Operation resulted in a transaction conflict.</value>
+	</data>
+
+	<data name="WBEM_E_FORCED_ROLLBACK" xml:space="preserve">
+		<value>Transaction forced a rollback.</value>
+	</data>
+
+	<data name="WBEM_E_UNSUPPORTED_LOCALE" xml:space="preserve">
+		<value>Locale used in the call is not supported.</value>
+	</data>
+
+	<data name="WBEM_E_HANDLE_OUT_OF_DATE" xml:space="preserve">
+		<value>Object handle is out-of-date.</value>
+	</data>
+
+	<data name="WBEM_E_CONNECTION_FAILED" xml:space="preserve">
+		<value>Connection to the SQL database failed.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_HANDLE_REQUEST" xml:space="preserve">
+		<value>Handle request was not valid.</value>
+	</data>
+
+	<data name="WBEM_E_PROPERTY_NAME_TOO_WIDE" xml:space="preserve">
+		<value>Property name contains more than 255 characters.</value>
+	</data>
+
+	<data name="WBEM_E_CLASS_NAME_TOO_WIDE" xml:space="preserve">
+		<value>Class name contains more than 255 characters.</value>
+	</data>
+
+	<data name="WBEM_E_METHOD_NAME_TOO_WIDE" xml:space="preserve">
+		<value>Method name contains more than 255 characters.</value>
+	</data>
+
+	<data name="WBEM_E_QUALIFIER_NAME_TOO_WIDE" xml:space="preserve">
+		<value>Qualifier name contains more than 255 characters.</value>
+	</data>
+
+	<data name="WBEM_E_RERUN_COMMAND" xml:space="preserve">
+		<value>The SQL command must be rerun because there is a deadlock in SQL. This can be returned only when data is being stored in an SQL database.</value>
+	</data>
+
+	<data name="WBEM_E_DATABASE_VER_MISMATCH" xml:space="preserve">
+		<value>The database version does not match the version that the repository driver processes.</value>
+	</data>
+
+	<data name="WBEM_E_VETO_DELETE" xml:space="preserve">
+		<value>WMI cannot execute the delete operation because the provider does not allow it.</value>
+	</data>
+
+	<data name="WBEM_E_VETO_PUT" xml:space="preserve">
+		<value>WMI cannot execute the put operation because the provider does not allow it.</value>
+	</data>
+
+	<data name="WBEM_E_INVALID_LOCALE" xml:space="preserve">
+		<value>Specified locale identifier was not valid for the operation.</value>
+	</data>
+
+	<data name="WBEM_E_PROVIDER_SUSPENDED" xml:space="preserve">
+		<value>Provider is suspended.</value>
+	</data>
+
+	<data name="WBEM_E_SYNCHRONIZATION_REQUIRED" xml:space="preserve">
+		<value>Object must be written to the WMI repository and retrieved again before the requested operation can succeed. This constant is returned when an object must be committed and retrieved to see the property value.</value>
+	</data>
+
+	<data name="WBEM_E_NO_SCHEMA" xml:space="preserve">
+		<value>Operation cannot be completed; no schema is available.</value>
+	</data>
+
+	<data name="WBEM_E_PROVIDER_ALREADY_REGISTERED" xml:space="preserve">
+		<value>Provider cannot be registered because it is already registered.</value>
+	</data>
+
+	<data name="WBEM_E_PROVIDER_NOT_REGISTERED" xml:space="preserve">
+		<value>Provider was not registered.</value>
+	</data>
+
+	<data name="WBEM_E_FATAL_TRANSPORT_ERROR" xml:space="preserve">
+		<value>A fatal transport error occurred.</value>
+	</data>
+
+	<data name="WBEM_E_ENCRYPTED_CONNECTION_REQUIRED" xml:space="preserve">
+		<value>User attempted to set a computer name or domain without an encrypted connection.</value>
+	</data>
+
+	<data name="WBEM_E_PROVIDER_TIMED_OUT" xml:space="preserve">
+		<value>A provider failed to report results within the specified timeout.</value>
+	</data>
+
+	<data name="WBEM_E_NO_KEY" xml:space="preserve">
+		<value>User attempted to put an instance with no defined key.</value>
+	</data>
+
+	<data name="WBEM_E_PROVIDER_DISABLED" xml:space="preserve">
+		<value>User attempted to register a provider instance but the COM server for the provider instance was unloaded.</value>
+	</data>
+
+	<data name="WBEMESS_E_REGISTRATION_TOO_BROAD" xml:space="preserve">
+		<value>Provider registration overlaps with the system event domain.</value>
+	</data>
+
+	<data name="WBEMESS_E_REGISTRATION_TOO_PRECISE" xml:space="preserve">
+		<value>A WITHIN clause was not used in this query.</value>
+	</data>
+
+	<data name="WBEMESS_E_AUTHZ_NOT_PRIVILEGED" xml:space="preserve">
+		<value>This computer does not have the necessary domain permissions to support the security functions that relate to the created subscription instance. Contact the Domain Administrator to get this computer added to the Windows Authorization Access Group.</value>
+	</data>
+
+	<data name="WBEM_E_RETRY_LATER" xml:space="preserve">
+		<value>Reserved for future use.</value>
+	</data>
+
+	<data name="WBEM_E_RESOURCE_CONTENTION" xml:space="preserve">
+		<value>Reserved for future use.</value>
+	</data>
+
+	<data name="WBEMMOF_E_EXPECTED_QUALIFIER_NAME" xml:space="preserve">
+		<value>Expected a qualifier name.</value>
+	</data>
+
+	<data name="WBEMMOF_E_EXPECTED_SEMI" xml:space="preserve">
+		<value>Expected semicolon or '='.</value>
+	</data>
+
+	<data name="WBEMMOF_E_EXPECTED_OPEN_BRACE" xml:space="preserve">
+		<value>Expected an opening brace.</value>
+	</data>
+
+	<data name="WBEMMOF_E_EXPECTED_CLOSE_BRACE" xml:space="preserve">
+		<value>Missing closing brace or an illegal array element.</value>
+	</data>
+
+	<data name="WBEMMOF_E_EXPECTED_CLOSE_BRACKET" xml:space="preserve">
+		<value>Expected a closing bracket.</value>
+	</data>
+
+	<data name="WBEMMOF_E_EXPECTED_CLOSE_PAREN" xml:space="preserve">
+		<value>Expected closing parenthesis.</value>
+	</data>
+
+	<data name="WBEMMOF_E_ILLEGAL_CONSTANT_VALUE" xml:space="preserve">
+		<value>Numeric value out of range or strings without quotes.</value>
+	</data>
+
+	<data name="WBEMMOF_E_EXPECTED_TYPE_IDENTIFIER" xml:space="preserve">
+		<value>Expected a type identifier.</value>
+	</data>
+
+	<data name="WBEMMOF_E_EXPECTED_OPEN_PAREN" xml:space="preserve">
+		<value>Expected an open parenthesis.</value>
+	</data>
+
+	<data name="WBEMMOF_E_UNRECOGNIZED_TOKEN" xml:space="preserve">
+		<value>Unexpected token in the file.</value>
+	</data>
+
+	<data name="WBEMMOF_E_UNRECOGNIZED_TYPE" xml:space="preserve">
+		<value>Unrecognized or unsupported type identifier.</value>
+	</data>
+
+	<data name="WBEMMOF_E_EXPECTED_PROPERTY_NAME" xml:space="preserve">
+		<value>Expected property or method name.</value>
+	</data>
+
+	<data name="WBEMMOF_E_TYPEDEF_NOT_SUPPORTED" xml:space="preserve">
+		<value>Typedefs and enumerated types are not supported.</value>
+	</data>
+
+	<data name="WBEMMOF_E_UNEXPECTED_ALIAS" xml:space="preserve">
+		<value>Only a reference to a class object can have an alias value.</value>
+	</data>
+
+	<data name="WBEMMOF_E_UNEXPECTED_ARRAY_INIT" xml:space="preserve">
+		<value>Unexpected array initialization. Arrays must be declared with [].</value>
+	</data>
+
+	<data name="WBEMMOF_E_INVALID_AMENDMENT_SYNTAX" xml:space="preserve">
+		<value>Namespace path syntax is not valid.</value>
+	</data>
+
+	<data name="WBEMMOF_E_INVALID_DUPLICATE_AMENDMENT" xml:space="preserve">
+		<value>Duplicate amendment specifiers.</value>
+	</data>
+
+	<data name="WBEMMOF_E_INVALID_PRAGMA" xml:space="preserve">
+		<value>#pragma must be followed by a valid keyword.</value>
+	</data>
+
+	<data name="WBEMMOF_E_INVALID_NAMESPACE_SYNTAX" xml:space="preserve">
+		<value>Namespace path syntax is not valid.</value>
+	</data>
+
+	<data name="WBEMMOF_E_EXPECTED_CLASS_NAME" xml:space="preserve">
+		<value>Unexpected character in class name must be an identifier.</value>
+	</data>
+
+	<data name="WBEMMOF_E_TYPE_MISMATCH" xml:space="preserve">
+		<value>The value specified cannot be made into the appropriate type.</value>
+	</data>
+
+	<data name="WBEMMOF_E_EXPECTED_ALIAS_NAME" xml:space="preserve">
+		<value>Dollar sign must be followed by an alias name as an identifier.</value>
+	</data>
+
+	<data name="WBEMMOF_E_INVALID_CLASS_DECLARATION" xml:space="preserve">
+		<value>Class declaration is not valid.</value>
+	</data>
+
+	<data name="WBEMMOF_E_INVALID_INSTANCE_DECLARATION" xml:space="preserve">
+		<value>The instance declaration is not valid. It must start with "instance of"</value>
+	</data>
+
+	<data name="WBEMMOF_E_EXPECTED_DOLLAR" xml:space="preserve">
+		<value>Expected dollar sign. An alias in the form "$name" must follow the "as" keyword.</value>
+	</data>
+
+	<data name="WBEMMOF_E_CIMTYPE_QUALIFIER" xml:space="preserve">
+		<value>"CIMTYPE" qualifier cannot be specified directly in a MOF file. Use standard type notation.</value>
+	</data>
+
+	<data name="WBEMMOF_E_DUPLICATE_PROPERTY" xml:space="preserve">
+		<value>Duplicate property name was found in the MOF.</value>
+	</data>
+
+	<data name="WBEMMOF_E_INVALID_NAMESPACE_SPECIFICATION" xml:space="preserve">
+		<value>Namespace syntax is not valid. References to other servers are not allowed.</value>
+	</data>
+
+	<data name="WBEMMOF_E_OUT_OF_RANGE" xml:space="preserve">
+		<value>Value out of range.</value>
+	</data>
+
+	<data name="WBEMMOF_E_INVALID_FILE" xml:space="preserve">
+		<value>The file is not a valid text MOF file or binary MOF file.</value>
+	</data>
+
+	<data name="WBEMMOF_E_ALIASES_IN_EMBEDDED" xml:space="preserve">
+		<value>Embedded objects cannot be aliases.</value>
+	</data>
+
+	<data name="WBEMMOF_E_NULL_ARRAY_ELEM" xml:space="preserve">
+		<value>NULL elements in an array are not supported.</value>
+	</data>
+
+	<data name="WBEMMOF_E_DUPLICATE_QUALIFIER" xml:space="preserve">
+		<value>Qualifier was used more than once on the object.</value>
+	</data>
+
+	<data name="WBEMMOF_E_EXPECTED_FLAVOR_TYPE" xml:space="preserve">
+		<value>Expected a flavor type such as ToInstance, ToSubClass, EnableOverride, or DisableOverride.</value>
+	</data>
+
+	<data name="WBEMMOF_E_INCOMPATIBLE_FLAVOR_TYPES" xml:space="preserve">
+		<value>Combining EnableOverride and DisableOverride on same qualifier is not legal.</value>
+	</data>
+
+	<data name="WBEMMOF_E_MULTIPLE_ALIASES" xml:space="preserve">
+		<value>An alias cannot be used twice.</value>
+	</data>
+
+	<data name="WBEMMOF_E_INCOMPATIBLE_FLAVOR_TYPES2" xml:space="preserve">
+		<value>Combining Restricted, and ToInstance or ToSubClass is not legal.</value>
+	</data>
+
+	<data name="WBEMMOF_E_NO_ARRAYS_RETURNED" xml:space="preserve">
+		<value>Methods cannot return array values.</value>
+	</data>
+
+	<data name="WBEMMOF_E_MUST_BE_IN_OR_OUT" xml:space="preserve">
+		<value>Arguments must have an In or Out qualifier.</value>
+	</data>
+
+	<data name="WBEMMOF_E_INVALID_FLAGS_SYNTAX" xml:space="preserve">
+		<value>Flags syntax is not valid.</value>
+	</data>
+
+	<data name="WBEMMOF_E_EXPECTED_BRACE_OR_BAD_TYPE" xml:space="preserve">
+		<value>The final brace and semi-colon for a class are missing.</value>
+	</data>
+
+	<data name="WBEMMOF_E_UNSUPPORTED_CIMV22_QUAL_VALUE" xml:space="preserve">
+		<value>A CIM version 2.2 feature is not supported for a qualifier value.</value>
+	</data>
+
+	<data name="WBEMMOF_E_UNSUPPORTED_CIMV22_DATA_TYPE" xml:space="preserve">
+		<value>The CIM version 2.2 data type is not supported.</value>
+	</data>
+
+	<data name="WBEMMOF_E_INVALID_DELETEINSTANCE_SYNTAX" xml:space="preserve">
+		<value>The delete instance syntax is not valid. It should be #pragma DeleteInstance("instancepath", FAIL|NOFAIL)</value>
+	</data>
+
+	<data name="WBEMMOF_E_INVALID_QUALIFIER_SYNTAX" xml:space="preserve">
+		<value>The qualifier syntax is not valid. It should be qualifiername:type=value,scope(class|instance), flavorname.</value>
+	</data>
+
+	<data name="WBEMMOF_E_QUALIFIER_USED_OUTSIDE_SCOPE" xml:space="preserve">
+		<value>The qualifier is used outside of its scope.</value>
+	</data>
+
+	<data name="WBEMMOF_E_ERROR_CREATING_TEMP_FILE" xml:space="preserve">
+		<value>Error creating temporary file. The temporary file is an intermediate stage in the MOF compilation.</value>
+	</data>
+
+	<data name="WBEMMOF_E_ERROR_INVALID_INCLUDE_FILE" xml:space="preserve">
+		<value>A file included in the MOF by the preprocessor command #include is not valid.</value>
+	</data>
+
+	<data name="WBEMMOF_E_INVALID_DELETECLASS_SYNTAX" xml:space="preserve">
+		<value>The syntax for the preprocessor commands #pragma deleteinstance or #pragma deleteclass is not valid.	</value>
+	</data>
+	
 </root>

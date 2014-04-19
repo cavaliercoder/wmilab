@@ -61,11 +61,1755 @@ namespace WMILab.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Current user does not have permission to perform the action..
+        /// </summary>
+        internal static string WBEM_E_ACCESS_DENIED {
+            get {
+                return ResourceManager.GetString("WBEM_E_ACCESS_DENIED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A GROUP BY clause references a property that is an embedded object without using dot notation..
+        /// </summary>
+        internal static string WBEM_E_AGGREGATING_BY_OBJECT {
+            get {
+                return ResourceManager.GetString("WBEM_E_AGGREGATING_BY_OBJECT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Requested query language is not supported..
+        /// </summary>
+        internal static string WBEM_E_ALREADY_EXISTS {
+            get {
+                return ResourceManager.GetString("WBEM_E_ALREADY_EXISTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operation was ambiguous..
+        /// </summary>
+        internal static string WBEM_E_AMBIGUOUS_OPERATION {
+            get {
+                return ResourceManager.GetString("WBEM_E_AMBIGUOUS_OPERATION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Amended object was written without the WBEM_FLAG_USE_AMENDED_QUALIFIERS flag being specified..
+        /// </summary>
+        internal static string WBEM_E_AMENDED_OBJECT {
+            get {
+                return ResourceManager.GetString("WBEM_E_AMENDED_OBJECT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Request was made to back up or restore the repository while it was in use by WinMgmt.exe, or by the SVCHOST process that contains the WMI service..
+        /// </summary>
+        internal static string WBEM_E_BACKUP_RESTORE_WINMGMT_RUNNING {
+            get {
+                return ResourceManager.GetString("WBEM_E_BACKUP_RESTORE_WINMGMT_RUNNING", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Supplied buffer was too small to hold all of the objects in the enumerator or to read a string property..
+        /// </summary>
+        internal static string WBEM_E_BUFFER_TOO_SMALL {
+            get {
+                return ResourceManager.GetString("WBEM_E_BUFFER_TOO_SMALL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Asynchronous process has been canceled internally or by the user. Note that due to the timing and nature of the asynchronous operation, the operation may not have been truly canceled..
+        /// </summary>
+        internal static string WBEM_E_CALL_CANCELLED {
+            get {
+                return ResourceManager.GetString("WBEM_E_CALL_CANCELLED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Class was made abstract when its parent class is not abstract..
+        /// </summary>
+        internal static string WBEM_E_CANNOT_BE_ABSTRACT {
+            get {
+                return ResourceManager.GetString("WBEM_E_CANNOT_BE_ABSTRACT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Illegal attempt to specify a key qualifier on a property that cannot be a key. The keys are specified in the class definition for an object and cannot be altered on a per-instance basis..
+        /// </summary>
+        internal static string WBEM_E_CANNOT_BE_KEY {
+            get {
+                return ResourceManager.GetString("WBEM_E_CANNOT_BE_KEY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Illegal attempt was made to make a class singleton, such as when the class is derived from a non-singleton class..
+        /// </summary>
+        internal static string WBEM_E_CANNOT_BE_SINGLETON {
+            get {
+                return ResourceManager.GetString("WBEM_E_CANNOT_BE_SINGLETON", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An attempt was made to change an index when instances or subclasses are already using the index..
+        /// </summary>
+        internal static string WBEM_E_CANNOT_CHANGE_INDEX_INHERITANCE {
+            get {
+                return ResourceManager.GetString("WBEM_E_CANNOT_CHANGE_INDEX_INHERITANCE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attempt was made to change a key when instances or subclasses are already using the key..
+        /// </summary>
+        internal static string WBEM_E_CANNOT_CHANGE_KEY_INHERITANCE {
+            get {
+                return ResourceManager.GetString("WBEM_E_CANNOT_CHANGE_KEY_INHERITANCE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attempt was made to create a reference that is circular (for example, deriving a class from itself)..
+        /// </summary>
+        internal static string WBEM_E_CIRCULAR_REFERENCE {
+            get {
+                return ResourceManager.GetString("WBEM_E_CIRCULAR_REFERENCE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attempt was made to make a change that invalidates a subclass..
+        /// </summary>
+        internal static string WBEM_E_CLASS_HAS_CHILDREN {
+            get {
+                return ResourceManager.GetString("WBEM_E_CLASS_HAS_CHILDREN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attempt was made to delete or modify a class that has instances..
+        /// </summary>
+        internal static string WBEM_E_CLASS_HAS_INSTANCES {
+            get {
+                return ResourceManager.GetString("WBEM_E_CLASS_HAS_INSTANCES", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Class name contains more than 255 characters..
+        /// </summary>
+        internal static string WBEM_E_CLASS_NAME_TOO_WIDE {
+            get {
+                return ResourceManager.GetString("WBEM_E_CLASS_NAME_TOO_WIDE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Client did not retrieve objects quickly enough from an enumeration. This constant is returned when a client creates an enumeration object, but does not retrieve objects from the enumerator in a timely fashion, causing the enumerator&apos;s object caches to back up..
+        /// </summary>
+        internal static string WBEM_E_CLIENT_TOO_SLOW {
+            get {
+                return ResourceManager.GetString("WBEM_E_CLIENT_TOO_SLOW", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connection to the SQL database failed..
+        /// </summary>
+        internal static string WBEM_E_CONNECTION_FAILED {
+            get {
+                return ResourceManager.GetString("WBEM_E_CONNECTION_FAILED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Internal, critical, and unexpected error occurred. Report the error to Microsoft Technical Support..
+        /// </summary>
+        internal static string WBEM_E_CRITICAL_ERROR {
+            get {
+                return ResourceManager.GetString("WBEM_E_CRITICAL_ERROR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The database version does not match the version that the repository driver processes..
+        /// </summary>
+        internal static string WBEM_E_DATABASE_VER_MISMATCH {
+            get {
+                return ResourceManager.GetString("WBEM_E_DATABASE_VER_MISMATCH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User attempted to set a computer name or domain without an encrypted connection..
+        /// </summary>
+        internal static string WBEM_E_ENCRYPTED_CONNECTION_REQUIRED {
+            get {
+                return ResourceManager.GetString("WBEM_E_ENCRYPTED_CONNECTION_REQUIRED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Call failed..
+        /// </summary>
+        internal static string WBEM_E_FAILED {
+            get {
+                return ResourceManager.GetString("WBEM_E_FAILED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A fatal transport error occurred..
+        /// </summary>
+        internal static string WBEM_E_FATAL_TRANSPORT_ERROR {
+            get {
+                return ResourceManager.GetString("WBEM_E_FATAL_TRANSPORT_ERROR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transaction forced a rollback..
+        /// </summary>
+        internal static string WBEM_E_FORCED_ROLLBACK {
+            get {
+                return ResourceManager.GetString("WBEM_E_FORCED_ROLLBACK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Object handle is out-of-date..
+        /// </summary>
+        internal static string WBEM_E_HANDLE_OUT_OF_DATE {
+            get {
+                return ResourceManager.GetString("WBEM_E_HANDLE_OUT_OF_DATE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value of Nothing/NULL was specified for a property that must have a value, such as one that is marked by a Key, Indexed, or Not_Null qualifier..
+        /// </summary>
+        internal static string WBEM_E_ILLEGAL_NULL {
+            get {
+                return ResourceManager.GetString("WBEM_E_ILLEGAL_NULL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User requested an illegal operation, such as spawning a class from an instance..
+        /// </summary>
+        internal static string WBEM_E_ILLEGAL_OPERATION {
+            get {
+                return ResourceManager.GetString("WBEM_E_ILLEGAL_OPERATION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current object is not a valid class definition. Either it is incomplete or it has not been registered with WMI using SWbemObject.Put_..
+        /// </summary>
+        internal static string WBEM_E_INCOMPLETE_CLASS {
+            get {
+                return ResourceManager.GetString("WBEM_E_INCOMPLETE_CLASS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Component, such as a provider, failed to initialize for internal reasons..
+        /// </summary>
+        internal static string WBEM_E_INITIALIZATION_FAILURE {
+            get {
+                return ResourceManager.GetString("WBEM_E_INITIALIZATION_FAILURE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Association is not valid..
+        /// </summary>
+        internal static string WBEM_E_INVALID_ASSOCIATION {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_ASSOCIATION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CIM type specified is not valid..
+        /// </summary>
+        internal static string WBEM_E_INVALID_CIM_TYPE {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_CIM_TYPE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specified class is not valid..
+        /// </summary>
+        internal static string WBEM_E_INVALID_CLASS {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_CLASS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The IWbemContext object is not valid..
+        /// </summary>
+        internal static string WBEM_E_INVALID_CONTEXT {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_CONTEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duplicate parameter was declared in a CIM method..
+        /// </summary>
+        internal static string WBEM_E_INVALID_DUPLICATE_PARAMETER {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_DUPLICATE_PARAMETER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specified qualifier flavor was not valid..
+        /// </summary>
+        internal static string WBEM_E_INVALID_FLAVOR {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_FLAVOR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Handle request was not valid..
+        /// </summary>
+        internal static string WBEM_E_INVALID_HANDLE_REQUEST {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_HANDLE_REQUEST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specified locale identifier was not valid for the operation..
+        /// </summary>
+        internal static string WBEM_E_INVALID_LOCALE {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_LOCALE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Requested method is not available..
+        /// </summary>
+        internal static string WBEM_E_INVALID_METHOD {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_METHOD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameters provided for the method are not valid..
+        /// </summary>
+        internal static string WBEM_E_INVALID_METHOD_PARAMETERS {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_METHOD_PARAMETERS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Namespace specified cannot be found..
+        /// </summary>
+        internal static string WBEM_E_INVALID_NAMESPACE {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_NAMESPACE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specified instance is not valid..
+        /// </summary>
+        internal static string WBEM_E_INVALID_OBJECT {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_OBJECT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specified object path was not valid..
+        /// </summary>
+        internal static string WBEM_E_INVALID_OBJECT_PATH {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_OBJECT_PATH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Requested operation is not valid. This error usually applies to invalid attempts to delete classes or properties..
+        /// </summary>
+        internal static string WBEM_E_INVALID_OPERATION {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_OPERATION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operator is not valid for this property type..
+        /// </summary>
+        internal static string WBEM_E_INVALID_OPERATOR {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_OPERATOR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One of the parameters to the call is not correct..
+        /// </summary>
+        internal static string WBEM_E_INVALID_PARAMETER {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_PARAMETER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Method parameter has an ID qualifier that is not valid..
+        /// </summary>
+        internal static string WBEM_E_INVALID_PARAMETER_ID {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_PARAMETER_ID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property type is not recognized..
+        /// </summary>
+        internal static string WBEM_E_INVALID_PROPERTY {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_PROPERTY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CIM type specified for a property is not valid..
+        /// </summary>
+        internal static string WBEM_E_INVALID_PROPERTY_TYPE {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_PROPERTY_TYPE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 
+        ///		Provider referenced in the schema has an incorrect or incomplete registration.
+        ///		This error may be caused by many conditions, including the following:
+        ///		A missing #pragma namespace command in the Managed Object Format (MOF) file used to register the provider. The provider may be registered in the wrong WMI namespace.
+        ///		Failure to retrieve the COM registration.
+        ///		Hosting model is not valid. For more information, see Provider Hosting and Security.
+        ///		An class specified in the registration is not valid [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string WBEM_E_INVALID_PROVIDER_REGISTRATION {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_PROVIDER_REGISTRATION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attempt was made to mismatch qualifiers, such as putting [key] on an object instead of a property..
+        /// </summary>
+        internal static string WBEM_E_INVALID_QUALIFIER {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_QUALIFIER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Variant value for a qualifier was provided that is not a legal qualifier type..
+        /// </summary>
+        internal static string WBEM_E_INVALID_QUALIFIER_TYPE {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_QUALIFIER_TYPE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Query was not syntactically valid..
+        /// </summary>
+        internal static string WBEM_E_INVALID_QUERY {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_QUERY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One or more network packets were corrupted during a remote session..
+        /// </summary>
+        internal static string WBEM_E_INVALID_STREAM {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_STREAM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parent class specified is not valid..
+        /// </summary>
+        internal static string WBEM_E_INVALID_SUPERCLASS {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_SUPERCLASS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Query is syntactically not valid..
+        /// </summary>
+        internal static string WBEM_E_INVALID_SYNTAX {
+            get {
+                return ResourceManager.GetString("WBEM_E_INVALID_SYNTAX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User specified a username/password/authority on a local connection. The user must use a blank username/password and rely on default security..
+        /// </summary>
+        internal static string WBEM_E_LOCAL_CREDENTIALS {
+            get {
+                return ResourceManager.GetString("WBEM_E_LOCAL_CREDENTIALS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Packet appears to be corrupt..
+        /// </summary>
+        internal static string WBEM_E_MARSHAL_INVALID_SIGNATURE {
+            get {
+                return ResourceManager.GetString("WBEM_E_MARSHAL_INVALID_SIGNATURE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Packet has an unsupported version..
+        /// </summary>
+        internal static string WBEM_E_MARSHAL_VERSION_MISMATCH {
+            get {
+                return ResourceManager.GetString("WBEM_E_MARSHAL_VERSION_MISMATCH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attempt was made to execute a method marked with [disabled]..
+        /// </summary>
+        internal static string WBEM_E_METHOD_DISABLED {
+            get {
+                return ResourceManager.GetString("WBEM_E_METHOD_DISABLED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Method name contains more than 255 characters..
+        /// </summary>
+        internal static string WBEM_E_METHOD_NAME_TOO_WIDE {
+            get {
+                return ResourceManager.GetString("WBEM_E_METHOD_NAME_TOO_WIDE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attempt was made to execute a method not marked with [implemented] in any relevant class..
+        /// </summary>
+        internal static string WBEM_E_METHOD_NOT_IMPLEMENTED {
+            get {
+                return ResourceManager.GetString("WBEM_E_METHOD_NOT_IMPLEMENTED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A GROUP BY clause was used. Aggregation on all properties is not supported..
+        /// </summary>
+        internal static string WBEM_E_MISSING_AGGREGATION_LIST {
+            get {
+                return ResourceManager.GetString("WBEM_E_MISSING_AGGREGATION_LIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A GROUP BY clause was used without the corresponding GROUP WITHIN clause..
+        /// </summary>
+        internal static string WBEM_E_MISSING_GROUP_WITHIN {
+            get {
+                return ResourceManager.GetString("WBEM_E_MISSING_GROUP_WITHIN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter was missing from the method call..
+        /// </summary>
+        internal static string WBEM_E_MISSING_PARAMETER_ID {
+            get {
+                return ResourceManager.GetString("WBEM_E_MISSING_PARAMETER_ID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User attempted to put an instance with no defined key..
+        /// </summary>
+        internal static string WBEM_E_NO_KEY {
+            get {
+                return ResourceManager.GetString("WBEM_E_NO_KEY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operation cannot be completed; no schema is available..
+        /// </summary>
+        internal static string WBEM_E_NO_SCHEMA {
+            get {
+                return ResourceManager.GetString("WBEM_E_NO_SCHEMA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One or more of the method parameters have ID qualifiers that are out of sequence..
+        /// </summary>
+        internal static string WBEM_E_NONCONSECUTIVE_PARAMETER_IDS {
+            get {
+                return ResourceManager.GetString("WBEM_E_NONCONSECUTIVE_PARAMETER_IDS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reserved for future use..
+        /// </summary>
+        internal static string WBEM_E_NONDECORATED_OBJECT {
+            get {
+                return ResourceManager.GetString("WBEM_E_NONDECORATED_OBJECT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resource, typically a remote server, is not currently available..
+        /// </summary>
+        internal static string WBEM_E_NOT_AVAILABLE {
+            get {
+                return ResourceManager.GetString("WBEM_E_NOT_AVAILABLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The FROM clause of a filtering query references a class that is not an event class (not derived from __Event)..
+        /// </summary>
+        internal static string WBEM_E_NOT_EVENT_CLASS {
+            get {
+                return ResourceManager.GetString("WBEM_E_NOT_EVENT_CLASS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Object cannot be found. Check the class defined in your query exists..
+        /// </summary>
+        internal static string WBEM_E_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("WBEM_E_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feature or operation is not supported..
+        /// </summary>
+        internal static string WBEM_E_NOT_SUPPORTED {
+            get {
+                return ResourceManager.GetString("WBEM_E_NOT_SUPPORTED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Null security descriptor was used..
+        /// </summary>
+        internal static string WBEM_E_NULL_SECURITY_DESCRIPTOR {
+            get {
+                return ResourceManager.GetString("WBEM_E_NULL_SECURITY_DESCRIPTOR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 
+        ///		Disk is out of space or the 4 GB limit on WMI repository (CIM repository) size is reached.
+        ///		Windows XP:  Disk is out of space.
+        ///		.
+        /// </summary>
+        internal static string WBEM_E_OUT_OF_DISK_SPACE {
+            get {
+                return ResourceManager.GetString("WBEM_E_OUT_OF_DISK_SPACE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not enough memory for the operation..
+        /// </summary>
+        internal static string WBEM_E_OUT_OF_MEMORY {
+            get {
+                return ResourceManager.GetString("WBEM_E_OUT_OF_MEMORY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not possible to perform the add operation on this qualifier because the owning object does not permit overrides..
+        /// </summary>
+        internal static string WBEM_E_OVERRIDE_NOT_ALLOWED {
+            get {
+                return ResourceManager.GetString("WBEM_E_OVERRIDE_NOT_ALLOWED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Return value for a method has an ID qualifier..
+        /// </summary>
+        internal static string WBEM_E_PARAMETER_ID_ON_RETVAL {
+            get {
+                return ResourceManager.GetString("WBEM_E_PARAMETER_ID_ON_RETVAL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operation failed because the client did not have the necessary security privilege..
+        /// </summary>
+        internal static string WBEM_E_PRIVILEGE_NOT_HELD {
+            get {
+                return ResourceManager.GetString("WBEM_E_PRIVILEGE_NOT_HELD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attempt was made to reuse an existing method name from a parent class and the signatures do not match..
+        /// </summary>
+        internal static string WBEM_E_PROPAGATED_METHOD {
+            get {
+                return ResourceManager.GetString("WBEM_E_PROPAGATED_METHOD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User attempted to delete a property that was not owned. The property was inherited from a parent class..
+        /// </summary>
+        internal static string WBEM_E_PROPAGATED_PROPERTY {
+            get {
+                return ResourceManager.GetString("WBEM_E_PROPAGATED_PROPERTY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In a put operation, the wbemChangeFlagCreateOnly flag was specified, but the instance already exists..
+        /// </summary>
+        internal static string WBEM_E_PROPAGATED_QUALIFIER {
+            get {
+                return ResourceManager.GetString("WBEM_E_PROPAGATED_QUALIFIER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property name contains more than 255 characters..
+        /// </summary>
+        internal static string WBEM_E_PROPERTY_NAME_TOO_WIDE {
+            get {
+                return ResourceManager.GetString("WBEM_E_PROPERTY_NAME_TOO_WIDE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dot notation was used on a property that is not an embedded object..
+        /// </summary>
+        internal static string WBEM_E_PROPERTY_NOT_AN_OBJECT {
+            get {
+                return ResourceManager.GetString("WBEM_E_PROPERTY_NOT_AN_OBJECT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Provider cannot be registered because it is already registered..
+        /// </summary>
+        internal static string WBEM_E_PROVIDER_ALREADY_REGISTERED {
+            get {
+                return ResourceManager.GetString("WBEM_E_PROVIDER_ALREADY_REGISTERED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User attempted to register a provider instance but the COM server for the provider instance was unloaded..
+        /// </summary>
+        internal static string WBEM_E_PROVIDER_DISABLED {
+            get {
+                return ResourceManager.GetString("WBEM_E_PROVIDER_DISABLED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Provider has failed at some time other than during initialization..
+        /// </summary>
+        internal static string WBEM_E_PROVIDER_FAILURE {
+            get {
+                return ResourceManager.GetString("WBEM_E_PROVIDER_FAILURE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 
+        ///		COM cannot locate a provider referenced in the schema.
+        ///		This error may be caused by many conditions, including the following:
+        ///		Provider is using a WMI DLL that does not match the .lib file used when the provider was built.
+        ///		Provider&apos;s DLL, or any of the DLLs on which it depends, is corrupt.
+        ///		Provider failed to export DllRegisterServer.
+        ///		In-process provider was not registered using the regsvr32 command.
+        ///		Out-of-process provider was not registered using the /regserver switch. For example, mypr [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string WBEM_E_PROVIDER_LOAD_FAILURE {
+            get {
+                return ResourceManager.GetString("WBEM_E_PROVIDER_LOAD_FAILURE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Provider cannot perform the requested operation. This can include a query that is too complex, retrieving an instance, creating or updating a class, deleting a class, or enumerating a class..
+        /// </summary>
+        internal static string WBEM_E_PROVIDER_NOT_CAPABLE {
+            get {
+                return ResourceManager.GetString("WBEM_E_PROVIDER_NOT_CAPABLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Provider referenced in the schema does not have a corresponding registration..
+        /// </summary>
+        internal static string WBEM_E_PROVIDER_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("WBEM_E_PROVIDER_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Provider was not registered..
+        /// </summary>
+        internal static string WBEM_E_PROVIDER_NOT_REGISTERED {
+            get {
+                return ResourceManager.GetString("WBEM_E_PROVIDER_NOT_REGISTERED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Provider is suspended..
+        /// </summary>
+        internal static string WBEM_E_PROVIDER_SUSPENDED {
+            get {
+                return ResourceManager.GetString("WBEM_E_PROVIDER_SUSPENDED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A provider failed to report results within the specified timeout..
+        /// </summary>
+        internal static string WBEM_E_PROVIDER_TIMED_OUT {
+            get {
+                return ResourceManager.GetString("WBEM_E_PROVIDER_TIMED_OUT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Qualifier name contains more than 255 characters..
+        /// </summary>
+        internal static string WBEM_E_QUALIFIER_NAME_TOO_WIDE {
+            get {
+                return ResourceManager.GetString("WBEM_E_QUALIFIER_NAME_TOO_WIDE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reserved for future use..
+        /// </summary>
+        internal static string WBEM_E_QUERY_NOT_IMPLEMENTED {
+            get {
+                return ResourceManager.GetString("WBEM_E_QUERY_NOT_IMPLEMENTED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Asynchronous delivery queue overflowed from the event consumer being too slow..
+        /// </summary>
+        internal static string WBEM_E_QUEUE_OVERFLOW {
+            get {
+                return ResourceManager.GetString("WBEM_E_QUEUE_OVERFLOW", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WMI is taking up too much memory. This can be caused by low memory availability or excessive memory consumption by WMI..
+        /// </summary>
+        internal static string WBEM_E_QUOTA_VIOLATION {
+            get {
+                return ResourceManager.GetString("WBEM_E_QUOTA_VIOLATION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An attempt was made to modify a read-only property..
+        /// </summary>
+        internal static string WBEM_E_READ_ONLY {
+            get {
+                return ResourceManager.GetString("WBEM_E_READ_ONLY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresher is busy with another operation..
+        /// </summary>
+        internal static string WBEM_E_REFRESHER_BUSY {
+            get {
+                return ResourceManager.GetString("WBEM_E_REFRESHER_BUSY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The SQL command must be rerun because there is a deadlock in SQL. This can be returned only when data is being stored in an SQL database..
+        /// </summary>
+        internal static string WBEM_E_RERUN_COMMAND {
+            get {
+                return ResourceManager.GetString("WBEM_E_RERUN_COMMAND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reserved for future use..
+        /// </summary>
+        internal static string WBEM_E_RESOURCE_CONTENTION {
+            get {
+                return ResourceManager.GetString("WBEM_E_RESOURCE_CONTENTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reserved for future use..
+        /// </summary>
+        internal static string WBEM_E_RETRY_LATER {
+            get {
+                return ResourceManager.GetString("WBEM_E_RETRY_LATER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Call to IWbemObjectSink::Indicate has failed. The provider can refire the event..
+        /// </summary>
+        internal static string WBEM_E_SERVER_TOO_BUSY {
+            get {
+                return ResourceManager.GetString("WBEM_E_SERVER_TOO_BUSY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User has requested an operation while WMI is in the process of shutting down..
+        /// </summary>
+        internal static string WBEM_E_SHUTTING_DOWN {
+            get {
+                return ResourceManager.GetString("WBEM_E_SHUTTING_DOWN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Object must be written to the WMI repository and retrieved again before the requested operation can succeed. This constant is returned when an object must be committed and retrieved to see the property value..
+        /// </summary>
+        internal static string WBEM_E_SYNCHRONIZATION_REQUIRED {
+            get {
+                return ResourceManager.GetString("WBEM_E_SYNCHRONIZATION_REQUIRED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There was an attempt to get qualifiers on a system property..
+        /// </summary>
+        internal static string WBEM_E_SYSTEM_PROPERTY {
+            get {
+                return ResourceManager.GetString("WBEM_E_SYSTEM_PROPERTY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operation timed out..
+        /// </summary>
+        internal static string WBEM_E_TIMED_OUT {
+            get {
+                return ResourceManager.GetString("WBEM_E_TIMED_OUT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attempt was made to create more properties than the current version of the class supports..
+        /// </summary>
+        internal static string WBEM_E_TOO_MANY_PROPERTIES {
+            get {
+                return ResourceManager.GetString("WBEM_E_TOO_MANY_PROPERTIES", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reserved for future use..
+        /// </summary>
+        internal static string WBEM_E_TOO_MUCH_DATA {
+            get {
+                return ResourceManager.GetString("WBEM_E_TOO_MUCH_DATA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operation resulted in a transaction conflict..
+        /// </summary>
+        internal static string WBEM_E_TRANSACTION_CONFLICT {
+            get {
+                return ResourceManager.GetString("WBEM_E_TRANSACTION_CONFLICT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Networking error that prevents normal operation has occurred..
+        /// </summary>
+        internal static string WBEM_E_TRANSPORT_FAILURE {
+            get {
+                return ResourceManager.GetString("WBEM_E_TRANSPORT_FAILURE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type mismatch occurred..
+        /// </summary>
+        internal static string WBEM_E_TYPE_MISMATCH {
+            get {
+                return ResourceManager.GetString("WBEM_E_TYPE_MISMATCH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Client made an unexpected and illegal sequence of calls, such as calling EndEnumeration before calling BeginEnumeration..
+        /// </summary>
+        internal static string WBEM_E_UNEXPECTED {
+            get {
+                return ResourceManager.GetString("WBEM_E_UNEXPECTED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Event provider registration query (__EventProviderRegistration) did not specify the classes for which events were provided..
+        /// </summary>
+        internal static string WBEM_E_UNINTERPRETABLE_PROVIDER_QUERY {
+            get {
+                return ResourceManager.GetString("WBEM_E_UNINTERPRETABLE_PROVIDER_QUERY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Object with an incorrect type or version was encountered during marshaling..
+        /// </summary>
+        internal static string WBEM_E_UNKNOWN_OBJECT_TYPE {
+            get {
+                return ResourceManager.GetString("WBEM_E_UNKNOWN_OBJECT_TYPE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Packet with an incorrect type or version was encountered during marshaling..
+        /// </summary>
+        internal static string WBEM_E_UNKNOWN_PACKET_TYPE {
+            get {
+                return ResourceManager.GetString("WBEM_E_UNKNOWN_PACKET_TYPE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filtering query is syntactically not valid..
+        /// </summary>
+        internal static string WBEM_E_UNPARSABLE_QUERY {
+            get {
+                return ResourceManager.GetString("WBEM_E_UNPARSABLE_QUERY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specified class is not supported..
+        /// </summary>
+        internal static string WBEM_E_UNSUPPORTED_CLASS_UPDATE {
+            get {
+                return ResourceManager.GetString("WBEM_E_UNSUPPORTED_CLASS_UPDATE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locale used in the call is not supported..
+        /// </summary>
+        internal static string WBEM_E_UNSUPPORTED_LOCALE {
+            get {
+                return ResourceManager.GetString("WBEM_E_UNSUPPORTED_LOCALE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One or more parameter values, such as a query text, is too complex or unsupported. WMI is therefore requested to retry the operation with simpler parameters..
+        /// </summary>
+        internal static string WBEM_E_UNSUPPORTED_PARAMETER {
+            get {
+                return ResourceManager.GetString("WBEM_E_UNSUPPORTED_PARAMETER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Provider does not support the requested put operation..
+        /// </summary>
+        internal static string WBEM_E_UNSUPPORTED_PUT_EXTENSION {
+            get {
+                return ResourceManager.GetString("WBEM_E_UNSUPPORTED_PUT_EXTENSION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attempt was made in a derived class to override a qualifier that cannot be overridden..
+        /// </summary>
+        internal static string WBEM_E_UPDATE_OVERRIDE_NOT_ALLOWED {
+            get {
+                return ResourceManager.GetString("WBEM_E_UPDATE_OVERRIDE_NOT_ALLOWED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Method was re-declared with a conflicting signature in a derived class..
+        /// </summary>
+        internal static string WBEM_E_UPDATE_PROPAGATED_METHOD {
+            get {
+                return ResourceManager.GetString("WBEM_E_UPDATE_PROPAGATED_METHOD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property was redefined with a conflicting type in a derived class..
+        /// </summary>
+        internal static string WBEM_E_UPDATE_TYPE_MISMATCH {
+            get {
+                return ResourceManager.GetString("WBEM_E_UPDATE_TYPE_MISMATCH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Request was made with an out-of-range value or it is incompatible with the type..
+        /// </summary>
+        internal static string WBEM_E_VALUE_OUT_OF_RANGE {
+            get {
+                return ResourceManager.GetString("WBEM_E_VALUE_OUT_OF_RANGE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WMI cannot execute the delete operation because the provider does not allow it..
+        /// </summary>
+        internal static string WBEM_E_VETO_DELETE {
+            get {
+                return ResourceManager.GetString("WBEM_E_VETO_DELETE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WMI cannot execute the put operation because the provider does not allow it..
+        /// </summary>
+        internal static string WBEM_E_VETO_PUT {
+            get {
+                return ResourceManager.GetString("WBEM_E_VETO_PUT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The user was denied access to some but not all resources..
+        /// </summary>
+        internal static string WBEM_S_ACCESS_DENIED {
+            get {
+                return ResourceManager.GetString("WBEM_S_ACCESS_DENIED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An attempt was made to create an object or class that already exists..
+        /// </summary>
+        internal static string WBEM_S_ALREADY_EXISTS {
+            get {
+                return ResourceManager.GetString("WBEM_S_ALREADY_EXISTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The items (objects, classes, and so on) that are being compared are not identical..
+        /// </summary>
+        internal static string WBEM_S_DIFFERENT {
+            get {
+                return ResourceManager.GetString("WBEM_S_DIFFERENT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to More than one copy of the same object was detected in the result set of an enumeration..
+        /// </summary>
+        internal static string WBEM_S_DUPLICATE_OBJECTS {
+            get {
+                return ResourceManager.GetString("WBEM_S_DUPLICATE_OBJECTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No more objects are available, the number of objects returned is less than the number requested, or this is the end of an enumeration. This value is also returned when this method is called with a value of 0 for the uCount parameter..
+        /// </summary>
+        internal static string WBEM_S_FALSE {
+            get {
+                return ResourceManager.GetString("WBEM_S_FALSE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reserved for future use..
+        /// </summary>
+        internal static string WBEM_S_INDIRECTLY_UPDATED {
+            get {
+                return ResourceManager.GetString("WBEM_S_INDIRECTLY_UPDATED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The provider is capable of limited service..
+        /// </summary>
+        internal static string WBEM_S_LIMITED_SERVICE {
+            get {
+                return ResourceManager.GetString("WBEM_S_LIMITED_SERVICE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The operation was successful..
+        /// </summary>
+        internal static string WBEM_S_NO_ERROR {
+            get {
+                return ResourceManager.GetString("WBEM_S_NO_ERROR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No more data is available from the enumeration, and the user must terminate the enumeration..
+        /// </summary>
+        internal static string WBEM_S_NO_MORE_DATA {
+            get {
+                return ResourceManager.GetString("WBEM_S_NO_MORE_DATA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The operation was intentionally or unintentionally canceled..
+        /// </summary>
+        internal static string WBEM_S_OPERATION_CANCELLED {
+            get {
+                return ResourceManager.GetString("WBEM_S_OPERATION_CANCELLED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The user did not receive all of the objects requested due to inaccessible resources (other than security violations)..
+        /// </summary>
+        internal static string WBEM_S_PARTIAL_RESULTS {
+            get {
+                return ResourceManager.GetString("WBEM_S_PARTIAL_RESULTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A request is still in progress, and the results are not yet available..
+        /// </summary>
+        internal static string WBEM_S_PENDING {
+            get {
+                return ResourceManager.GetString("WBEM_S_PENDING", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An overridden property was deleted. This value is returned to signal that the original non-overridden value has been restored as a result of the deletion..
+        /// </summary>
+        internal static string WBEM_S_RESET_TO_DEFAULT {
+            get {
+                return ResourceManager.GetString("WBEM_S_RESET_TO_DEFAULT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A call timed out. This is not an error condition. Therefore, some results may have also been returned..
+        /// </summary>
+        internal static string WBEM_S_TIMEDOUT {
+            get {
+                return ResourceManager.GetString("WBEM_S_TIMEDOUT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This computer does not have the necessary domain permissions to support the security functions that relate to the created subscription instance. Contact the Domain Administrator to get this computer added to the Windows Authorization Access Group..
+        /// </summary>
+        internal static string WBEMESS_E_AUTHZ_NOT_PRIVILEGED {
+            get {
+                return ResourceManager.GetString("WBEMESS_E_AUTHZ_NOT_PRIVILEGED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Provider registration overlaps with the system event domain..
+        /// </summary>
+        internal static string WBEMESS_E_REGISTRATION_TOO_BROAD {
+            get {
+                return ResourceManager.GetString("WBEMESS_E_REGISTRATION_TOO_BROAD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A WITHIN clause was not used in this query..
         /// </summary>
         internal static string WBEMESS_E_REGISTRATION_TOO_PRECISE {
             get {
                 return ResourceManager.GetString("WBEMESS_E_REGISTRATION_TOO_PRECISE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Embedded objects cannot be aliases..
+        /// </summary>
+        internal static string WBEMMOF_E_ALIASES_IN_EMBEDDED {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_ALIASES_IN_EMBEDDED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;CIMTYPE&quot; qualifier cannot be specified directly in a MOF file. Use standard type notation..
+        /// </summary>
+        internal static string WBEMMOF_E_CIMTYPE_QUALIFIER {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_CIMTYPE_QUALIFIER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duplicate property name was found in the MOF..
+        /// </summary>
+        internal static string WBEMMOF_E_DUPLICATE_PROPERTY {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_DUPLICATE_PROPERTY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Qualifier was used more than once on the object..
+        /// </summary>
+        internal static string WBEMMOF_E_DUPLICATE_QUALIFIER {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_DUPLICATE_QUALIFIER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error creating temporary file. The temporary file is an intermediate stage in the MOF compilation..
+        /// </summary>
+        internal static string WBEMMOF_E_ERROR_CREATING_TEMP_FILE {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_ERROR_CREATING_TEMP_FILE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A file included in the MOF by the preprocessor command #include is not valid..
+        /// </summary>
+        internal static string WBEMMOF_E_ERROR_INVALID_INCLUDE_FILE {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_ERROR_INVALID_INCLUDE_FILE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dollar sign must be followed by an alias name as an identifier..
+        /// </summary>
+        internal static string WBEMMOF_E_EXPECTED_ALIAS_NAME {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_EXPECTED_ALIAS_NAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The final brace and semi-colon for a class are missing..
+        /// </summary>
+        internal static string WBEMMOF_E_EXPECTED_BRACE_OR_BAD_TYPE {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_EXPECTED_BRACE_OR_BAD_TYPE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unexpected character in class name must be an identifier..
+        /// </summary>
+        internal static string WBEMMOF_E_EXPECTED_CLASS_NAME {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_EXPECTED_CLASS_NAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing closing brace or an illegal array element..
+        /// </summary>
+        internal static string WBEMMOF_E_EXPECTED_CLOSE_BRACE {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_EXPECTED_CLOSE_BRACE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected a closing bracket..
+        /// </summary>
+        internal static string WBEMMOF_E_EXPECTED_CLOSE_BRACKET {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_EXPECTED_CLOSE_BRACKET", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected closing parenthesis..
+        /// </summary>
+        internal static string WBEMMOF_E_EXPECTED_CLOSE_PAREN {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_EXPECTED_CLOSE_PAREN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected dollar sign. An alias in the form &quot;$name&quot; must follow the &quot;as&quot; keyword..
+        /// </summary>
+        internal static string WBEMMOF_E_EXPECTED_DOLLAR {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_EXPECTED_DOLLAR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected a flavor type such as ToInstance, ToSubClass, EnableOverride, or DisableOverride..
+        /// </summary>
+        internal static string WBEMMOF_E_EXPECTED_FLAVOR_TYPE {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_EXPECTED_FLAVOR_TYPE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected an opening brace..
+        /// </summary>
+        internal static string WBEMMOF_E_EXPECTED_OPEN_BRACE {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_EXPECTED_OPEN_BRACE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected an open parenthesis..
+        /// </summary>
+        internal static string WBEMMOF_E_EXPECTED_OPEN_PAREN {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_EXPECTED_OPEN_PAREN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected property or method name..
+        /// </summary>
+        internal static string WBEMMOF_E_EXPECTED_PROPERTY_NAME {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_EXPECTED_PROPERTY_NAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected a qualifier name..
+        /// </summary>
+        internal static string WBEMMOF_E_EXPECTED_QUALIFIER_NAME {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_EXPECTED_QUALIFIER_NAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected semicolon or &apos;=&apos;..
+        /// </summary>
+        internal static string WBEMMOF_E_EXPECTED_SEMI {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_EXPECTED_SEMI", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected a type identifier..
+        /// </summary>
+        internal static string WBEMMOF_E_EXPECTED_TYPE_IDENTIFIER {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_EXPECTED_TYPE_IDENTIFIER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Numeric value out of range or strings without quotes..
+        /// </summary>
+        internal static string WBEMMOF_E_ILLEGAL_CONSTANT_VALUE {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_ILLEGAL_CONSTANT_VALUE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Combining EnableOverride and DisableOverride on same qualifier is not legal..
+        /// </summary>
+        internal static string WBEMMOF_E_INCOMPATIBLE_FLAVOR_TYPES {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_INCOMPATIBLE_FLAVOR_TYPES", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Combining Restricted, and ToInstance or ToSubClass is not legal..
+        /// </summary>
+        internal static string WBEMMOF_E_INCOMPATIBLE_FLAVOR_TYPES2 {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_INCOMPATIBLE_FLAVOR_TYPES2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Namespace path syntax is not valid..
+        /// </summary>
+        internal static string WBEMMOF_E_INVALID_AMENDMENT_SYNTAX {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_INVALID_AMENDMENT_SYNTAX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Class declaration is not valid..
+        /// </summary>
+        internal static string WBEMMOF_E_INVALID_CLASS_DECLARATION {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_INVALID_CLASS_DECLARATION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The syntax for the preprocessor commands #pragma deleteinstance or #pragma deleteclass is not valid.	.
+        /// </summary>
+        internal static string WBEMMOF_E_INVALID_DELETECLASS_SYNTAX {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_INVALID_DELETECLASS_SYNTAX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The delete instance syntax is not valid. It should be #pragma DeleteInstance(&quot;instancepath&quot;, FAIL|NOFAIL).
+        /// </summary>
+        internal static string WBEMMOF_E_INVALID_DELETEINSTANCE_SYNTAX {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_INVALID_DELETEINSTANCE_SYNTAX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duplicate amendment specifiers..
+        /// </summary>
+        internal static string WBEMMOF_E_INVALID_DUPLICATE_AMENDMENT {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_INVALID_DUPLICATE_AMENDMENT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The file is not a valid text MOF file or binary MOF file..
+        /// </summary>
+        internal static string WBEMMOF_E_INVALID_FILE {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_INVALID_FILE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Flags syntax is not valid..
+        /// </summary>
+        internal static string WBEMMOF_E_INVALID_FLAGS_SYNTAX {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_INVALID_FLAGS_SYNTAX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The instance declaration is not valid. It must start with &quot;instance of&quot;.
+        /// </summary>
+        internal static string WBEMMOF_E_INVALID_INSTANCE_DECLARATION {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_INVALID_INSTANCE_DECLARATION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Namespace syntax is not valid. References to other servers are not allowed..
+        /// </summary>
+        internal static string WBEMMOF_E_INVALID_NAMESPACE_SPECIFICATION {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_INVALID_NAMESPACE_SPECIFICATION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Namespace path syntax is not valid..
+        /// </summary>
+        internal static string WBEMMOF_E_INVALID_NAMESPACE_SYNTAX {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_INVALID_NAMESPACE_SYNTAX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to #pragma must be followed by a valid keyword..
+        /// </summary>
+        internal static string WBEMMOF_E_INVALID_PRAGMA {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_INVALID_PRAGMA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The qualifier syntax is not valid. It should be qualifiername:type=value,scope(class|instance), flavorname..
+        /// </summary>
+        internal static string WBEMMOF_E_INVALID_QUALIFIER_SYNTAX {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_INVALID_QUALIFIER_SYNTAX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An alias cannot be used twice..
+        /// </summary>
+        internal static string WBEMMOF_E_MULTIPLE_ALIASES {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_MULTIPLE_ALIASES", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Arguments must have an In or Out qualifier..
+        /// </summary>
+        internal static string WBEMMOF_E_MUST_BE_IN_OR_OUT {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_MUST_BE_IN_OR_OUT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Methods cannot return array values..
+        /// </summary>
+        internal static string WBEMMOF_E_NO_ARRAYS_RETURNED {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_NO_ARRAYS_RETURNED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NULL elements in an array are not supported..
+        /// </summary>
+        internal static string WBEMMOF_E_NULL_ARRAY_ELEM {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_NULL_ARRAY_ELEM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value out of range..
+        /// </summary>
+        internal static string WBEMMOF_E_OUT_OF_RANGE {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_OUT_OF_RANGE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The qualifier is used outside of its scope..
+        /// </summary>
+        internal static string WBEMMOF_E_QUALIFIER_USED_OUTSIDE_SCOPE {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_QUALIFIER_USED_OUTSIDE_SCOPE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The value specified cannot be made into the appropriate type..
+        /// </summary>
+        internal static string WBEMMOF_E_TYPE_MISMATCH {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_TYPE_MISMATCH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Typedefs and enumerated types are not supported..
+        /// </summary>
+        internal static string WBEMMOF_E_TYPEDEF_NOT_SUPPORTED {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_TYPEDEF_NOT_SUPPORTED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only a reference to a class object can have an alias value..
+        /// </summary>
+        internal static string WBEMMOF_E_UNEXPECTED_ALIAS {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_UNEXPECTED_ALIAS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unexpected array initialization. Arrays must be declared with []..
+        /// </summary>
+        internal static string WBEMMOF_E_UNEXPECTED_ARRAY_INIT {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_UNEXPECTED_ARRAY_INIT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unexpected token in the file..
+        /// </summary>
+        internal static string WBEMMOF_E_UNRECOGNIZED_TOKEN {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_UNRECOGNIZED_TOKEN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unrecognized or unsupported type identifier..
+        /// </summary>
+        internal static string WBEMMOF_E_UNRECOGNIZED_TYPE {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_UNRECOGNIZED_TYPE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The CIM version 2.2 data type is not supported..
+        /// </summary>
+        internal static string WBEMMOF_E_UNSUPPORTED_CIMV22_DATA_TYPE {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_UNSUPPORTED_CIMV22_DATA_TYPE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A CIM version 2.2 feature is not supported for a qualifier value..
+        /// </summary>
+        internal static string WBEMMOF_E_UNSUPPORTED_CIMV22_QUAL_VALUE {
+            get {
+                return ResourceManager.GetString("WBEMMOF_E_UNSUPPORTED_CIMV22_QUAL_VALUE", resourceCulture);
             }
         }
     }
