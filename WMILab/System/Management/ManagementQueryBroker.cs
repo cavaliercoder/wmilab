@@ -18,10 +18,10 @@
         /// <param name="connectionOptions">Specifies all settings required to make a WMI connection.</param>
         public ManagementQueryBroker(String query, ManagementScope scope)
         {
-            this.query = query;
+            this.Query = query;
             this.scope = scope;
-            this.queryType = query.GetWqlQueryType();
-            this.results = new List<ManagementBaseObject>();
+            this.QueryType = query.GetWqlQueryType();
+            this.Results = new List<ManagementBaseObject>();
 
             this.queryObserver = new ManagementOperationObserver();
             this.queryObserver.ObjectReady += new ObjectReadyEventHandler(queryObserver_ObjectReady);
@@ -32,20 +32,24 @@
             if (matches.Count != 1 || !matches[0].Groups[2].Success)
                 throw new ArgumentException("Could not determine class name from query.");
 
+            // Get class descriptor to assist with queries
             var className = matches[0].Groups[2];
             var classPath = new ManagementPath(String.Format("\\\\{0}\\{1}:{2}", scope.Path.Server, scope.Path.NamespacePath, className));
+            this.ResultClass = new ManagementClass(this.scope, classPath, new ObjectGetOptions());
 
-            // Get class descriptor to assist with queries
-            this.resultClass = new ManagementClass(this.scope, classPath, new ObjectGetOptions());
+            // Configure event queries
+            this.IsEventQuery = this.ResultClass.IsEvent();
+            if (this.IsEventQuery && query.ToLowerInvariant().Contains("group within"))
+            {
+                // Change result class to '__AggregateEvent' if this is an event query with a grouping
+                classPath = new ManagementPath(String.Format("\\\\{0}\\{1}:__AggregateEvent", scope.Path.Server, scope.Path.NamespacePath));
+                this.ResultClass = new ManagementClass(this.scope, classPath, new ObjectGetOptions());
+            }
         }
 
         #endregion
 
         #region Fields
-
-        private String query;
-
-        private WqlQueryType queryType;
 
         private ManagementScope scope;
 
@@ -55,24 +59,23 @@
 
         private ManagementEventWatcher queryWatcher;
 
-        private Int32 resultCount;
-
-        private Boolean inProgress;
-
-        private List<ManagementBaseObject> results;
-
-        private ManagementClass resultClass;
-
         #endregion
 
         #region Properties
+
+        public String Query
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// Gets the WqlQueryType of the WQL Query string.
         /// </summary>
         public WqlQueryType QueryType
         {
-            get { return this.queryType; }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -80,7 +83,8 @@
         /// </summary>
         public Boolean InProgress
         {
-            get { return this.inProgress; }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -88,7 +92,8 @@
         /// </summary>
         public Int32 ResultCount
         {
-            get { return this.resultCount; }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -96,12 +101,20 @@
         /// </summary>
         public List<ManagementBaseObject> Results
         {
-            get { return this.results; }
+            get;
+            private set;
         }
 
         public ManagementClass ResultClass
         {
-            get { return this.resultClass; }
+            get;
+            private set;
+        }
+
+        public Boolean IsEventQuery
+        {
+            get;
+            private set;
         }
 
         #endregion
@@ -117,10 +130,10 @@
 
             try
             {
-                if (this.ResultClass.IsEvent())
+                if (this.IsEventQuery)
                 {
                     // Start an event watcher
-                    this.queryWatcher = new ManagementEventWatcher(this.scope, new EventQuery(this.query));
+                    this.queryWatcher = new ManagementEventWatcher(this.scope, new EventQuery(this.Query));
                     this.queryWatcher.EventArrived += new EventArrivedEventHandler(queryWatcher_EventArrived);
                     this.queryWatcher.Stopped += new StoppedEventHandler(queryWatcher_Stopped);
                     this.queryWatcher.Start();
@@ -129,14 +142,14 @@
                 else
                 {
                     // Start a standard async query
-                    this.querySearcher = new ManagementObjectSearcher(this.scope, new ObjectQuery(query));
+                    this.querySearcher = new ManagementObjectSearcher(this.scope, new ObjectQuery(Query));
                     this.querySearcher.Get(this.queryObserver);
                 }
             }
 
             catch (ManagementException)
             {
-                this.inProgress = false;
+                this.InProgress = false;
             }
         }
 
@@ -163,10 +176,10 @@
 
         protected virtual void OnStarted(object sender, EventArgs e)
         {
-            this.resultCount = 0;
-            this.results.Clear();
+            this.ResultCount = 0;
+            this.Results.Clear();
 
-            this.inProgress = true;
+            this.InProgress = true;
 
             if (this.Started != null)
                 this.Started(sender, e);
@@ -174,7 +187,7 @@
 
         protected virtual void OnQueryCompleted(object sender, BrokerCompletedEventArgs e)
         {
-            this.inProgress = false;
+            this.InProgress = false;
 
             if (null != this.Completed)
                 this.Completed(sender, e);
@@ -182,8 +195,8 @@
 
         protected virtual void OnObjectReady(object sender, BrokerObjectReadyEventArgs e)
         {
-            this.resultCount++;
-            this.results.Add(e.NewObject);
+            this.ResultCount++;
+            this.Results.Add(e.NewObject);
             
             if (null != this.ObjectReady)
                 this.ObjectReady(sender, e);
@@ -213,7 +226,7 @@
 
         void queryWatcher_EventArrived(object sender, EventArrivedEventArgs e)
         {
-            var args = new BrokerObjectReadyEventArgs(e.NewEvent, this.resultCount + 1);
+            var args = new BrokerObjectReadyEventArgs(e.NewEvent, this.ResultCount + 1);
             this.OnObjectReady(this, args);
         }
 

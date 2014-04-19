@@ -7,6 +7,7 @@
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
     using WMILab.Localization;
+    using System.Diagnostics;
 
     public partial class frmMain : Form
     {
@@ -662,7 +663,7 @@
             {
                 foreach (PropertyData p in e.NewObject.Properties)
                 {
-                    values[i++] = p.Value == null ? String.Empty : p.Value.ToString();
+                    values[i++] = p.ValueToString();
                 }
             }
 
@@ -714,7 +715,7 @@
             if (WqlQueryType.Select == this.queryBroker.QueryType)
             {
                 // Add property columns
-                foreach (PropertyData p in result.Properties)
+                foreach (PropertyData p in c.Properties)
                 {
                     DataGridViewColumn colProperty;
 
@@ -815,7 +816,6 @@
             if (selectMode)
             {
                 string propertyName = this.gridQueryResults.Columns[e.ColumnIndex].HeaderText;
-
                 if (this.queryBroker.ResultClass.Properties[propertyName].Type == CimType.Reference)
                 {
                     // Link was a reference to an instance. Fetch the instance
@@ -828,7 +828,7 @@
                 else
                 {
                     // Link was to an object instance
-                    mObject = (ManagementBaseObject)this.queryBroker.Results[e.RowIndex].Properties[propertyName].Value;
+                    mObject = (ManagementBaseObject) this.queryBroker.Results[e.RowIndex].Properties[propertyName].Value;
                 }
             }
 
@@ -859,15 +859,14 @@
         private void LogComException(COMException e)
         {
             UInt32 code = (UInt32) e.ErrorCode;
-            String constant = "Unknown";
 
             if (Enum.IsDefined(typeof(ManagementError), code))
             {
-                // Log an error with known error info
-                ManagementError error = (ManagementError)code;
-                this.Log(LogLevel.Critical, String.Format("COM Exception {0:G} (0x{0:X}) {1}", code, error.ToString()));
+                // Log an constant with known constant info
+                var constant = ((ManagementError)code).ToString();
+                this.Log(LogLevel.Critical, String.Format("COM Exception {0:G} (0x{0:X}) {1}", code, constant));
 
-                // Attempt to get an error description
+                // Attempt to get an constant description
                 var description = ErrorCodes.ResourceManager.GetString(constant);
                 if (!String.IsNullOrEmpty(description))
                     this.Log(LogLevel.Information, description);

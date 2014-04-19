@@ -1,7 +1,7 @@
 ﻿namespace System.Management
 {
     /// <summary>
-    /// Describes the enumeration of all WMI error codes that are currently defined.
+    /// Describes the enumeration of all WMI constant codes that are currently defined.
     /// </summary>
     /// <remarks>Sourced from "http://msdn.microsoft.com/en-us/library/aa394559(v=vs.85).aspx"</remarks>
     public enum ManagementError : uint 

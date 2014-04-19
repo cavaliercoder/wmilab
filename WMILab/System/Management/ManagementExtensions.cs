@@ -5,6 +5,8 @@
 
     public static class ManagementExtensions
     {
+        private static DateTime epoch = new DateTime(1601, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
         #region CimType
 
         public static Boolean IsNumeric(this CimType cimType)
@@ -263,13 +265,20 @@
                     if (prop.Value.GetType().IsAssignableFrom(typeof(ManagementBaseObject)))
                     {
                         // Expand object
-                        return ((ManagementBaseObject)prop.Value).ClassPath.Path;
+                        return ((ManagementBaseObject)prop.Value).GetRelativePath();
                     }
 
                     else if (prop.Type == CimType.DateTime)
                     {
                         DateTime datetime = ManagementDateTimeConverter.ToDateTime(prop.Value.ToString());
                         return datetime.ToString();
+                    }
+
+                    else if (prop.Type == CimType.UInt64 && prop.Name == "TIME_CREATED")
+                    {
+                        Double ms = ((UInt64) prop.Value) / 10000;
+                        var datetime = epoch.AddMilliseconds(ms);
+                        return datetime.ToLocalTime().ToString();
                     }
 
                     else

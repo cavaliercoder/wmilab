@@ -24,3 +24,5 @@ __Requirements:__
   Eg: SELECT * FROM __InstanceModificationEvent WHERE TargetInstance ISA 'Win32_Process'
 * Add code generators
 * Add progress indicator for namspace/class lists
+
+SELECT * FROM __InstanceModificationEvent WITHIN 5 WHERE TargetInstance ISA 'Win32_Process' GROUP WITHIN 5
