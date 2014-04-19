@@ -4,10 +4,10 @@
     using System.Collections.Generic;
     using System.Drawing;
     using System.Management;
+    using System.Management.CodeGeneration;
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
     using WMILab.Localization;
-    using System.Diagnostics;
 
     public partial class frmMain : Form
     {
@@ -25,8 +25,11 @@
             classListObserver.ObjectReady += new ObjectReadyEventHandler(OnClassReady);
             classListObserver.Completed += new CompletedEventHandler(OnClassSearchCompleted);
 
+            // Refresh script template menu
+            this.RefreshCodeGeneratorMenu();
+
             // Build local namespace tree
-            RefreshNamespaceTree();
+            this.RefreshNamespaceTree();
 
             // Navigate to default namespace and class
             this.CurrentNamespacePath = @"\\.\ROOT\CIMV2";
@@ -66,6 +69,8 @@
         private Boolean showSystemClasses = false;
 
         private ManagementQueryBroker queryBroker;
+
+        private ICodeGenerator codeGenerator;
 
         #endregion
 
@@ -134,6 +139,19 @@
                 this.currentClass = value;
                 RefreshClassView();
             }
+        }
+
+        private ICodeGenerator CodeGenerator
+        {
+            get { return this.codeGenerator; }
+
+            set
+            {
+                this.codeGenerator = value;
+                if(this.CurrentClass != null)
+                    this.RefreshScript(this.CurrentClass);
+            }
+
         }
 
         #endregion
@@ -364,6 +382,7 @@
             RefreshClassMembersListView(c);
             RefreshClassMembersDetailView(c);
             RefreshQueryView(c);
+            RefreshScript(c);
         }
 
         private void RefreshClassMembersListView(ManagementClass c)
@@ -564,7 +583,7 @@
             String query;
             if (c.IsEvent())
             {
-                query = String.Format("SELECT * FROM {0} WITHIN 30", c.ClassPath.ClassName);
+                query = String.Format("SELECT * FROM {0} WITHIN 5", c.ClassPath.ClassName);
             }
 
             else
@@ -573,6 +592,14 @@
             }
 
             this.txtQuery.Text = query;
+        }
+
+        private void RefreshScript(ManagementClass c)
+        {
+            if (this.CodeGenerator != null && c != null)
+            {
+                this.txtCode.Text = this.CodeGenerator.GetScript(c, "TODO");
+            }
         }
 
         #endregion
@@ -897,17 +924,62 @@
 
         #endregion
 
+        #region Code generation
+
+        private void RefreshCodeGeneratorMenu()
+        {
+            var generators = CodeGeneratorFactory.CodeGenerators;
+
+            foreach (var generator in generators)
+            {
+                // Search for an existing language menu
+                ToolStripMenuItem mnuLang = null;
+                foreach (ToolStripMenuItem langItem in this.mnuScriptTemplates.DropDownItems)
+                {
+                    if (langItem.Text.Equals(generator.Language))
+                    {
+                        mnuLang = langItem;
+                        break;
+                    }
+                }
+
+                // Create a missing language menu
+                if (mnuLang == null)
+                {
+                    mnuLang =(ToolStripMenuItem) mnuScriptTemplates.DropDownItems.Add(generator.Language);
+                }
+
+                // Create script menu item
+                var scriptItem = new ToolStripMenuItem
+                {
+                    Text = generator.Name,
+                    Tag = generator
+                };
+                scriptItem.Click += new EventHandler(OnScriptMenuItemClick);
+                mnuLang.DropDownItems.Add(scriptItem);
+            }
+
+            // Sort menus
+            this.mnuScriptTemplates.DropDownItems.Sort();
+            foreach (ToolStripMenuItem child in this.mnuScriptTemplates.DropDownItems)
+            {
+                child.DropDownItems.Sort();
+            }
+        }
+
+        #endregion
+
         #region Logging
 
         private void LogManagementException(ManagementException e)
         {
-            UInt32 code = (UInt32) e.ErrorCode;
+            UInt32 code = (UInt32)e.ErrorCode;
             this.Log(LogLevel.Critical, String.Format("WMI Exception {0:G} (0x{0:X})", code));
         }
 
         private void LogComException(COMException e)
         {
-            UInt32 code = (UInt32) e.ErrorCode;
+            UInt32 code = (UInt32)e.ErrorCode;
 
             if (Enum.IsDefined(typeof(ManagementError), code))
             {
@@ -1143,6 +1215,11 @@
                 this.txtQuery.Text = query;
                 this.ExecuteQuery(query);
             }
+        }
+
+        void OnScriptMenuItemClick(object sender, EventArgs e)
+        {
+            this.CodeGenerator = (ICodeGenerator)((ToolStripMenuItem)sender).Tag;
         }
 
         #endregion

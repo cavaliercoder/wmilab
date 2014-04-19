@@ -7,7 +7,6 @@ WMI Lab expands on common WMI tools to allow for inspection, querying, deeper in
 
 __Requirements:__
 
-* Microsoft .Net Framework 3.5
 * Microsoft Visual Studio 2010
 
 ### Bugs
@@ -16,6 +15,7 @@ __Requirements:__
 * Query must be cancelled before changing to another class
 * Queries fail for classes after the selected namespace changes
 * Value mappings with value 0 don't translate
+* System class filter button does nothing
 
 ### Todo
 
@@ -23,10 +23,12 @@ __Requirements:__
 * Add support for remote connections
 * Add code generators
 * Add progress indicator for namspace/class lists
-* Add duration timestamps to query completion
-* Add support for toggling value map translations
+* Add state restoration for UI controls and navigation
+* Add common text functions to query results, inspector, log, detail view, etc.
 
 ### Example Queries
 
 * Grouped Event query
   SELECT * FROM __InstanceModificationEvent WITHIN 5 WHERE TargetInstance ISA 'Win32_Process' GROUP WITHIN 5
+  
+  
