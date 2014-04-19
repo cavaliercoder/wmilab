@@ -62,7 +62,6 @@
             this.tabClassMembers = new System.Windows.Forms.TabPage();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.treeViewClassMembers = new System.Windows.Forms.TreeView();
-            this.txtClassMemberDetail = new System.Windows.Forms.RichTextBoxEx();
             this.tabQuery = new System.Windows.Forms.TabPage();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.txtQuery = new System.Windows.Forms.TextBox();
@@ -70,10 +69,10 @@
             this.btnExecuteQuery = new System.Windows.Forms.ToolStripMenuItem();
             this.btnCancelQuery = new System.Windows.Forms.ToolStripMenuItem();
             this.gridQueryResults = new System.Windows.Forms.DataGridView();
-            this.Code = new System.Windows.Forms.TabPage();
-            this.txtCode = new System.Windows.Forms.RichTextBoxEx();
+            this.tabCode = new System.Windows.Forms.TabPage();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.mnuScriptTemplates = new System.Windows.Forms.ToolStripMenuItem();
+            this.txtClassMemberDetail = new System.Windows.Forms.RichTextBoxEx();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.menuMain.SuspendLayout();
             this.menuQueryRow.SuspendLayout();
@@ -98,7 +97,7 @@
             this.splitContainer4.SuspendLayout();
             this.menuQuery.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridQueryResults)).BeginInit();
-            this.Code.SuspendLayout();
+            this.tabCode.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -358,7 +357,7 @@
             // 
             this.tabControl1.Controls.Add(this.tabClassMembers);
             this.tabControl1.Controls.Add(this.tabQuery);
-            this.tabControl1.Controls.Add(this.Code);
+            this.tabControl1.Controls.Add(this.tabCode);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.ImageList = this.ImageList1;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
@@ -410,18 +409,6 @@
             this.treeViewClassMembers.Size = new System.Drawing.Size(226, 482);
             this.treeViewClassMembers.TabIndex = 0;
             this.treeViewClassMembers.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewClassMembers_AfterSelect);
-            // 
-            // txtClassMemberDetail
-            // 
-            this.txtClassMemberDetail.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtClassMemberDetail.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtClassMemberDetail.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtClassMemberDetail.Location = new System.Drawing.Point(0, 0);
-            this.txtClassMemberDetail.Name = "txtClassMemberDetail";
-            this.txtClassMemberDetail.Size = new System.Drawing.Size(462, 482);
-            this.txtClassMemberDetail.TabIndex = 0;
-            this.txtClassMemberDetail.Text = "";
-            this.txtClassMemberDetail.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.txtClassMemberDetail_LinkClicked);
             // 
             // tabQuery
             // 
@@ -517,29 +504,17 @@
             this.gridQueryResults.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridQueryResults_CellMouseEnter);
             this.gridQueryResults.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridQueryResults_CellMouseUp);
             // 
-            // Code
+            // tabCode
             // 
-            this.Code.Controls.Add(this.txtCode);
-            this.Code.Controls.Add(this.menuStrip1);
-            this.Code.ImageKey = "Code";
-            this.Code.Location = new System.Drawing.Point(4, 23);
-            this.Code.Name = "Code";
-            this.Code.Padding = new System.Windows.Forms.Padding(3);
-            this.Code.Size = new System.Drawing.Size(698, 488);
-            this.Code.TabIndex = 2;
-            this.Code.Text = "Code";
-            this.Code.UseVisualStyleBackColor = true;
-            // 
-            // txtCode
-            // 
-            this.txtCode.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtCode.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCode.Location = new System.Drawing.Point(3, 27);
-            this.txtCode.Name = "txtCode";
-            this.txtCode.Size = new System.Drawing.Size(692, 458);
-            this.txtCode.TabIndex = 1;
-            this.txtCode.Text = "";
-            this.txtCode.WordWrap = false;
+            this.tabCode.Controls.Add(this.menuStrip1);
+            this.tabCode.ImageKey = "Code";
+            this.tabCode.Location = new System.Drawing.Point(4, 23);
+            this.tabCode.Name = "tabCode";
+            this.tabCode.Padding = new System.Windows.Forms.Padding(3);
+            this.tabCode.Size = new System.Drawing.Size(698, 488);
+            this.tabCode.TabIndex = 2;
+            this.tabCode.Text = "Code";
+            this.tabCode.UseVisualStyleBackColor = true;
             // 
             // menuStrip1
             // 
@@ -556,6 +531,18 @@
             this.mnuScriptTemplates.Name = "mnuScriptTemplates";
             this.mnuScriptTemplates.Size = new System.Drawing.Size(74, 20);
             this.mnuScriptTemplates.Text = "&Templates";
+            // 
+            // txtClassMemberDetail
+            // 
+            this.txtClassMemberDetail.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtClassMemberDetail.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtClassMemberDetail.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtClassMemberDetail.Location = new System.Drawing.Point(0, 0);
+            this.txtClassMemberDetail.Name = "txtClassMemberDetail";
+            this.txtClassMemberDetail.Size = new System.Drawing.Size(462, 482);
+            this.txtClassMemberDetail.TabIndex = 0;
+            this.txtClassMemberDetail.Text = "";
+            this.txtClassMemberDetail.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.txtClassMemberDetail_LinkClicked);
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -606,8 +593,8 @@
             this.menuQuery.ResumeLayout(false);
             this.menuQuery.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridQueryResults)).EndInit();
-            this.Code.ResumeLayout(false);
-            this.Code.PerformLayout();
+            this.tabCode.ResumeLayout(false);
+            this.tabCode.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -625,7 +612,7 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabClassMembers;
         private System.Windows.Forms.TabPage tabQuery;
-        private System.Windows.Forms.TabPage Code;
+        private System.Windows.Forms.TabPage tabCode;
         internal System.Windows.Forms.ImageList ImageList1;
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.RichTextBoxEx txtClassMemberDetail;
@@ -654,7 +641,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem mnuScriptTemplates;
-        private System.Windows.Forms.RichTextBoxEx txtCode;
     }
 }
 

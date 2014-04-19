@@ -8,12 +8,31 @@
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
     using WMILab.Localization;
+using ScintillaNET;
 
     public partial class frmMain : Form
     {
         public frmMain()
         {
             InitializeComponent();
+
+            /*
+             * Init the Scintilla text editor
+             * The control is not added in the designer as it is unable to resolve the unmanaged DLLs
+             */
+            this.txtCode = new Scintilla
+            {
+                Dock = DockStyle.Fill,
+                Font = new Font("Consolas", 9.75f)
+            };
+            
+            // Show line numbers
+            this.txtCode.Margins[0].Width = 20;
+            this.txtCode.Scrolling.ScrollBars = ScrollBars.Both;
+
+            // Insert as first control so it isn't overlapped
+            this.tabCode.Controls.Add(this.txtCode);
+            this.tabCode.Controls.SetChildIndex(this.txtCode, 0);
 
             // Connection and enumeration options
             classListEnumOpts.EnumerateDeep = true;
@@ -34,9 +53,12 @@
             // Navigate to default namespace and class
             this.CurrentNamespacePath = @"\\.\ROOT\CIMV2";
             this.CurrentClassPath = @"\\.\ROOT\CIMV2:Win32_ComputerSystem";
+            this.CodeGenerator = new CodeGenerators.CsWrapperCodeGenerator();
         }
 
         #region Fields
+
+        private Scintilla txtCode = new Scintilla();
 
         private ConnectionOptions conOpts = new ConnectionOptions();
 
@@ -598,7 +620,10 @@
         {
             if (this.CodeGenerator != null && c != null)
             {
+                this.txtCode.IsReadOnly = false;
+                this.txtCode.ConfigurationManager.Language = this.CodeGenerator.Lexer;
                 this.txtCode.Text = this.CodeGenerator.GetScript(c, "TODO");
+                this.txtCode.IsReadOnly = true;
             }
         }
 
@@ -887,7 +912,7 @@
         {
             Boolean selectMode = this.queryBroker.QueryType == WqlQueryType.Select;
 
-            // A hyperlinked object was click. Get target object
+            // A hyperlinked object was click. Get c object
             ManagementBaseObject mObject = null;
             if (selectMode)
             {

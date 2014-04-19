@@ -69,6 +69,24 @@
             }
         }
 
+        public string Lexer
+        {
+            get
+            {
+                switch (this.CodeLanguage)
+                {
+                    case System.Management.CodeLanguage.CSharp:
+                        return "cs";
+
+                    case System.Management.CodeLanguage.VB:
+                        return "vbscript";
+
+                    default:
+                        return String.Empty;
+                }
+            }
+        }
+
         public String GetScript(ManagementClass c, String query)
         {
             try

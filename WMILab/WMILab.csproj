@@ -41,6 +41,7 @@
     <StartupObject>WMILab.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ScintillaNET, Version=2.6.0.0, Culture=neutral, PublicKeyToken=948d6c9751444115, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
@@ -55,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeGenerators\DotNetWrapperBaseCodeGenerator.cs" />
+    <Compile Include="CodeGenerators\VBScript\VbBasicConsoleCodeGenerator.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -165,6 +167,12 @@
     <None Include="Resources\AddToFavorites.bmp" />
     <None Include="Resources\PublishToWebHS.png" />
     <None Include="Resources\Properties.bmp" />
+    <Content Include="SciLexer.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SciLexer64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="WmiStudio.ico" />
   </ItemGroup>
   <ItemGroup />
