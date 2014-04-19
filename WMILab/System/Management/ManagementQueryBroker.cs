@@ -45,6 +45,9 @@
                 classPath = new ManagementPath(String.Format("\\\\{0}\\{1}:__AggregateEvent", scope.Path.Server, scope.Path.NamespacePath));
                 this.ResultClass = new ManagementClass(this.scope, classPath, new ObjectGetOptions());
             }
+
+            // Get value maps for the query
+            this.ResultClassValueMaps = this.ResultClass.GetValueMaps();
         }
 
         #endregion
@@ -106,6 +109,12 @@
         }
 
         public ManagementClass ResultClass
+        {
+            get;
+            private set;
+        }
+
+        public PropertyDataValueMapCollection ResultClassValueMaps
         {
             get;
             private set;

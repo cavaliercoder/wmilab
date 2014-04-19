@@ -2,11 +2,10 @@
 {
     using System;
     using System.Text;
+    using System.Text.RegularExpressions;
 
     public static class ManagementExtensions
     {
-        private static DateTime epoch = new DateTime(1601, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
         #region CimType
 
         public static Boolean IsNumeric(this CimType cimType)
@@ -126,8 +125,12 @@
         /// <returns>The System.String description of the specified ManagementBaseObject.</returns>
         public static String GetDescription(this ManagementBaseObject obj)
         {
-            return (obj.HasQualifier("Description")) ? (String) obj.Qualifiers["Description"].Value : String.Empty;
+            String description = (obj.HasQualifier("Description")) ? (String) obj.Qualifiers["Description"].Value : String.Empty;
+            
+            // TODO: Fix line endings
+            // description = Regex.Replace(description, "[^\r]\n", "\r\n");
 
+            return description;
         }
 
         #endregion
@@ -218,76 +221,6 @@
             }
 
             return String.Empty;
-        }
-
-        public static string ValueToString(this PropertyData prop)
-        {
-            // Format value as string
-            if (prop.Value == null)
-            {
-                return String.Empty;
-            }
-
-            else
-            {
-                // Is the value an array?
-                if (prop.Value.GetType().IsArray)
-                {
-                    if (prop.Value.GetType().IsAssignableFrom(typeof(Byte)))
-                        return ("byte[]");
-
-                    // Expand Array
-                    StringBuilder s = new StringBuilder();
-                    s.AppendFormat("{0}[] {{", prop.Type);
-                    try
-                    {
-                        object[] objects = (object[])prop.Value;
-                        string[] values = new string[objects.Length];
-                        for (int i = 0; i < objects.Length; i++)
-                        {
-                            values[i] = objects[i].ToString();
-                        }
-
-                        s.Append(String.Join(", ", values));
-                    }
-                    catch (InvalidCastException)
-                    {
-                        return (prop.Value.GetType().Name);
-                    }
-
-                    s.Append("}");
-                    return s.ToString();
-                }
-
-                else
-                {
-                    // Is a reference to another management class?
-                    if (prop.Value.GetType().IsAssignableFrom(typeof(ManagementBaseObject)))
-                    {
-                        // Expand object
-                        return ((ManagementBaseObject)prop.Value).GetRelativePath();
-                    }
-
-                    else if (prop.Type == CimType.DateTime)
-                    {
-                        DateTime datetime = ManagementDateTimeConverter.ToDateTime(prop.Value.ToString());
-                        return datetime.ToString();
-                    }
-
-                    else if (prop.Type == CimType.UInt64 && prop.Name == "TIME_CREATED")
-                    {
-                        Double ms = ((UInt64) prop.Value) / 10000;
-                        var datetime = epoch.AddMilliseconds(ms);
-                        return datetime.ToLocalTime().ToString();
-                    }
-
-                    else
-                    {
-                        // Plain old string!
-                        return prop.Value.ToString();
-                    }
-                }
-            }
         }
 
         #endregion

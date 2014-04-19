@@ -20,9 +20,8 @@ __Requirements:__
 
 * Add error feedback for bad queries
 * Add support for remote connections
-* Add support for watching event queries
-  Eg: SELECT * FROM __InstanceModificationEvent WHERE TargetInstance ISA 'Win32_Process'
 * Add code generators
 * Add progress indicator for namspace/class lists
+* Add duration timestamps to query completion
 
 SELECT * FROM __InstanceModificationEvent WITHIN 5 WHERE TargetInstance ISA 'Win32_Process' GROUP WITHIN 5

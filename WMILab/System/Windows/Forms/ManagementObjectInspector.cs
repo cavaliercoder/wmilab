@@ -269,7 +269,7 @@
 
         private TreeGridNode AddNode(ManagementBaseObject o, PropertyData p, TreeGridNodeCollection nodes)
         {
-            TreeGridNode node = nodes.Add(p.Name, p.ValueToString());
+            TreeGridNode node = nodes.Add(p.Name, p.GetValueAsString());
             string guid = GetGUID();
             node.Tag = guid;
             this.objectMap.Add(guid, o);
@@ -457,7 +457,7 @@
             string guid = this.dataGridView1.CurrentNode.Tag.ToString();
 
             // Ignore unchanged values
-            if (!this.SelectedProperty.ValueToString().Equals(e.FormattedValue.ToString()))
+            if (!this.SelectedProperty.GetValueAsString().Equals(e.FormattedValue.ToString()))
             {
                 // Update object
                 try

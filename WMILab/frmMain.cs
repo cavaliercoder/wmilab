@@ -459,8 +459,7 @@
                     this.txtClassMemberDetail.AppendText(prop.GetDescription() + "\r\n\r\n");
                 }
 
-                /*
-                Dictionary<string, string> map = PropertyDataHelper.GetValueMap(prop);
+                var map = prop.GetValueMap();
                 if (map.Count > 0)
                 {
                     this.txtClassMemberDetail.AppendText("Values:\r\n", boldFont);
@@ -477,7 +476,6 @@
                     }
                     this.txtClassMemberDetail.AppendText("\r\n");
                 }
-                */
                     
                 if (prop.Origin != "" && prop.Origin != c.Path.ClassName)
                 {
@@ -663,7 +661,24 @@
             {
                 foreach (PropertyData p in e.NewObject.Properties)
                 {
-                    values[i++] = p.ValueToString();
+                    // Should we translate a value map?
+                    if (this.queryBroker.ResultClassValueMaps.ContainsKey(p.Name))
+                    {
+                        var map = this.queryBroker.ResultClassValueMaps[p.Name];
+                        var key = p.GetValueAsString();
+
+                        if (map.ContainsKey(key))
+                            values[i++] = map[key];
+
+                        else
+                            values[i++] = key;
+                    }
+
+                    else
+                    {
+
+                        values[i++] = p.GetValueAsString();
+                    }
                 }
             }
 

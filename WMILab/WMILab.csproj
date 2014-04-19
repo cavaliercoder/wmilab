@@ -70,6 +70,8 @@
     <Compile Include="System\Management\ManagementError.cs" />
     <Compile Include="System\Management\ManagementExtensions.cs" />
     <Compile Include="System\Management\ManagementQueryBroker.cs" />
+    <Compile Include="System\Management\PropertyDataHelper.cs" />
+    <Compile Include="System\Management\PropertyDataValueMap.cs" />
     <Compile Include="System\Management\WqlQueryType.cs" />
     <Compile Include="System\Windows\Forms\ManagementObjectInspector.cs">
       <SubType>UserControl</SubType>
