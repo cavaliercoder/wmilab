@@ -12,6 +12,8 @@ using ScintillaNET;
 
     public partial class frmMain : Form
     {
+        #region Constructors
+
         public frmMain()
         {
             InitializeComponent();
@@ -46,6 +48,11 @@ using ScintillaNET;
 
             // Refresh script template menu
             this.RefreshCodeGeneratorMenu();
+        }
+
+        private void OnFormShown(object sender, EventArgs e)
+        {
+            resetClassColumnHeader();
 
             // Build local namespace tree
             this.RefreshNamespaceTree();
@@ -53,8 +60,10 @@ using ScintillaNET;
             // Navigate to default namespace and class
             this.CurrentNamespacePath = @"\\.\ROOT\CIMV2";
             this.CurrentClassPath = @"\\.\ROOT\CIMV2:Win32_ComputerSystem";
-            this.CodeGenerator = new CodeGenerators.CsWrapperCodeGenerator();
+            this.CodeGenerator = new CodeGenerators.VBScript.VbBasicConsoleCodeGenerator();
         }
+
+        #endregion
 
         #region Fields
 
@@ -602,18 +611,7 @@ using ScintillaNET;
 
         private void RefreshQueryView(ManagementClass c)
         {
-            String query;
-            if (c.IsEvent())
-            {
-                query = String.Format("SELECT * FROM {0} WITHIN 5", c.ClassPath.ClassName);
-            }
-
-            else
-            {
-                query = String.Format("SELECT * FROM {0}", c.ClassPath.ClassName);
-            }
-
-            this.txtQuery.Text = query;
+            this.txtQuery.Text = c.GetDefaultQuery();
         }
 
         private void RefreshScript(ManagementClass c)
@@ -622,7 +620,7 @@ using ScintillaNET;
             {
                 this.txtCode.IsReadOnly = false;
                 this.txtCode.ConfigurationManager.Language = this.CodeGenerator.Lexer;
-                this.txtCode.Text = this.CodeGenerator.GetScript(c, "TODO");
+                this.txtCode.Text = this.CodeGenerator.GetScript(c, c.GetDefaultQuery());
                 this.txtCode.IsReadOnly = true;
             }
         }
@@ -992,6 +990,37 @@ using ScintillaNET;
             }
         }
 
+        private void SaveScript(string path)
+        {
+            System.IO.StreamWriter stream = new System.IO.StreamWriter(path, false);
+
+            try
+            {
+                stream.Write(this.txtCode.Text);
+            }
+            finally
+            {
+                stream.Close();
+            }
+        }
+
+        private void SaveScript()
+        {
+            if (this.CodeGenerator == null) return;
+
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.FileName = this.CodeGenerator.Name + "." + this.CodeGenerator.FileExtension;
+            dlg.OverwritePrompt = true;
+            dlg.Filter = this.CodeGenerator.Language + " Scripts|*." + this.CodeGenerator.FileExtension + "|All Files|*.*";
+            dlg.CheckPathExists = true;
+            dlg.Tag = "Save Script";
+
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                this.SaveScript(dlg.FileName);
+            }
+        }
+
         #endregion
 
         #region Logging
@@ -1041,11 +1070,6 @@ using ScintillaNET;
         #endregion
 
         #region UI Event Handlers
-
-        private void frmMain_Shown(object sender, EventArgs e)
-        {
-            resetClassColumnHeader();
-        }
 
         private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
         {
@@ -1242,9 +1266,14 @@ using ScintillaNET;
             }
         }
 
-        void OnScriptMenuItemClick(object sender, EventArgs e)
+        private void OnScriptMenuItemClick(object sender, EventArgs e)
         {
             this.CodeGenerator = (ICodeGenerator)((ToolStripMenuItem)sender).Tag;
+        }
+
+        private void btnSaveScript_Click(object sender, EventArgs e)
+        {
+            SaveScript();
         }
 
         #endregion

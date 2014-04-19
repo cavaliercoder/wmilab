@@ -133,6 +133,24 @@
             return description;
         }
 
+        /// <summary>
+        /// Gets a WQL query string to perform as basic query of the specified WMI object.
+        /// </summary>
+        /// <param name="obj">The WMI object for which a basic query will be returned.</param>
+        /// <returns>A WQL query string to perform as basic query of the specified WMI object.</returns>
+        public static String GetDefaultQuery(this ManagementBaseObject obj)
+        {
+            if (obj.IsEvent())
+            {
+                return String.Format("SELECT * FROM {0} WITHIN 5", obj.ClassPath.ClassName);
+            }
+
+            else
+            {
+                return String.Format("SELECT * FROM {0}", obj.ClassPath.ClassName);
+            }
+        }
+
         #endregion
 
         #region MethodData

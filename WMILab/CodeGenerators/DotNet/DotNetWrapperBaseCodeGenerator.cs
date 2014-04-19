@@ -1,4 +1,4 @@
-﻿namespace WMILab.CodeGenerators
+﻿namespace WMILab.CodeGenerators.DotNet
 {
     using System;
     using System.IO;

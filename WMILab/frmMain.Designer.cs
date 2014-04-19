@@ -47,8 +47,6 @@
             this.btnResultPropertiesSeparater = new System.Windows.Forms.ToolStripSeparator();
             this.btnResultProperies = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
-            this.listViewLog = new System.Windows.Forms.ListView();
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.listViewClasses = new System.Windows.Forms.ListView();
@@ -62,6 +60,7 @@
             this.tabClassMembers = new System.Windows.Forms.TabPage();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.treeViewClassMembers = new System.Windows.Forms.TreeView();
+            this.txtClassMemberDetail = new System.Windows.Forms.RichTextBoxEx();
             this.tabQuery = new System.Windows.Forms.TabPage();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.txtQuery = new System.Windows.Forms.TextBox();
@@ -72,8 +71,10 @@
             this.tabCode = new System.Windows.Forms.TabPage();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.mnuScriptTemplates = new System.Windows.Forms.ToolStripMenuItem();
-            this.txtClassMemberDetail = new System.Windows.Forms.RichTextBoxEx();
+            this.listViewLog = new System.Windows.Forms.ListView();
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnSaveScript = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.menuQueryRow.SuspendLayout();
             this.splitContainer5.Panel1.SuspendLayout();
@@ -210,30 +211,6 @@
             this.splitContainer5.Size = new System.Drawing.Size(985, 616);
             this.splitContainer5.SplitterDistance = 515;
             this.splitContainer5.TabIndex = 2;
-            // 
-            // listViewLog
-            // 
-            this.listViewLog.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            this.listViewLog.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader2});
-            this.listViewLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewLog.FullRowSelect = true;
-            this.listViewLog.GridLines = true;
-            this.listViewLog.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.listViewLog.HideSelection = false;
-            this.listViewLog.Location = new System.Drawing.Point(0, 0);
-            this.listViewLog.MultiSelect = false;
-            this.listViewLog.Name = "listViewLog";
-            this.listViewLog.Size = new System.Drawing.Size(985, 97);
-            this.listViewLog.SmallImageList = this.ImageList1;
-            this.listViewLog.TabIndex = 1;
-            this.listViewLog.UseCompatibleStateImageBehavior = false;
-            this.listViewLog.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "Log message";
-            this.columnHeader2.Width = 981;
             // 
             // splitContainer1
             // 
@@ -410,6 +387,18 @@
             this.treeViewClassMembers.TabIndex = 0;
             this.treeViewClassMembers.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewClassMembers_AfterSelect);
             // 
+            // txtClassMemberDetail
+            // 
+            this.txtClassMemberDetail.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtClassMemberDetail.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtClassMemberDetail.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtClassMemberDetail.Location = new System.Drawing.Point(0, 0);
+            this.txtClassMemberDetail.Name = "txtClassMemberDetail";
+            this.txtClassMemberDetail.Size = new System.Drawing.Size(462, 482);
+            this.txtClassMemberDetail.TabIndex = 0;
+            this.txtClassMemberDetail.Text = "";
+            this.txtClassMemberDetail.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.txtClassMemberDetail_LinkClicked);
+            // 
             // tabQuery
             // 
             this.tabQuery.Controls.Add(this.splitContainer4);
@@ -519,7 +508,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuScriptTemplates});
+            this.mnuScriptTemplates,
+            this.btnSaveScript});
             this.menuStrip1.Location = new System.Drawing.Point(3, 3);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(692, 24);
@@ -532,17 +522,29 @@
             this.mnuScriptTemplates.Size = new System.Drawing.Size(74, 20);
             this.mnuScriptTemplates.Text = "&Templates";
             // 
-            // txtClassMemberDetail
+            // listViewLog
             // 
-            this.txtClassMemberDetail.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtClassMemberDetail.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtClassMemberDetail.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtClassMemberDetail.Location = new System.Drawing.Point(0, 0);
-            this.txtClassMemberDetail.Name = "txtClassMemberDetail";
-            this.txtClassMemberDetail.Size = new System.Drawing.Size(462, 482);
-            this.txtClassMemberDetail.TabIndex = 0;
-            this.txtClassMemberDetail.Text = "";
-            this.txtClassMemberDetail.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.txtClassMemberDetail_LinkClicked);
+            this.listViewLog.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.listViewLog.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader2});
+            this.listViewLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewLog.FullRowSelect = true;
+            this.listViewLog.GridLines = true;
+            this.listViewLog.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listViewLog.HideSelection = false;
+            this.listViewLog.Location = new System.Drawing.Point(0, 0);
+            this.listViewLog.MultiSelect = false;
+            this.listViewLog.Name = "listViewLog";
+            this.listViewLog.Size = new System.Drawing.Size(985, 97);
+            this.listViewLog.SmallImageList = this.ImageList1;
+            this.listViewLog.TabIndex = 1;
+            this.listViewLog.UseCompatibleStateImageBehavior = false;
+            this.listViewLog.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Log message";
+            this.columnHeader2.Width = 981;
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -550,6 +552,16 @@
             this.dataGridViewTextBoxColumn1.HeaderText = "Message";
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // btnSaveScript
+            // 
+            this.btnSaveScript.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btnSaveScript.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnSaveScript.Image = global::WMILab.Properties.Resources.Save;
+            this.btnSaveScript.Name = "btnSaveScript";
+            this.btnSaveScript.Size = new System.Drawing.Size(28, 20);
+            this.btnSaveScript.Text = "&Save";
+            this.btnSaveScript.Click += new System.EventHandler(this.btnSaveScript_Click);
             // 
             // frmMain
             // 
@@ -563,7 +575,7 @@
             this.MainMenuStrip = this.menuMain;
             this.Name = "frmMain";
             this.Text = "WMI Lab";
-            this.Shown += new System.EventHandler(this.frmMain_Shown);
+            this.Shown += new System.EventHandler(this.OnFormShown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.frmMain_KeyUp);
             this.menuMain.ResumeLayout(false);
             this.menuMain.PerformLayout();
@@ -641,6 +653,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem mnuScriptTemplates;
+        private System.Windows.Forms.ToolStripMenuItem btnSaveScript;
     }
 }
 

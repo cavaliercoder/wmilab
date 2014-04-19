@@ -55,7 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeGenerators\DotNetWrapperBaseCodeGenerator.cs" />
+    <Compile Include="CodeGenerators\DotNet\DotNetWrapperBaseCodeGenerator.cs" />
     <Compile Include="CodeGenerators\VBScript\VbBasicConsoleCodeGenerator.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
