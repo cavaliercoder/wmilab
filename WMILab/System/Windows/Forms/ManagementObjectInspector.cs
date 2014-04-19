@@ -8,6 +8,8 @@
 
     public partial class ManagementObjectInspector : UserControl
     {
+        private const int MAX_ARRAY_MEMBERS = 16;
+
         #region Constructors
 
         public ManagementObjectInspector()
@@ -18,8 +20,6 @@
         #endregion
 
         #region Fields
-
-        private ManagementScope scope;
 
         private TreeGridNode SystemPropertiesGroup;
 
@@ -66,9 +66,8 @@
         [Browsable(false)]
         public ManagementScope Scope
         {
-            get { return this.scope; }
-
-            set { this.scope = value; }
+            get;
+            set;
         }
 
         [Browsable(false)]
@@ -84,6 +83,13 @@
                 this.managementObject = value;
                 this.RefreshView();
             }
+        }
+
+        [Browsable(false)]
+        public PropertyDataValueMapCollection ValueMaps
+        {
+            get;
+            set;
         }
 
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -293,20 +299,47 @@
             }
 
             // Expand arrays
-            if (p.Value != null && p.IsArray && !p.IsNumeric())
+            if (p.Value != null && p.IsArray)
             {
-                object[] values = (object[])p.Value;
+                var values = (Array)p.Value;
 
-                node.Cells[1].Value = String.Format("{0}[{1}]", p.Type, values.Length);
+                // Expand value mappings
+                if (this.ValueMaps != null && this.ValueMaps.ContainsKey(p.Name))
+                {
+                    values = p.GetValueAsStringArray(this.ValueMaps[p.Name]);
+                }
 
                 int i = 0;
+                bool addValues = true;
                 foreach (object value in values)
                 {
-                    TreeGridNode child = node.Nodes.Add(String.Format("[{0}]", i), value.ToString());
-                    child.Cells[0].Style.Alignment = DataGridViewContentAlignment.MiddleRight;
-                    child.Cells[0].Style.ForeColor = SystemColors.GrayText;
-                    i++;
+                    if (i >= MAX_ARRAY_MEMBERS)
+                    {
+                        addValues = false;
+                    }
+                    else
+                    {
+                        // Keep add values or just count them?
+                        if (addValues)
+                        {
+                            TreeGridNode child = node.Nodes.Add(String.Format("[{0}]", i), value.ToString());
+                            child.Cells[0].Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+                            child.Cells[0].Style.ForeColor = SystemColors.GrayText;
+                        }
+
+                        i++;
+                    }
                 }
+
+                // Add note if results were truncated
+                if (!addValues)
+                {
+                    TreeGridNode truncNode = node.Nodes.Add(String.Format("[...{0}]", i), "Results were truncated.");
+                    truncNode.Cells[0].Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    truncNode.Cells[0].Style.ForeColor = SystemColors.GrayText;
+                }
+
+                node.Cells[1].Value = String.Format("{0} [{1}]", p.Type, i);
             }
 
             // Expand Objects
@@ -394,8 +427,6 @@
                 this.ValidationSucceeded(this, EventArgs.Empty);
         }
 
-        #endregion
-
         /// <summary>
         /// Caches the current cell value for the cell about to be edited.
         /// </summary>
@@ -435,7 +466,7 @@
                 }
 
                 // Edit contents
-                if(this.dataGridView1.CurrentNode.Nodes.Count == 0)
+                if (this.dataGridView1.CurrentNode.Nodes.Count == 0)
                     this.dataGridView1.BeginEdit(true);
             }
 
@@ -449,8 +480,8 @@
         /// <param name="e"></param>
         private void dataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            if (!this.dataGridView1.CurrentCell.IsInEditMode || 
-                this.selectedObject == null || 
+            if (!this.dataGridView1.CurrentCell.IsInEditMode ||
+                this.selectedObject == null ||
                 this.selectedProperty == null)
                 return;
 
@@ -500,6 +531,8 @@
 
             }
         }
+
+        #endregion
     }
 
     public class ValidationExceptionEventArgs : EventArgs

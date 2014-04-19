@@ -33,9 +33,12 @@
                 throw new ArgumentException("Could not determine class name from query.");
 
             // Get class descriptor to assist with queries
+            var options = new ObjectGetOptions();
+            options.UseAmendedQualifiers = true;
+
             var className = matches[0].Groups[2];
             var classPath = new ManagementPath(String.Format("\\\\{0}\\{1}:{2}", scope.Path.Server, scope.Path.NamespacePath, className));
-            this.ResultClass = new ManagementClass(this.scope, classPath, new ObjectGetOptions());
+            this.ResultClass = new ManagementClass(this.scope, classPath, options);
 
             // Configure event queries
             this.IsEventQuery = this.ResultClass.IsEvent();

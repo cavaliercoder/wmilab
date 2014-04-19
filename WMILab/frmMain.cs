@@ -665,13 +665,7 @@
                     if (this.queryBroker.ResultClassValueMaps.ContainsKey(p.Name))
                     {
                         var map = this.queryBroker.ResultClassValueMaps[p.Name];
-                        var key = p.GetValueAsString();
-
-                        if (map.ContainsKey(key))
-                            values[i++] = map[key];
-
-                        else
-                            values[i++] = key;
+                        values[i++] = p.GetValueAsString(map);
                     }
 
                     else
@@ -809,6 +803,7 @@
             // Create form
             ManagementObjectInspectorForm popup = new ManagementObjectInspectorForm();
             popup.Scope = this.CurrentNamespaceScope;
+            popup.ValueMaps = this.queryBroker.ResultClassValueMaps;
             popup.ManagementObject = managementObject;
 
             // Offset location to screen bounds

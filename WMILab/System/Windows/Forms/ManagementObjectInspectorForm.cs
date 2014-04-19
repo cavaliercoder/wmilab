@@ -33,6 +33,13 @@ namespace System.Windows.Forms
             set { this.managementClassInspector1.Scope = value; }
         }
 
+        public PropertyDataValueMapCollection ValueMaps
+        {
+            get { return this.managementClassInspector1.ValueMaps; }
+
+            set { this.managementClassInspector1.ValueMaps = value; }
+        }
+
         private void ManagementObjectInspectorForm_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
