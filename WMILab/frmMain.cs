@@ -626,7 +626,7 @@
 
             if (e.Success)
             {
-                this.Log(LogLevel.Information, String.Format("Query completed with {0} results.", this.queryBroker.ResultCount));
+                this.Log(LogLevel.Information, String.Format("Query completed in {0} with {1} results.",this.queryBroker.ExecutionTime, this.queryBroker.ResultCount));
             }
 
             else

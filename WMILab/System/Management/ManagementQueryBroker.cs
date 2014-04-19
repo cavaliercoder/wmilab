@@ -65,6 +65,8 @@
 
         private ManagementEventWatcher queryWatcher;
 
+        private int startTime;
+
         #endregion
 
         #region Properties
@@ -129,6 +131,12 @@
             private set;
         }
 
+        public TimeSpan ExecutionTime
+        {
+            get;
+            private set;
+        }
+
         #endregion
 
         #region Methods
@@ -188,6 +196,8 @@
 
         protected virtual void OnStarted(object sender, EventArgs e)
         {
+            this.startTime = Environment.TickCount;
+          
             this.ResultCount = 0;
             this.Results.Clear();
 
@@ -200,6 +210,9 @@
         protected virtual void OnQueryCompleted(object sender, BrokerCompletedEventArgs e)
         {
             this.InProgress = false;
+            var endTime = Environment.TickCount;
+
+            this.ExecutionTime = new TimeSpan(0, 0, 0, 0, endTime - this.startTime);
 
             if (null != this.Completed)
                 this.Completed(sender, e);

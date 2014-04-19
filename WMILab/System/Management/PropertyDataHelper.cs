@@ -1,7 +1,6 @@
 ﻿namespace System.Management
 {
     using System;
-    using System.Text;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -11,11 +10,6 @@
         /// Epoch data used for calculating UInt64 timestamps in WMI.
         /// </summary>
         private static DateTime epoch = new DateTime(1601, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
-        public static string GetValueAsString(this PropertyData p, PropertyDataValueMap valueMap)
-        {
-            return String.Join(", ", GetValueAsStringArray(p, valueMap));
-        }
 
         public static String[] GetValueAsStringArray(this PropertyData p, PropertyDataValueMap valueMap)
         {
@@ -46,10 +40,36 @@
                 }
             }
         }
+
+        public static String[] GetValueAsStringArray(this PropertyData p, PropertyDataValueMapCollection valueMaps)
+        {
+            if (valueMaps != null && valueMaps.ContainsKey(p.Name))
+                return GetValueAsStringArray(p, valueMaps[p.Name]);
+
+            return GetValueAsStringArray(p);
+        }
+
+        public static String[] GetValueAsStringArray(this PropertyData p)
+        {
+            return GetValueAsStringArray(p, PropertyDataValueMap.Empty);
+        }
+
+        public static String GetValueAsString(this PropertyData p, PropertyDataValueMapCollection valueMaps)
+        {
+            if (valueMaps != null && valueMaps.ContainsKey(p.Name))
+                return GetValueAsString(p, valueMaps[p.Name]);
+
+            return GetValueAsString(p);
+        }
+
+        public static String GetValueAsString(this PropertyData p, PropertyDataValueMap valueMap)
+        {
+            return String.Join(", ", GetValueAsStringArray(p, valueMap));
+        }
         
         public static String GetValueAsString(this PropertyData p)
         {
-            return GetValueAsString(p, null);
+            return GetValueAsString(p, PropertyDataValueMap.Empty);
         }
 
         private static String GetObjectAsString(Object obj, PropertyData p, PropertyDataValueMap map)
@@ -81,7 +101,7 @@
 
             else if (map != null && obj != null && map.ContainsKey(obj.ToString()))
             {
-                return map[obj.ToString()];
+                return String.Format("{0} ({1})", map[obj.ToString()], obj.ToString());
             }
 
             else

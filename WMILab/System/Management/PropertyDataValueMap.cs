@@ -5,6 +5,9 @@
 
     public class PropertyDataValueMap : IDictionary<String, String>
     {
+        private PropertyDataValueMap()
+        { }
+
         public PropertyDataValueMap(PropertyData propertyData)
         {
             this.PropertyData = propertyData;
@@ -161,6 +164,14 @@
         Collections.IEnumerator Collections.IEnumerable.GetEnumerator()
         {
             throw new InvalidOperationException();
+        }
+
+        /// <summary>
+        /// Returns an empty System.Management.PropertyDataValueMap
+        /// </summary>
+        public static PropertyDataValueMap Empty
+        {
+            get { return new PropertyDataValueMap(); }
         }
     }
 

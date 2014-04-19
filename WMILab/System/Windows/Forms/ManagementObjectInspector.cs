@@ -275,7 +275,7 @@
 
         private TreeGridNode AddNode(ManagementBaseObject o, PropertyData p, TreeGridNodeCollection nodes)
         {
-            TreeGridNode node = nodes.Add(p.Name, p.GetValueAsString());
+            TreeGridNode node = nodes.Add(p.Name, p.GetValueAsString(this.ValueMaps));
             string guid = GetGUID();
             node.Tag = guid;
             this.objectMap.Add(guid, o);
