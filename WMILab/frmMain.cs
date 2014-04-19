@@ -7,8 +7,8 @@
     using System.Management.CodeGeneration;
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
+    using ScintillaNET;
     using WMILab.Localization;
-using ScintillaNET;
 
     public partial class frmMain : Form
     {
@@ -618,10 +618,43 @@ using ScintillaNET;
         {
             if (this.CodeGenerator != null && c != null)
             {
+                var query = c.GetDefaultQuery();
+
+                // Reset script
                 this.txtCode.IsReadOnly = false;
+                this.txtCode.Text = String.Empty;
+
+                // Update script
                 this.txtCode.ConfigurationManager.Language = this.CodeGenerator.Lexer;
-                this.txtCode.Text = this.CodeGenerator.GetScript(c, c.GetDefaultQuery());
+                this.txtCode.Text = this.CodeGenerator.GetScript(c, query);
                 this.txtCode.IsReadOnly = true;
+
+                // Reset actions
+                var toDelete = new List<ToolStripMenuItem>();
+                foreach (ToolStripMenuItem item in this.menuStripCode.Items)
+                {
+                    if (item.Tag != null && item.Tag.GetType() == typeof(CodeGeneratorAction))
+                        toDelete.Add(item);
+                }
+
+                foreach(ToolStripMenuItem item in toDelete)
+                    this.menuStripCode.Items.Remove(item);
+
+                // Update actions
+                foreach (var action in this.CodeGenerator.GetActions(c, query))
+                {
+                    ToolStripMenuItem item = new ToolStripMenuItem
+                    {
+                        Text = action.Name,
+                        Image = action.Image,
+                        Tag = action,
+                        Alignment = ToolStripItemAlignment.Right
+                    };
+
+                    item.Click += new EventHandler(OnActionClicked);
+
+                    this.menuStripCode.Items.Add(item);
+                }
             }
         }
 
@@ -1274,6 +1307,15 @@ using ScintillaNET;
         private void btnSaveScript_Click(object sender, EventArgs e)
         {
             SaveScript();
+        }
+
+        private void OnActionClicked(object sender, EventArgs e)
+        {
+            var action = ((ToolStripMenuItem)sender).Tag as CodeGeneratorAction;
+            if (action == null || this.CodeGenerator == null || this.CurrentClass == null)
+                return;
+
+            this.CodeGenerator.ExecuteAction(action, this.CurrentClass, this.CurrentClass.GetDefaultQuery());
         }
 
         #endregion

@@ -107,6 +107,16 @@
                 return e.Message;
             }
         }
+
+        public CodeGeneratorAction[] GetActions(ManagementClass c, string query)
+        {
+            return new CodeGeneratorAction[] { };
+        }
+
+        public int ExecuteAction(CodeGeneratorAction action, ManagementClass c, string query)
+        {
+            return 0;
+        }
     }
 
     public class CsWrapperCodeGenerator : DotNetWrapperBaseCodeGenerator, ICodeGenerator

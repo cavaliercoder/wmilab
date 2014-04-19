@@ -69,12 +69,12 @@
             this.btnCancelQuery = new System.Windows.Forms.ToolStripMenuItem();
             this.gridQueryResults = new System.Windows.Forms.DataGridView();
             this.tabCode = new System.Windows.Forms.TabPage();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menuStripCode = new System.Windows.Forms.MenuStrip();
             this.mnuScriptTemplates = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnSaveScript = new System.Windows.Forms.ToolStripMenuItem();
             this.listViewLog = new System.Windows.Forms.ListView();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnSaveScript = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.menuQueryRow.SuspendLayout();
             this.splitContainer5.Panel1.SuspendLayout();
@@ -99,7 +99,7 @@
             this.menuQuery.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridQueryResults)).BeginInit();
             this.tabCode.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
+            this.menuStripCode.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuMain
@@ -495,7 +495,7 @@
             // 
             // tabCode
             // 
-            this.tabCode.Controls.Add(this.menuStrip1);
+            this.tabCode.Controls.Add(this.menuStripCode);
             this.tabCode.ImageKey = "Code";
             this.tabCode.Location = new System.Drawing.Point(4, 23);
             this.tabCode.Name = "tabCode";
@@ -505,22 +505,31 @@
             this.tabCode.Text = "Code";
             this.tabCode.UseVisualStyleBackColor = true;
             // 
-            // menuStrip1
+            // menuStripCode
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuStripCode.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuScriptTemplates,
             this.btnSaveScript});
-            this.menuStrip1.Location = new System.Drawing.Point(3, 3);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(692, 24);
-            this.menuStrip1.TabIndex = 0;
-            this.menuStrip1.Text = "menuStrip1";
+            this.menuStripCode.Location = new System.Drawing.Point(3, 3);
+            this.menuStripCode.Name = "menuStripCode";
+            this.menuStripCode.Size = new System.Drawing.Size(692, 24);
+            this.menuStripCode.TabIndex = 0;
             // 
             // mnuScriptTemplates
             // 
             this.mnuScriptTemplates.Name = "mnuScriptTemplates";
             this.mnuScriptTemplates.Size = new System.Drawing.Size(74, 20);
             this.mnuScriptTemplates.Text = "&Templates";
+            // 
+            // btnSaveScript
+            // 
+            this.btnSaveScript.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btnSaveScript.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnSaveScript.Image = global::WMILab.Properties.Resources.Save;
+            this.btnSaveScript.Name = "btnSaveScript";
+            this.btnSaveScript.Size = new System.Drawing.Size(28, 20);
+            this.btnSaveScript.Text = "&Save";
+            this.btnSaveScript.Click += new System.EventHandler(this.btnSaveScript_Click);
             // 
             // listViewLog
             // 
@@ -552,16 +561,6 @@
             this.dataGridViewTextBoxColumn1.HeaderText = "Message";
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             this.dataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // btnSaveScript
-            // 
-            this.btnSaveScript.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.btnSaveScript.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnSaveScript.Image = global::WMILab.Properties.Resources.Save;
-            this.btnSaveScript.Name = "btnSaveScript";
-            this.btnSaveScript.Size = new System.Drawing.Size(28, 20);
-            this.btnSaveScript.Text = "&Save";
-            this.btnSaveScript.Click += new System.EventHandler(this.btnSaveScript_Click);
             // 
             // frmMain
             // 
@@ -607,8 +606,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridQueryResults)).EndInit();
             this.tabCode.ResumeLayout(false);
             this.tabCode.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.menuStripCode.ResumeLayout(false);
+            this.menuStripCode.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -651,7 +650,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.ListView listViewLog;
         private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip menuStripCode;
         private System.Windows.Forms.ToolStripMenuItem mnuScriptTemplates;
         private System.Windows.Forms.ToolStripMenuItem btnSaveScript;
     }

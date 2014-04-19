@@ -70,6 +70,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="System\Management\CodeGeneration\CodeGeneratorAction.cs" />
     <Compile Include="System\Management\CodeGeneration\CodeGeneratorFactory.cs" />
     <Compile Include="System\Management\CodeGeneration\ICodeGenerator.cs" />
     <Compile Include="System\Management\ManagementError.cs" />

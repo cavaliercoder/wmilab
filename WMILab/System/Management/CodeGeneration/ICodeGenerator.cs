@@ -16,5 +16,9 @@
         String Lexer { get; }
 
         String GetScript(ManagementClass c, String query);
+
+        CodeGeneratorAction[] GetActions(ManagementClass c, String query);
+
+        Int32 ExecuteAction(CodeGeneratorAction action, ManagementClass c, String query);
     }
 }

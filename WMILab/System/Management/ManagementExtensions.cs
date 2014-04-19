@@ -1,8 +1,6 @@
 ﻿namespace System.Management
 {
     using System;
-    using System.Text;
-    using System.Text.RegularExpressions;
 
     public static class ManagementExtensions
     {

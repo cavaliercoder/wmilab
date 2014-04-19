@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Management;
-using System.Management.CodeGeneration;
-using System.Windows.Forms;
-
-namespace WMILab.CodeGenerators.VBScript
+﻿namespace WMILab.CodeGenerators.VBScript
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Management;
+    using System.Management.CodeGeneration;
+    using System.Text;
+    using System.Windows.Forms;
+
     class VbBasicConsoleCodeGenerator : ICodeGenerator
     {
+        private const string ACTION_RUN = "Run in console";
 
         public string Name
         {
@@ -34,6 +36,7 @@ namespace WMILab.CodeGenerators.VBScript
         public string GetScript(System.Management.ManagementClass c, string query)
         {StringBuilder s = new StringBuilder();
             var lookups = new Dictionary<String, PropertyDataValueMap>();
+            
             bool isEvent = c.IsEvent();
             bool hasArrays = false;
             bool showComments = true;// ScriptOptionsManager.GetBool(this, "ShowComments", true);
@@ -42,8 +45,9 @@ namespace WMILab.CodeGenerators.VBScript
             bool ignoreErrors = true;// ScriptOptionsManager.GetBool(this, "IgnoreErrors", true);
             bool confirmExit = true; // ScriptOptionsManager.GetBool(this, "ConfirmExit", true);
             bool addConvertors = true; // ScriptOptionsManager.GetBool(this, "ValueMapLookups", true);
-            bool addConvertor = true;
+
             string escapedQuery = query.ToString().Replace("\"", "\"\"");
+            
             string[] comments = new string[] {
                 "'Connect to WMI Service:\r\n",
                 "'Start Watching for Instances of this Class.\r\n",
@@ -139,6 +143,8 @@ WScript.Echo
 
             foreach(PropertyData p in c.Properties)
             {
+                bool addConvertor = false;
+
                 if (addConvertors)
                 {
                     var map = p.GetValueMap();
@@ -257,6 +263,37 @@ End Function", field, strValues, strMappings, description);
             }
 
             return s.ToString();
+        }
+
+        public CodeGeneratorAction[] GetActions(ManagementClass c, string query)
+        {
+            return new CodeGeneratorAction[] {
+                new CodeGeneratorAction {
+                    Name = ACTION_RUN,
+                    Image = Properties.Resources.Execute
+                }
+            };
+        }
+
+        public int ExecuteAction(CodeGeneratorAction action, ManagementClass c, String query)
+        {
+            if (action.Name.Equals(ACTION_RUN))
+            {
+                String script = this.GetScript(c, query);
+                String path = Path.GetTempFileName().Replace(".tmp", "." + this.FileExtension);
+                File.WriteAllText(path, script);
+
+                //ConsoleForm.StartProcess(null, "cscript", path);
+                Process process = new Process();
+                ProcessStartInfo start = new ProcessStartInfo("cscript", String.Format("\"{0}\"", path));
+
+                process.StartInfo = start;
+                process.Start();
+
+                return 0;
+            }
+
+            return 1;
         }
     }
 }
