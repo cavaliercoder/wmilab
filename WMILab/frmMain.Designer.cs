@@ -40,6 +40,8 @@
             this.menuMain = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showSystemClassesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ImageList1 = new System.Windows.Forms.ImageList(this.components);
             this.menuQueryRow = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.btnGetAssociatorsOf = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,15 +54,12 @@
             this.listViewClasses = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.menuClassList = new System.Windows.Forms.MenuStrip();
-            this.txtClassFilter = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnToggleSystemClasses = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnFilter = new System.Windows.Forms.ToolStripMenuItem();
             this.treeViewNamespaces = new System.Windows.Forms.TreeView();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabClassMembers = new System.Windows.Forms.TabPage();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.treeViewClassMembers = new System.Windows.Forms.TreeView();
-            this.txtClassMemberDetail = new System.Windows.Forms.RichTextBoxEx();
             this.tabQuery = new System.Windows.Forms.TabPage();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.txtQuery = new System.Windows.Forms.TextBox();
@@ -74,7 +73,9 @@
             this.btnSaveScript = new System.Windows.Forms.ToolStripMenuItem();
             this.listViewLog = new System.Windows.Forms.ListView();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.txtClassMemberDetail = new System.Windows.Forms.RichTextBoxEx();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txtClassFilter = new System.Windows.Forms.ToolStripTextBoxEx();
             this.menuMain.SuspendLayout();
             this.menuQueryRow.SuspendLayout();
             this.splitContainer5.Panel1.SuspendLayout();
@@ -105,7 +106,8 @@
             // menuMain
             // 
             this.menuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.viewToolStripMenuItem});
             this.menuMain.Location = new System.Drawing.Point(0, 0);
             this.menuMain.Name = "menuMain";
             this.menuMain.Size = new System.Drawing.Size(985, 24);
@@ -125,6 +127,21 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showSystemClassesToolStripMenuItem});
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.viewToolStripMenuItem.Text = "&View";
+            // 
+            // showSystemClassesToolStripMenuItem
+            // 
+            this.showSystemClassesToolStripMenuItem.Name = "showSystemClassesToolStripMenuItem";
+            this.showSystemClassesToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.showSystemClassesToolStripMenuItem.Text = "Show &System Classes";
+            this.showSystemClassesToolStripMenuItem.Click += new System.EventHandler(this.showSystemClassesToolStripMenuItem_Click);
             // 
             // ImageList1
             // 
@@ -280,41 +297,22 @@
             // 
             this.menuClassList.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.txtClassFilter,
-            this.toolStripMenuItem1,
-            this.btnToggleSystemClasses});
+            this.btnFilter});
             this.menuClassList.Location = new System.Drawing.Point(0, 0);
             this.menuClassList.Name = "menuClassList";
             this.menuClassList.Size = new System.Drawing.Size(275, 27);
             this.menuClassList.TabIndex = 1;
             this.menuClassList.Text = "menuClassFilter";
             // 
-            // txtClassFilter
+            // btnFilter
             // 
-            this.txtClassFilter.Name = "txtClassFilter";
-            this.txtClassFilter.Size = new System.Drawing.Size(200, 23);
-            this.txtClassFilter.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtClassFilter_KeyUp);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripMenuItem1.Image = global::WMILab.Properties.Resources.Search;
-            this.toolStripMenuItem1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(28, 23);
-            this.toolStripMenuItem1.Text = "Filter";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
-            // 
-            // btnToggleSystemClasses
-            // 
-            this.btnToggleSystemClasses.CheckOnClick = true;
-            this.btnToggleSystemClasses.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnToggleSystemClasses.Image = global::WMILab.Properties.Resources.ShowHidden;
-            this.btnToggleSystemClasses.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnToggleSystemClasses.Name = "btnToggleSystemClasses";
-            this.btnToggleSystemClasses.Size = new System.Drawing.Size(28, 23);
-            this.btnToggleSystemClasses.Text = "Toggle system classes";
-            this.btnToggleSystemClasses.ToolTipText = "Toggle system classes";
-            this.btnToggleSystemClasses.Click += new System.EventHandler(this.btnToggleSystemClasses_Click);
+            this.btnFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnFilter.Image = global::WMILab.Properties.Resources.Search;
+            this.btnFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnFilter.Name = "btnFilter";
+            this.btnFilter.Size = new System.Drawing.Size(28, 23);
+            this.btnFilter.Text = "Filter";
+            this.btnFilter.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // treeViewNamespaces
             // 
@@ -386,18 +384,6 @@
             this.treeViewClassMembers.Size = new System.Drawing.Size(226, 482);
             this.treeViewClassMembers.TabIndex = 0;
             this.treeViewClassMembers.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewClassMembers_AfterSelect);
-            // 
-            // txtClassMemberDetail
-            // 
-            this.txtClassMemberDetail.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtClassMemberDetail.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtClassMemberDetail.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtClassMemberDetail.Location = new System.Drawing.Point(0, 0);
-            this.txtClassMemberDetail.Name = "txtClassMemberDetail";
-            this.txtClassMemberDetail.Size = new System.Drawing.Size(462, 482);
-            this.txtClassMemberDetail.TabIndex = 0;
-            this.txtClassMemberDetail.Text = "";
-            this.txtClassMemberDetail.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.txtClassMemberDetail_LinkClicked);
             // 
             // tabQuery
             // 
@@ -517,8 +503,10 @@
             // 
             // mnuScriptTemplates
             // 
+            this.mnuScriptTemplates.Image = global::WMILab.Properties.Resources.Expanded;
+            this.mnuScriptTemplates.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuScriptTemplates.Name = "mnuScriptTemplates";
-            this.mnuScriptTemplates.Size = new System.Drawing.Size(74, 20);
+            this.mnuScriptTemplates.Size = new System.Drawing.Size(90, 20);
             this.mnuScriptTemplates.Text = "&Templates";
             // 
             // btnSaveScript
@@ -555,12 +543,31 @@
             this.columnHeader2.Text = "Log message";
             this.columnHeader2.Width = 981;
             // 
+            // txtClassMemberDetail
+            // 
+            this.txtClassMemberDetail.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtClassMemberDetail.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtClassMemberDetail.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtClassMemberDetail.Location = new System.Drawing.Point(0, 0);
+            this.txtClassMemberDetail.Name = "txtClassMemberDetail";
+            this.txtClassMemberDetail.Size = new System.Drawing.Size(462, 482);
+            this.txtClassMemberDetail.TabIndex = 0;
+            this.txtClassMemberDetail.Text = "";
+            this.txtClassMemberDetail.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.txtClassMemberDetail_LinkClicked);
+            // 
             // dataGridViewTextBoxColumn1
             // 
             this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.dataGridViewTextBoxColumn1.HeaderText = "Message";
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // txtClassFilter
+            // 
+            this.txtClassFilter.Name = "txtClassFilter";
+            this.txtClassFilter.Size = new System.Drawing.Size(147, 23);
+            this.txtClassFilter.Stretch = true;
+            this.txtClassFilter.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtClassFilter_KeyUp);
             // 
             // frmMain
             // 
@@ -638,9 +645,7 @@
         private System.Windows.Forms.DataGridView gridQueryResults;
         private System.Windows.Forms.ToolStripMenuItem btnCancelQuery;
         private System.Windows.Forms.MenuStrip menuClassList;
-        private System.Windows.Forms.ToolStripTextBox txtClassFilter;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem btnToggleSystemClasses;
+        private System.Windows.Forms.ToolStripMenuItem btnFilter;
         private System.Windows.Forms.ContextMenuStrip menuQueryRow;
         private System.Windows.Forms.ToolStripMenuItem btnGetAssociatorsOf;
         private System.Windows.Forms.ToolStripMenuItem btnGetReferencesOf;
@@ -653,6 +658,9 @@
         private System.Windows.Forms.MenuStrip menuStripCode;
         private System.Windows.Forms.ToolStripMenuItem mnuScriptTemplates;
         private System.Windows.Forms.ToolStripMenuItem btnSaveScript;
+        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showSystemClassesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripTextBoxEx txtClassFilter;
     }
 }
 

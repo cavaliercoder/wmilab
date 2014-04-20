@@ -96,6 +96,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="System\Windows\Forms\ToolStripItemSorter.cs" />
+    <Compile Include="System\Windows\Forms\ToolStripTextBoxEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="System\Windows\Forms\TreeGridCell.cs" />
     <Compile Include="System\Windows\Forms\TreeGridEvents.cs" />
     <Compile Include="System\Windows\Forms\TreeGridNode.cs" />

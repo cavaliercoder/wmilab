@@ -143,20 +143,25 @@
 
         private String CurrentClassPath
         {
-            get { return this.currentClass.Path.Path; }
+            get { return this.currentClass == null ? null : this.currentClass.Path.Path; }
 
             set
             {
-                var path = new ManagementPath(value);
+                if (String.IsNullOrEmpty(value))
+                {
+                    this.CurrentClass = null;
+                    return;
+                }
 
+                var path = new ManagementPath(value);
                 try
                 {
                     this.CurrentClass = new ManagementClass(this.CurrentNamespaceScope, path, classObjGetOpts);
                     this.Log(LogLevel.Information, String.Format("Loaded class: {0}", value));
                 }
-                catch (ManagementException e)
+                catch (Exception e)
                 {
-                    this.Log(LogLevel.Critical, String.Format("Unable to load class: {0}", value));
+                    this.Log(LogLevel.Critical, String.Format("Unable to load class {0}: {1}", value, e.Message));
                 }
             }
         }
@@ -405,11 +410,15 @@
 
         private void RefreshClassView()
         {
-
+            // Select the class in the list
             this.SelectClassListViewItem(this.CurrentClass.ClassPath.ClassName);
 
-            var c = this.CurrentClass;
+            // Stop an existing query
+            if (this.queryBroker != null)
+                this.queryBroker.Cancel();
 
+            // Update class view
+            var c = this.CurrentClass;
             RefreshClassMembersListView(c);
             RefreshClassMembersDetailView(c);
             RefreshQueryView(c);
@@ -1186,13 +1195,6 @@
             this.RefreshClassListFilter();
         }
 
-        private void btnToggleSystemClasses_Click(object sender, EventArgs e)
-        {
-            this.btnToggleSystemClasses.Checked = !this.btnToggleSystemClasses.Checked;
-            this.showSystemClasses = this.btnToggleSystemClasses.Checked;
-            this.RefreshClassListFilter();
-        }
-
         private void gridQueryResults_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1 || e.ColumnIndex == -1) return;
@@ -1319,6 +1321,13 @@
         }
 
         #endregion
+
+        private void showSystemClassesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.showSystemClassesToolStripMenuItem.Checked = !this.showSystemClassesToolStripMenuItem.Checked;
+            this.showSystemClasses = this.showSystemClassesToolStripMenuItem.Checked;
+            this.RefreshClassListFilter();
+        }
     }
 
     internal enum LogLevel

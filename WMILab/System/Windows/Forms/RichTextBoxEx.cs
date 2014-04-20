@@ -1,13 +1,12 @@
-﻿// Some work courtesy: http://www.codeproject.com/KB/edit/RichTextBoxLinks.aspx
-
-using System;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Runtime.InteropServices;
-
+﻿// Adapted from: http://www.codeproject.com/KB/edit/RichTextBoxLinks.aspx
 namespace System.Windows.Forms
 {
+    using System;
+    using System.ComponentModel;
+    using System.Drawing;
+    using System.Windows.Forms;
+    using System.Runtime.InteropServices;
+
     public class RichTextBoxEx : RichTextBox
     {
         #region Win32 API

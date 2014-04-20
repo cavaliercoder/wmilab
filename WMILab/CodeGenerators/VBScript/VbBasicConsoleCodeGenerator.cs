@@ -41,9 +41,9 @@
             bool hasArrays = false;
             bool showComments = true;// ScriptOptionsManager.GetBool(this, "ShowComments", true);
             bool showDocumentation = true; // ScriptOptionsManager.GetBool(this, "ShowDocumentation", false);
-            bool allowremote = true; // ScriptOptionsManager.GetBool(this, "RemoteConnections", false);
-            bool ignoreErrors = true;// ScriptOptionsManager.GetBool(this, "IgnoreErrors", true);
-            bool confirmExit = true; // ScriptOptionsManager.GetBool(this, "ConfirmExit", true);
+            bool allowremote = false; // ScriptOptionsManager.GetBool(this, "RemoteConnections", false);
+            bool ignoreErrors = false; // ScriptOptionsManager.GetBool(this, "IgnoreErrors", true);
+            bool confirmExit = false; // ScriptOptionsManager.GetBool(this, "ConfirmExit", true);
             bool addConvertors = true; // ScriptOptionsManager.GetBool(this, "ValueMapLookups", true);
 
             string escapedQuery = query.ToString().Replace("\"", "\"\"");
@@ -236,7 +236,7 @@ End Function", comments[7]);
                     foreach (string key in map.Keys)
                     {
                         values.Add(key);
-                        mappings.Add(map[key]);
+                        mappings.Add(String.Format("{0} ({1})", map[key], key));
                     }
 
                     string strValues = c.Properties[field].IsNumeric() ?
@@ -285,7 +285,7 @@ End Function", field, strValues, strMappings, description);
 
                 //ConsoleForm.StartProcess(null, "cscript", path);
                 Process process = new Process();
-                ProcessStartInfo start = new ProcessStartInfo("cscript", String.Format("\"{0}\"", path));
+                ProcessStartInfo start = new ProcessStartInfo("cmd.exe", String.Format("/K cscript /nologo \"{0}\"", path));
 
                 process.StartInfo = start;
                 process.Start();
