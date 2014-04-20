@@ -18,23 +18,7 @@
         {
             InitializeComponent();
 
-            /*
-             * Init the Scintilla text editor
-             * The control is not added in the designer as it is unable to resolve the unmanaged DLLs
-             */
-            this.txtCode = new Scintilla
-            {
-                Dock = DockStyle.Fill,
-                Font = new Font("Consolas", 9.75f)
-            };
-            
-            // Show line numbers
-            this.txtCode.Margins[0].Width = 20;
-            this.txtCode.Scrolling.ScrollBars = ScrollBars.Both;
-
-            // Insert as first control so it isn't overlapped
-            this.tabCode.Controls.Add(this.txtCode);
-            this.tabCode.Controls.SetChildIndex(this.txtCode, 0);
+            InitCodeEditor();
 
             // Connection and enumeration options
             classListEnumOpts.EnumerateDeep = true;
@@ -118,6 +102,10 @@
             {
                 if (!String.IsNullOrEmpty(currentNamespacePath) && currentNamespacePath.Equals(value))
                     return;
+
+                // Cancel any running queries
+                if (this.queryBroker != null)
+                    this.queryBroker.Cancel();
 
                 try
                 {
@@ -627,13 +615,43 @@
             {
                 var query = c.GetDefaultQuery();
 
-                // Reset script
+                // Reset script editor
                 this.txtCode.IsReadOnly = false;
                 this.txtCode.Text = String.Empty;
+                this.txtCode.ConfigurationManager.Language = String.Empty;
+                this.txtCode.ConfigurationManager.Configure();
 
-                // Update script
-                this.txtCode.ConfigurationManager.Language = this.CodeGenerator.Lexer;
-                this.txtCode.Text = this.CodeGenerator.GetScript(c, query);
+                try
+                {
+                    this.txtCode.Text = this.CodeGenerator.GetScript(c, query);
+
+                    // Update script
+                    this.txtCode.ConfigurationManager.Language = this.CodeGenerator.Lexer;
+                    this.txtCode.ConfigurationManager.Configure();
+
+                    // Set colors
+                    if (!String.IsNullOrEmpty(this.CodeGenerator.Lexer))
+                    {
+                        this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["STRING"]].ForeColor = Color.FromArgb(163, 21, 21);
+                        this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["COMMENT"]].ForeColor = Color.FromArgb(0, 128, 0);
+                        this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["LINENUMBER"]].ForeColor = Color.FromArgb(43, 145, 175);
+                        this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["LINENUMBER"]].BackColor = SystemColors.Window;
+                        this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["NUMBER"]].ForeColor = SystemColors.WindowText;
+                        this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["OPERATOR"]].ForeColor = SystemColors.WindowText;
+
+                        if (this.CodeGenerator.Lexer == "cs")
+                        {
+                            this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["GLOBALCLASS"]].ForeColor = Color.Blue;
+                            this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["WORD2"]].ForeColor = Color.Blue;
+                        }
+                    }
+                }
+
+                catch (Exception e)
+                {
+                    this.txtCode.Text = e.Message;
+                }
+
                 this.txtCode.IsReadOnly = true;
 
                 // Reset actions
@@ -988,6 +1006,27 @@
         #endregion
 
         #region Code generation
+
+        private void InitCodeEditor()
+        {
+            /*
+             * Init the Scintilla text editor
+             * The control is not added in the designer as it is unable to resolve the unmanaged DLLs
+             */
+            this.txtCode = new Scintilla
+            {
+                Dock = DockStyle.Fill,
+                Font = new Font("Consolas", 9.75f)
+            };
+
+            // Show line numbers
+            this.txtCode.Margins[0].Width = 40;
+            this.txtCode.Scrolling.ScrollBars = ScrollBars.Both;
+
+            // Insert as first control so it isn't overlapped
+            this.tabCode.Controls.Add(this.txtCode);
+            this.tabCode.Controls.SetChildIndex(this.txtCode, 0);
+        }
 
         private void RefreshCodeGeneratorMenu()
         {

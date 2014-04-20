@@ -9,20 +9,14 @@ __Requirements:__
 
 ### Bugs
 * Line ending ignored in member descriptors
-* Query must be cancelled before changing to another class
-* Queries fail for classes after the selected namespace changes
 * Value mappings with value 0 don't translate (eg. Win32_CacheMemory.Location)
-* System class filter button does nothing
 * Class view flickers when filtering the class list
 
 ### Todo
-* Improve error feedback for bad queries
 * Add support for remote connections
-* Add code generators
 * Add progress indicator for namspace/class lists
 * Add state restoration for UI controls and navigation
 * Add common text functions to query results, inspector, log, detail view, etc.
-* Improve font colors in code editor
 
 * Add about dialog
 * Add license details

@@ -81,6 +81,9 @@
                     case System.Management.CodeLanguage.VB:
                         return "vbscript";
 
+                    case System.Management.CodeLanguage.Mcpp:
+                        return "cpp";
+
                     default:
                         return String.Empty;
                 }
@@ -89,23 +92,15 @@
 
         public String GetScript(ManagementClass c, String query)
         {
-            try
-            {
-                // Create temp file
-                string tmp = Path.GetTempFileName();
+            // Create temp file
+            string tmp = Path.GetTempFileName();
 
-                // Dump class to file
-                c.GetStronglyTypedClassCode(this.CodeLanguage, tmp, "");
-                string code = File.ReadAllText(tmp);
-                File.Delete(tmp);
+            // Dump class to file
+            c.GetStronglyTypedClassCode(this.CodeLanguage, tmp, "");
+            string code = File.ReadAllText(tmp);
+            File.Delete(tmp);
 
-                return code;
-            }
-
-            catch (Exception e)
-            {
-                return e.Message;
-            }
+            return code;
         }
 
         public CodeGeneratorAction[] GetActions(ManagementClass c, string query)
