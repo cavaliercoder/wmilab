@@ -14,7 +14,7 @@ __Requirements:__
 
 ### Todo
 * Add support for remote connections
-* Add progress indicator for namspace/class lists
+* Add progress indicator for namespace/class lists
 * Add state restoration for UI controls and navigation
 * Add common text functions to query results, inspector, log, detail view, etc.
 

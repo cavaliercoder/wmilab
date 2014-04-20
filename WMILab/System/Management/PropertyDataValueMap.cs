@@ -16,21 +16,31 @@
             foreach (var qualifer in propertyData.Qualifiers)
             {
                 if (qualifer.Name.Equals("ValuesMap", StringComparison.InvariantCultureIgnoreCase))
+                {
                     mapKeys = (String[])qualifer.Value;
-
+                    this.IsKeyValMap = true;
+                }
                 else if (qualifer.Name.Equals("Values", StringComparison.InvariantCultureIgnoreCase))
                     mapValues = (String[])qualifer.Value;
 
                 else if (qualifer.Name.Equals("BitMap", StringComparison.InvariantCultureIgnoreCase))
+                {
                     mapKeys = (String[])qualifer.Value;
+                    this.IsKeyValMap = true;
+                    this.IsBitMap = true;
+                }
 
                 else if (qualifer.Name.Equals("BitValues", StringComparison.InvariantCultureIgnoreCase))
+                {
                     mapValues = (String[])qualifer.Value;
+                    this.IsBitMap = true;
+                }
             }
 
             // Some properties have an implied key which is the index of the value
-            if (mapKeys.Length == 0 && mapValues.Length > 0)
+            if (!this.IsKeyValMap)
             {
+                this.IsKeyValMap = true;
                 mapKeys = new String[mapValues.Length];
 
                 // Set the key as the index of the value
@@ -46,10 +56,25 @@
         private String[] mapKeys = {};
         private String[] mapValues = {}; 
 
+        /// <summary>Gets the System.Management.PropertyData object to which this value map belongs.</summary>
         public PropertyData PropertyData
         {
             get; 
             private set; 
+        }
+
+        /// <summary>Gets a value indicating whether this value map has keys for each value or simply uses a sequential index.</summary>
+        /// <remarks>Classes with a Key/Value map will defines both a 'ValuesMap' and 'Values' qualifier. If no 'ValuesMap' qualifier is set, the value map uses the zero based index of each value as the key.</remarks>
+        public Boolean IsKeyValMap
+        {
+            get;
+            private set;
+        }
+
+        public Boolean IsBitMap
+        {
+            get;
+            private set;
         }
 
         public int IndexOfKey(string key)
@@ -70,7 +95,7 @@
 
         public bool ContainsKey(string key)
         {
-            return this.IndexOfKey(key) > 0;
+            return this.IndexOfKey(key) >= 0;
         }
 
         public ICollection<string> Keys
