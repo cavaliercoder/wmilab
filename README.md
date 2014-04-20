@@ -13,6 +13,7 @@ __Requirements:__
 * Queries fail for classes after the selected namespace changes
 * Value mappings with value 0 don't translate (eg. Win32_CacheMemory.Location)
 * System class filter button does nothing
+* Class view flickers when filtering the class list
 
 ### Todo
 * Improve error feedback for bad queries

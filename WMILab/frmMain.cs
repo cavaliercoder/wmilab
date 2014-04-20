@@ -314,19 +314,17 @@
             for (int i = 0; i < classListItems.Count; i++)
             {
                 var className = classListItems[i].Text;
-
-                if (!String.IsNullOrEmpty(filter))
-                {
-                    if(className.ToLowerInvariant().Contains(filter.ToLowerInvariant()))
-                    {
-                        displayList.Add(classListItems[i]);
-                    }
-                }
                 
-                else if (this.showSystemClasses || !classListItems[i].Text.StartsWith("__"))
-                {
+                bool display = true;
+
+                // Apply user filter
+                display &= String.IsNullOrEmpty(filter) || className.ToLowerInvariant().Contains(filter.ToLowerInvariant());
+
+                // Apply system class filter
+                display &= this.showSystemClasses || !classListItems[i].Text.StartsWith("__");
+
+                if(display)
                     displayList.Add(classListItems[i]);
-                }
             }
 
             this.listViewClasses.Items.AddRange(displayList.ToArray());
@@ -1320,14 +1318,14 @@
             this.CodeGenerator.ExecuteAction(action, this.CurrentClass, this.CurrentClass.GetDefaultQuery());
         }
 
-        #endregion
-
         private void showSystemClassesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.showSystemClassesToolStripMenuItem.Checked = !this.showSystemClassesToolStripMenuItem.Checked;
             this.showSystemClasses = this.showSystemClassesToolStripMenuItem.Checked;
             this.RefreshClassListFilter();
         }
+
+        #endregion
     }
 
     internal enum LogLevel
