@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.Design;
-using System.Diagnostics;
-//---------------------------------------------------------------------
+﻿//---------------------------------------------------------------------
 // 
 //  Copyright (obj) Microsoft Corporation.  All rights reserved.
 // 
@@ -10,12 +7,16 @@ using System.Diagnostics;
 //IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 //PARTICULAR PURPOSE.
 //---------------------------------------------------------------------
-using System.Drawing;
-using System.Drawing.Design;
-using System.Text;
+
 
 namespace System.Windows.Forms
 {
+    using System.ComponentModel;
+    using System.ComponentModel.Design;
+    using System.Diagnostics;
+    using System.Drawing;
+    using System.Drawing.Design;
+    using System.Text;
 	[
 		ToolboxItem(false),
 		DesignTimeVisible(false)

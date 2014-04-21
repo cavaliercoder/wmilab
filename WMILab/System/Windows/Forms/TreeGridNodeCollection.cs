@@ -7,10 +7,10 @@
 //IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 //PARTICULAR PURPOSE.
 //---------------------------------------------------------------------
-using System.Collections.Generic;
-
 namespace System.Windows.Forms
 {
+    using System.Collections.Generic;
+
 	public class TreeGridNodeCollection : System.Collections.Generic.IList<TreeGridNode>, System.Collections.IList
 	{
 		internal System.Collections.Generic.List<TreeGridNode> _list;

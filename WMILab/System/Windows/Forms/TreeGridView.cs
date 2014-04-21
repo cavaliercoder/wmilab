@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using System.ComponentModel.Design;
 //---------------------------------------------------------------------
 // 
 //  Copyright (obj) Microsoft Corporation.  All rights reserved.
@@ -9,13 +7,15 @@ using System.ComponentModel.Design;
 //IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 //PARTICULAR PURPOSE.
 //---------------------------------------------------------------------
-using System.Diagnostics;
-using System.Drawing.Design;
-using System.Windows.Forms.VisualStyles;
-using System.Drawing;
-
 namespace System.Windows.Forms
 {
+    using System.ComponentModel;
+    using System.ComponentModel.Design;
+    using System.Diagnostics;
+    using System.Drawing;
+    using System.Drawing.Design;
+    using System.Windows.Forms.VisualStyles;
+
 	/// <summary>
 	/// Summary description for TreeGridView.
 	/// </summary>

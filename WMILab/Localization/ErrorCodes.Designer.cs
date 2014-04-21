@@ -61,6 +61,105 @@ namespace WMILab.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Operation aborted.
+        /// </summary>
+        internal static string E_ABORT {
+            get {
+                return ResourceManager.GetString("E_ABORT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to General access denied error.
+        /// </summary>
+        internal static string E_ACCESSDENIED {
+            get {
+                return ResourceManager.GetString("E_ACCESSDENIED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unspecified failure.
+        /// </summary>
+        internal static string E_FAIL {
+            get {
+                return ResourceManager.GetString("E_FAIL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Handle that is not valid.
+        /// </summary>
+        internal static string E_HANDLE {
+            get {
+                return ResourceManager.GetString("E_HANDLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One or more arguments are not valid.
+        /// </summary>
+        internal static string E_INVALIDARG {
+            get {
+                return ResourceManager.GetString("E_INVALIDARG", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No such interface supported.
+        /// </summary>
+        internal static string E_NOINTERFACE {
+            get {
+                return ResourceManager.GetString("E_NOINTERFACE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not implemented.
+        /// </summary>
+        internal static string E_NOTIMPL {
+            get {
+                return ResourceManager.GetString("E_NOTIMPL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to allocate necessary memory.
+        /// </summary>
+        internal static string E_OUTOFMEMORY {
+            get {
+                return ResourceManager.GetString("E_OUTOFMEMORY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pointer that is not valid.
+        /// </summary>
+        internal static string E_POINTER {
+            get {
+                return ResourceManager.GetString("E_POINTER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unexpected failure.
+        /// </summary>
+        internal static string E_UNEXPECTED {
+            get {
+                return ResourceManager.GetString("E_UNEXPECTED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operation successful.
+        /// </summary>
+        internal static string S_OK {
+            get {
+                return ResourceManager.GetString("S_OK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Current user does not have permission to perform the action..
         /// </summary>
         internal static string WBEM_E_ACCESS_DENIED {
