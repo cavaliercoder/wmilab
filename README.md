@@ -9,7 +9,6 @@ __Requirements:__
 
 ### Bugs
 * Line ending ignored in member descriptors
-* Value mappings with value 0 don't translate (eg. Win32_CacheMemory.Location)
 * Class view flickers when filtering the class list
 
 ### Todo
@@ -17,6 +16,7 @@ __Requirements:__
 * Add progress indicator for namespace/class lists
 * Add state restoration for UI controls and navigation
 * Add common text functions to query results, inspector, log, detail view, etc.
+* Add class details to object inspector
 
 * Add about dialog
 * Add license details

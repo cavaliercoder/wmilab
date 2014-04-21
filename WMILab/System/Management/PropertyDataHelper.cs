@@ -54,17 +54,17 @@
             return GetValueAsStringArray(p, PropertyDataValueMap.Empty);
         }
 
+        public static String GetValueAsString(this PropertyData p, PropertyDataValueMap valueMap)
+        {
+            return String.Join(", ", GetValueAsStringArray(p, valueMap));
+        }
+
         public static String GetValueAsString(this PropertyData p, PropertyDataValueMapCollection valueMaps)
         {
             if (valueMaps != null && valueMaps.ContainsKey(p.Name))
                 return GetValueAsString(p, valueMaps[p.Name]);
 
             return GetValueAsString(p);
-        }
-
-        public static String GetValueAsString(this PropertyData p, PropertyDataValueMap valueMap)
-        {
-            return String.Join(", ", GetValueAsStringArray(p, valueMap));
         }
         
         public static String GetValueAsString(this PropertyData p)

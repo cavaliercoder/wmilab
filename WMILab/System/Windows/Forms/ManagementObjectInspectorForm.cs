@@ -33,6 +33,12 @@ namespace System.Windows.Forms
             set { this.managementClassInspector1.Scope = value; }
         }
 
+        public Boolean ShowMappedValues
+        {
+            get { return this.managementClassInspector1.ShowMappedValues; }
+            set { this.managementClassInspector1.ShowMappedValues = value; }
+        }
+
         public PropertyDataValueMapCollection ValueMaps
         {
             get { return this.managementClassInspector1.ValueMaps; }

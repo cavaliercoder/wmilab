@@ -43,7 +43,9 @@
 
         private bool showSystemProperties;
 
-        private bool showQualifiers;
+        private bool showQualifiers = true;
+
+        private bool showMappedValues = true;
 
         private bool autoExpandProperties = true;
 
@@ -145,6 +147,17 @@
             {
                 this.showQualifiers = value;
                 this.RefreshView();
+            }
+        }
+
+        [Browsable(true), Category("Behavior"), DefaultValue(true), Description("Show mapped values instead of raw values.")]
+        public bool ShowMappedValues
+        {
+            get { return this.showMappedValues; }
+            set
+            {
+                this.showMappedValues = value;
+                RefreshView();
             }
         }
 
@@ -301,13 +314,7 @@
             // Expand arrays
             if (p.Value != null && p.IsArray)
             {
-                var values = (Array)p.Value;
-
-                // Expand value mappings
-                if (this.ValueMaps != null && this.ValueMaps.ContainsKey(p.Name))
-                {
-                    values = p.GetValueAsStringArray(this.ValueMaps[p.Name]);
-                }
+                var values = p.GetValueAsStringArray(this.ShowMappedValues ? this.ValueMaps : null);
 
                 int i = 0;
                 bool addValues = true;

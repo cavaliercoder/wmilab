@@ -81,11 +81,13 @@
 
         private bool updatingNavigation = false;
 
-        private Boolean showSystemClasses = false;
-
         private ManagementQueryBroker queryBroker;
 
         private ICodeGenerator codeGenerator;
+
+        private Boolean showSystemClasses = false;
+
+        private Boolean showMappedValues = true;
 
         #endregion
 
@@ -808,18 +810,7 @@
             {
                 foreach (PropertyData p in e.NewObject.Properties)
                 {
-                    // Should we translate a value map?
-                    if (this.queryBroker.ResultClassValueMaps.ContainsKey(p.Name))
-                    {
-                        var map = this.queryBroker.ResultClassValueMaps[p.Name];
-                        values[i++] = p.GetValueAsString(map);
-                    }
-
-                    else
-                    {
-
-                        values[i++] = p.GetValueAsString();
-                    }
+                    values[i++] = p.GetValueAsString(this.showMappedValues ? this.queryBroker.ResultClassValueMaps : null);
                 }
             }
 
@@ -949,6 +940,7 @@
 
             // Create form
             ManagementObjectInspectorForm popup = new ManagementObjectInspectorForm();
+            popup.ShowMappedValues = this.showMappedValues;
             popup.Scope = this.CurrentNamespaceScope;
             popup.ValueMaps = this.queryBroker.ResultClassValueMaps;
             popup.ManagementObject = managementObject;
@@ -1362,6 +1354,12 @@
             this.showSystemClassesToolStripMenuItem.Checked = !this.showSystemClassesToolStripMenuItem.Checked;
             this.showSystemClasses = this.showSystemClassesToolStripMenuItem.Checked;
             this.RefreshClassListFilter();
+        }
+
+        private void showmappedValuesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.showmappedValuesToolStripMenuItem.Checked = !this.showmappedValuesToolStripMenuItem.Checked;
+            this.showMappedValues = this.showmappedValuesToolStripMenuItem.Checked;
         }
 
         #endregion
