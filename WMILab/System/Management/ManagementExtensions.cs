@@ -54,6 +54,11 @@
             return obj.ClassPath.RelativePath;
         }
 
+        public static Boolean HasProperty(this ManagementBaseObject obj, String name)
+        {
+            return obj.Properties.Contains(name);
+        }
+
         /// <summary>
         /// Return true if the specified qualifier name exists in the specified ManagementBaseObject's qualifier collection.
         /// </summary>
@@ -237,6 +242,15 @@
             }
 
             return String.Empty;
+        }
+
+        public static Boolean Contains(this PropertyDataCollection properties, String name)
+        {
+            foreach (var p in properties)
+                if (p.Name == name)
+                    return true;
+
+            return false;
         }
 
         #endregion

@@ -93,6 +93,9 @@
 
         #region Properties
 
+        /// <summary>
+        /// Gets or sets the full path of the WMI Namepace currently displayed in the main window.
+        /// </summary>
         private String CurrentNamespacePath
         {
             get
@@ -126,11 +129,17 @@
             }
         }
 
+        /// <summary>
+        /// Gets the ManagementScope for the WMI Namespace currently displayed in the main window.
+        /// </summary>
         private ManagementScope CurrentNamespaceScope
         {
             get { return this.currentNamespaceScope; }
         }
 
+        /// <summary>
+        /// Gets or set the full path of the WMI Class currently displayed in the main window.
+        /// </summary>
         private String CurrentClassPath
         {
             get { return this.currentClass == null ? null : this.currentClass.Path.Path; }
@@ -147,7 +156,6 @@
                 try
                 {
                     this.CurrentClass = new ManagementClass(this.CurrentNamespaceScope, path, classObjGetOpts);
-                    this.Log(LogLevel.Information, String.Format("Loaded class: {0}", value));
                 }
                 catch (Exception e)
                 {
@@ -156,6 +164,9 @@
             }
         }
 
+        /// <summary>
+        /// Gets or sets the WMI Class currently displayed in the main window.
+        /// </summary>
         private ManagementClass CurrentClass
         {
             get { return this.currentClass; }
@@ -164,9 +175,13 @@
             {
                 this.currentClass = value;
                 RefreshClassView();
+                this.Log(LogLevel.Information, String.Format("Loaded class: {0}", value));
             }
         }
 
+        /// <summary>
+        /// Gets or sets the code generator currently used to generate code in the class code tab.
+        /// </summary>
         private ICodeGenerator CodeGenerator
         {
             get { return this.codeGenerator; }
@@ -177,13 +192,15 @@
                 if(this.CurrentClass != null)
                     this.RefreshScript(this.CurrentClass);
             }
-
         }
 
         #endregion
 
         #region Namespace Tree
 
+        /// <summary>
+        /// Refreshes the namespace tree with tree nodes for the currently connected server.
+        /// </summary>
         private void RefreshNamespaceTree() {
             this.nsTreeObserver.Cancel();
 
@@ -255,6 +272,11 @@
 
         private delegate void appendTreeNodeDelegate(TreeNode parent, TreeNode child);
 
+        /// <summary>
+        /// Appends one tree node to another in a thread safe manner.
+        /// </summary>
+        /// <param name="parent">The parent TreeNode to be appended to.</param>
+        /// <param name="child">The child TreeNode to be appended.</param>
         private void appendTreeNode(TreeNode parent, TreeNode child)
         {
             if(this.InvokeRequired) {
@@ -273,6 +295,9 @@
 
         #region Class list
 
+        /// <summary>
+        /// Refreshes the class list for the currently connected WMI Namespace.
+        /// </summary>
         private void RefreshClassList()
         {
             classListItems.Clear();
@@ -295,6 +320,9 @@
             }
         }
 
+        /// <summary>
+        /// Applies a filter to the class list based on display options and user searching.
+        /// </summary>
         void RefreshClassListFilter()
         {
             this.listViewClasses.Items.Clear();
@@ -373,6 +401,10 @@
 
         #region Class view
 
+        /// <summary>
+        /// Selects and highlights a class from the class list without changing the current class.
+        /// </summary>
+        /// <param name="className">The name of the class item to be deleted.</param>
         private void SelectClassListViewItem(String className)
         {
             this.updatingNavigation = true;
@@ -396,6 +428,10 @@
             this.updatingNavigation = false;
         }
 
+        /// <summary>
+        /// Refreshes all class view controls to display data for the currently selected class.
+        /// </summary>
+        /// <remarks>Refreshes the member, query and code tabs.</remarks>
         private void RefreshClassView()
         {
             // Select the class in the list
@@ -409,6 +445,10 @@
             RefreshScript(c);
         }
 
+        /// <summary>
+        /// Refreshes the class member list view with details for members of the specified ManagementClass.
+        /// </summary>
+        /// <param name="c">The System.Management.ManagementClass to be displayed.</param>
         private void RefreshClassMembersListView(ManagementClass c)
         {
             this.treeViewClassMembers.Nodes.Clear();
@@ -450,6 +490,10 @@
             classNode.Expand();
         }
 
+        /// <summary>
+        /// Refreshes the class member detail view for the selected class member.
+        /// </summary>
+        /// <param name="tag">A ManagementClass, PropertyData or MethodData member object of the currently displayed ManagementClass.</param>
         private void RefreshClassMembersDetailView(object tag)
         {
             this.txtClassMemberDetail.Clear();
@@ -602,6 +646,11 @@
             }
         }
 
+        /// <summary>
+        /// Refreshes the query tab for the specified ManagementClass.
+        /// </summary>
+        /// <param name="c">The System.Management.ManagementClass to be displayed.</param>
+        /// <remarks>Cancels any currently running queries.</remarks>
         private void RefreshQueryView(ManagementClass c)
         {
             // Stop an existing query
@@ -618,6 +667,10 @@
             InitQueryResultGrid(c);
         }
 
+        /// <summary>
+        /// Initializes the query results grid to receive results for the specified ManagementClass.
+        /// </summary>
+        /// <param name="c">The System.Management.ManagementClass to be displayed.</param>
         private void InitQueryResultGrid(ManagementClass c)
         {
             this.gridQueryResults.Rows.Clear();
@@ -704,6 +757,10 @@
             }
         }
 
+        /// <summary>
+        /// Refreshes the code tab with script details for the specified ManagementClass.
+        /// </summary>
+        /// <param name="c">The System.Management.ManagementClass to be displayed.</param>
         private void RefreshScript(ManagementClass c)
         {
             if (this.CodeGenerator != null && c != null)
@@ -845,6 +902,11 @@
             }
         }
 
+        /// <summary>
+        /// Handles a Completed event when a WMI query has completed.
+        /// </summary>
+        /// <param name="sender">The System.Management.ManagementQueryBroker that owns the completed query.</param>
+        /// <param name="e">The BrokerCompletedEventArgs for this event.</param>
         private void OnQueryCompleted(object sender, BrokerCompletedEventArgs e)
         {
             if (this.InvokeRequired)
@@ -880,6 +942,11 @@
             }
         }
 
+        /// <summary>
+        /// Handles an ObjectReady event when a WMI object has been returned from a WMI query.
+        /// </summary>
+        /// <param name="sender">The System.Management.ManagementQueryBroker that returned this object.</param>
+        /// <param name="e">The BrokerObjectReadyEventArgs for this event.</param>
         private void OnQueryResultReady(object sender, BrokerObjectReadyEventArgs e)
         {
             if (this.Disposing)
@@ -900,9 +967,13 @@
 
             if (WqlQueryType.Select == this.queryBroker.QueryType)
             {
-                foreach (PropertyData p in e.NewObject.Properties)
+                // Get the properties from the class, not the object as the returned
+                // object may be a subclass with additional properies for which no
+                // columns have been configured.
+                foreach (PropertyData cProp in this.queryBroker.ResultClass.Properties)
                 {
-                    values[i++] = p.GetValueAsString(this.showMappedValues ? this.queryBroker.ResultClassValueMaps : null);
+                    var oProp = e.NewObject.Properties[cProp.Name];
+                    values[i++] = oProp.GetValueAsString(this.showMappedValues ? this.queryBroker.ResultClassValueMaps : null);
                 }
             }
 
@@ -923,7 +994,7 @@
         }
 
         /// <summary>
-        /// Toggles the query UI to feedback query status to the user.
+        /// Toggles the query UI controls to feedback query status to the user.
         /// </summary>
         /// <param name="inProgress">Determines the state of UI components.</param>
         private void ToggleQueryUI(Boolean inProgress)
@@ -936,6 +1007,11 @@
             this.tabQuery.Cursor = inProgress ? Cursors.WaitCursor : Cursors.Default;
         }
 
+        /// <summary>
+        /// Shows the object inspector window for the specified ManagementBaseObject.
+        /// </summary>
+        /// <param name="managementObject">The ManagementBaseObject to be inspected.</param>
+        /// <param name="location">The location (relative to the screen) to display the window.</param>
         private void ShowInspector(ManagementBaseObject managementObject, Point location)
         {
             this.gridQueryResults.Cursor = Cursors.WaitCursor;
@@ -944,7 +1020,7 @@
             ManagementObjectInspectorForm popup = new ManagementObjectInspectorForm();
             popup.ShowMappedValues = this.showMappedValues;
             popup.Scope = this.CurrentNamespaceScope;
-            popup.ValueMaps = this.queryBroker.ResultClassValueMaps;
+            popup.ManagementClass = this.queryBroker.ResultClass;
             popup.ManagementObject = managementObject;
 
             // Offset location to screen bounds
@@ -1001,12 +1077,12 @@
 
         #region Code generation
 
+        /// <summary>
+        /// Initializes the Scintilla.Net code editor control.
+        /// </summary>
+        /// <remarks>The control is not added in the designer as it is unable to resolve the unmanaged DLLs</remarks>
         private void InitCodeEditor()
         {
-            /*
-             * Init the Scintilla text editor
-             * The control is not added in the designer as it is unable to resolve the unmanaged DLLs
-             */
             this.txtCode = new Scintilla
             {
                 Dock = DockStyle.Fill,
@@ -1022,6 +1098,9 @@
             this.tabCode.Controls.SetChildIndex(this.txtCode, 0);
         }
 
+        /// <summary>
+        /// Refreshes the code language menu with menu items for all available code generators.
+        /// </summary>
         private void RefreshCodeGeneratorMenu()
         {
             var generators = CodeGeneratorFactory.CodeGenerators;
@@ -1063,6 +1142,10 @@
             }
         }
 
+        /// <summary>
+        /// Saves the contents of the code editor control to a script file.
+        /// </summary>
+        /// <param name="path">File path to save to.</param>
         private void SaveScript(string path)
         {
             System.IO.StreamWriter stream = new System.IO.StreamWriter(path, false);
@@ -1077,6 +1160,9 @@
             }
         }
 
+        /// <summary>
+        /// Displays a file save dialog to save the contents of the code editor control to a script file.
+        /// </summary>
         private void SaveScript()
         {
             if (this.CodeGenerator == null) return;
@@ -1098,39 +1184,11 @@
 
         #region Logging
 
-        private void LogManagementException(ManagementException e)
-        {
-            UInt32 code = (UInt32)e.ErrorCode;
-            this.Log(LogLevel.Critical, String.Format("WMI Exception {0:G} (0x{0:X})", code));
-        }
-
-        private void LogComException(COMException e)
-        {
-            UInt32 code = (UInt32)e.ErrorCode;
-
-            if (Enum.IsDefined(typeof(ManagementError), code))
-            {
-                // Log an constant with known constant info
-                var constant = ((ManagementError)code).ToString();
-                this.Log(LogLevel.Critical, String.Format("COM Exception {0:G} (0x{0:X}) {1}", code, constant));
-
-                // Attempt to get an constant description
-                var description = ErrorCodes.ResourceManager.GetString(constant);
-                if (!String.IsNullOrEmpty(description))
-                    this.Log(LogLevel.Information, description);
-            }
-
-            else
-            {
-                this.Log(LogLevel.Critical, String.Format("COM Exception {0:G} (0x{0:X})", code));
-            }
-        }
-
-        private void LogException(Exception e)
-        {
-            this.Log(LogLevel.Critical, e.Message);
-        }
-
+        /// <summary>
+        /// Logs a message to the log window.
+        /// </summary>
+        /// <param name="level">The log entry type.</param>
+        /// <param name="message">The message to be logged.</param>
         private void Log(LogLevel level, String message)
         {
             var item = new ListViewItem(message);

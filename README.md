@@ -11,13 +11,14 @@ __Requirements:__
 * Line ending ignored in member descriptors
 * Class view flickers when filtering the class list
 * Queries which return subclasses fail to order columns (eg. CIM_SYSTEM)
-
+* Value maps are not loaded for subclass results of a base class query 
+  eg. the Win32_ComputerSystem result in a CIM_System query
+  
 ### Todo
 * Add support for remote connections
 * Add progress indicator for namespace/class lists
 * Add state restoration for UI controls and navigation
 * Add common text functions to query results, inspector, log, detail view, etc.
-* Add class details to object inspector
 
 * Add about dialog
 * Add license details

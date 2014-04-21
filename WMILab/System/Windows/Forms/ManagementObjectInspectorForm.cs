@@ -17,15 +17,6 @@ namespace System.Windows.Forms
             form.Show();
         }
 
-        public ManagementBaseObject ManagementObject
-        {
-            get { return this.managementClassInspector1.ManagementObject; }
-            set 
-            {
-                this.managementClassInspector1.ManagementObject = value;
-                this.Text = value.GetRelativePath();
-            }
-        }
 
         public ManagementScope Scope
         {
@@ -33,17 +24,27 @@ namespace System.Windows.Forms
             set { this.managementClassInspector1.Scope = value; }
         }
 
+        public ManagementBaseObject ManagementObject
+        {
+            get { return this.managementClassInspector1.ManagementObject; }
+            set
+            {
+                this.managementClassInspector1.ManagementObject = value;
+                this.Text = value.GetRelativePath();
+            }
+        }
+
+        public ManagementClass ManagementClass
+        {
+            get { return this.managementClassInspector1.ManagementClass; }
+
+            set { this.managementClassInspector1.ManagementClass = value; }
+        }
+
         public Boolean ShowMappedValues
         {
             get { return this.managementClassInspector1.ShowMappedValues; }
             set { this.managementClassInspector1.ShowMappedValues = value; }
-        }
-
-        public PropertyDataValueMapCollection ValueMaps
-        {
-            get { return this.managementClassInspector1.ValueMaps; }
-
-            set { this.managementClassInspector1.ValueMaps = value; }
         }
 
         private void ManagementObjectInspectorForm_KeyUp(object sender, KeyEventArgs e)

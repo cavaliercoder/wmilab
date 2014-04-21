@@ -27,6 +27,10 @@
 
         private ManagementBaseObject selectedObject;
 
+        private ManagementClass managementClass;
+
+        private PropertyDataValueMapCollection valueMaps;
+
         private PropertyData selectedProperty;
 
         private Dictionary<string, PropertyData> propertyMap = new Dictionary<string, PropertyData>();
@@ -88,10 +92,15 @@
         }
 
         [Browsable(false)]
-        public PropertyDataValueMapCollection ValueMaps
+        public ManagementClass ManagementClass
         {
-            get;
-            set;
+            get { return this.managementClass; }
+            set
+            {
+                this.managementClass = value;
+                this.valueMaps = value.GetValueMaps();
+                this.RefreshView();
+            }
         }
 
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -288,19 +297,29 @@
 
         private TreeGridNode AddNode(ManagementBaseObject o, PropertyData p, TreeGridNodeCollection nodes)
         {
-            TreeGridNode node = nodes.Add(p.Name, p.GetValueAsString(this.ValueMaps));
+            TreeGridNode node = nodes.Add(p.Name, p.GetValueAsString(this.valueMaps));
             string guid = GetGUID();
             node.Tag = guid;
             this.objectMap.Add(guid, o);
             this.propertyMap.Add(guid, p);
 
+            // Get property description
+            var description = String.Empty;
+            if (this.ManagementClass != null && this.managementClass.HasProperty(p.Name))
+            {
+                description = this.ManagementClass.Properties[p.Name].GetDescription();
+                if (!String.IsNullOrEmpty(description))
+                    description = "\r\n" + description;
+            }
+
             // Set tooltip
             node.Cells[0].ToolTipText =
                 String.Format(
-                "{0} {1}.{2}",
+                "{0} {1}.{2}{3}",
                 p.Type.ToString() + (p.IsArray ? "[]" : String.Empty),
                 this.ManagementObject.ClassPath.ClassName,
-                p.Name
+                p.Name,
+                description
                 );
             
             // Highlight key columns
@@ -314,7 +333,7 @@
             // Expand arrays
             if (p.Value != null && p.IsArray)
             {
-                var values = p.GetValueAsStringArray(this.ShowMappedValues ? this.ValueMaps : null);
+                var values = p.GetValueAsStringArray(this.ShowMappedValues ? this.valueMaps : null);
 
                 int i = 0;
                 bool addValues = true;
