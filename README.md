@@ -10,6 +10,7 @@ __Requirements:__
 ### Bugs
 * Line ending ignored in member descriptors
 * Class view flickers when filtering the class list
+* Queries which return subclasses fail to order columns (eg. CIM_SYSTEM)
 
 ### Todo
 * Add support for remote connections

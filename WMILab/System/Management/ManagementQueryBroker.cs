@@ -6,7 +6,7 @@
     /// <summary>
     /// Acts as a broker for managing a single WQL query and subsequent executions.
     /// </summary>
-    public class ManagementQueryBroker
+    public class ManagementQueryBroker : IDisposable
     {
         #region Constructors
 
@@ -192,6 +192,11 @@
             }
 
             // ? this.OnQueryCompleted(this, EventArgs.Empty);
+        }
+
+        public void Dispose()
+        {
+            this.Cancel();
         }
 
         protected virtual void OnStarted(object sender, EventArgs e)

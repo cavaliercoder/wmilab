@@ -401,10 +401,6 @@
             // Select the class in the list
             this.SelectClassListViewItem(this.CurrentClass.ClassPath.ClassName);
 
-            // Stop an existing query
-            if (this.queryBroker != null)
-                this.queryBroker.Cancel();
-
             // Update class view
             var c = this.CurrentClass;
             RefreshClassMembersListView(c);
@@ -608,7 +604,104 @@
 
         private void RefreshQueryView(ManagementClass c)
         {
-            this.txtQuery.Text = c.GetDefaultQuery();
+            // Stop an existing query
+            if (this.queryBroker != null)
+            {
+                this.queryBroker.Cancel();
+            }
+
+            var query = c.GetDefaultQuery();
+
+            this.txtQuery.Text = query;
+            this.queryBroker = new ManagementQueryBroker(query, this.CurrentNamespaceScope);
+
+            InitQueryResultGrid(c);
+        }
+
+        private void InitQueryResultGrid(ManagementClass c)
+        {
+            this.gridQueryResults.Rows.Clear();
+            this.gridQueryResults.Columns.Clear();
+
+            // Configure result context menu
+            this.btnGetAssociatorsOf.Visible =
+                this.btnGetReferencesOf.Visible =
+                this.btnResultPropertiesSeparater.Visible =
+                this.queryBroker == null || this.queryBroker.QueryType == WqlQueryType.Select;
+
+            // Create count colIndex
+            DataGridViewTextBoxColumn colIndex = new DataGridViewTextBoxColumn();
+            colIndex.Name = colIndex.HeaderText = "#";
+            colIndex.DefaultCellStyle.BackColor = SystemColors.ControlLight;
+            colIndex.DefaultCellStyle.ForeColor = SystemColors.ControlDark;
+            colIndex.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+
+            // Create result inspector colIndex
+            DataGridViewImageColumn colInspector = new DataGridViewImageColumn();
+            colInspector.Image = this.ImageList1.Images["Property"];
+            colInspector.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+
+            this.gridQueryResults.Columns.AddRange(colIndex, colInspector);
+
+            if (this.queryBroker == null || this.queryBroker.QueryType == WqlQueryType.Select)
+            {
+                // Add property columns
+                foreach (PropertyData p in c.Properties)
+                {
+                    DataGridViewColumn colProperty;
+
+                    // Create hyperlink columns for objects
+                    if (p.Type == CimType.Object || p.Type == CimType.Reference)
+                    {
+                        colProperty = new DataGridViewLinkColumn();
+                        DataGridViewLinkColumn link = (DataGridViewLinkColumn)colProperty;
+                        link.LinkBehavior = LinkBehavior.HoverUnderline;
+                        link.VisitedLinkColor = link.LinkColor;
+                        link.ActiveLinkColor = link.LinkColor;
+                    }
+
+                    else
+                    {
+                        colProperty = new DataGridViewTextBoxColumn();
+                    }
+
+                    colProperty.Name = colProperty.HeaderText = p.Name;
+                    if (p.IsKey())
+                    {
+                        colProperty.DefaultCellStyle.BackColor = SystemColors.Info;
+                        colProperty.DefaultCellStyle.ForeColor = SystemColors.InfoText;
+                    }
+
+                    if (c.IsAssociation())
+                        colProperty.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                    else
+                        colProperty.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
+
+                    this.gridQueryResults.Columns.Add(colProperty);
+                }
+            }
+
+            else
+            {
+                DataGridViewLinkColumn col = new DataGridViewLinkColumn();
+                col.LinkBehavior = LinkBehavior.HoverUnderline;
+                col.VisitedLinkColor = col.LinkColor;
+                col.ActiveLinkColor = col.LinkColor;
+                col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+                switch (this.queryBroker.QueryType)
+                {
+                    case WqlQueryType.AssociatorsOf:
+                        col.Name = "Association";
+                        break;
+
+                    case WqlQueryType.ReferencesOf:
+                        col.Name = "Reference";
+                        break;
+                }
+
+                this.gridQueryResults.Columns.Add(col);
+            }
         }
 
         private void RefreshScript(ManagementClass c)
@@ -703,12 +796,15 @@
 
             try
             {
-                // Execute
-                var scope = new ManagementScope(this.CurrentNamespacePath, this.conOpts);
+                // Prepare the query broker
                 this.queryBroker = new ManagementQueryBroker(this.txtQuery.Text, this.CurrentNamespaceScope);
                 this.queryBroker.ObjectReady += new BrokerObjectReadyEventHandler(this.OnQueryResultReady);
                 this.queryBroker.Completed += new BrokerCompletedEventHandler(this.OnQueryCompleted);
 
+                // Init the grid view
+                this.InitQueryResultGrid(this.queryBroker.ResultClass);
+
+                // Fetch results
                 this.queryBroker.ExecuteAsync();
             }
 
@@ -795,10 +891,6 @@
                 return;
             }
 
-            // Init the datagrid if required
-            if (1 == this.queryBroker.ResultCount)
-                this.InitQueryResults(e.NewObject);
-
             // Build an array of values
             var i = 0;
             var values = new String[e.NewObject.Properties.Count + 3];
@@ -828,96 +920,6 @@
         private void ResetQueryResults()
         {
             this.gridQueryResults.Rows.Clear();
-            this.gridQueryResults.Columns.Clear();
-        }
-
-        /// <summary>
-        /// Initializes the Query UI to receive new results for the specified ManagementObject type.
-        /// </summary>
-        /// <param name="result">The first result returned by a query.</param>
-        private void InitQueryResults(ManagementBaseObject result)
-        {
-            var c = this.queryBroker.ResultClass;
-
-            // Configure result context menu
-            this.btnGetAssociatorsOf.Visible =
-                this.btnGetReferencesOf.Visible =
-                this.btnResultPropertiesSeparater.Visible =
-                this.queryBroker.QueryType == WqlQueryType.Select;
-
-            // Create count colIndex
-            DataGridViewTextBoxColumn colIndex = new DataGridViewTextBoxColumn();
-            colIndex.Name = colIndex.HeaderText = "#";
-            colIndex.DefaultCellStyle.BackColor = SystemColors.ControlLight;
-            colIndex.DefaultCellStyle.ForeColor = SystemColors.ControlDark;
-            colIndex.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-
-            // Create result inspector colIndex
-            DataGridViewImageColumn colInspector = new DataGridViewImageColumn();
-            colInspector.Image = this.ImageList1.Images["Property"];
-            colInspector.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-
-            this.gridQueryResults.Columns.AddRange(colIndex, colInspector);
-
-            if (WqlQueryType.Select == this.queryBroker.QueryType)
-            {
-                // Add property columns
-                foreach (PropertyData p in c.Properties)
-                {
-                    DataGridViewColumn colProperty;
-
-                    // Create hyperlink columns for objects
-                    if (p.Type == CimType.Object || p.Type == CimType.Reference)
-                    {
-                        colProperty = new DataGridViewLinkColumn();
-                        DataGridViewLinkColumn link = (DataGridViewLinkColumn)colProperty;
-                        link.LinkBehavior = LinkBehavior.HoverUnderline;
-                        link.VisitedLinkColor = link.LinkColor;
-                        link.ActiveLinkColor = link.LinkColor;
-                    }
-
-                    else
-                    {
-                        colProperty = new DataGridViewTextBoxColumn();
-                    }
-
-                    colProperty.Name = colProperty.HeaderText = p.Name;
-                    if (p.IsKey())
-                    {
-                        colProperty.DefaultCellStyle.BackColor = SystemColors.Info;
-                        colProperty.DefaultCellStyle.ForeColor = SystemColors.InfoText;
-                    }
-
-                    if (c.IsAssociation())
-                        colProperty.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                    else
-                        colProperty.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
-
-                    this.gridQueryResults.Columns.Add(colProperty);
-                }
-            }
-
-            else
-            {
-                DataGridViewLinkColumn col = new DataGridViewLinkColumn();
-                col.LinkBehavior = LinkBehavior.HoverUnderline;
-                col.VisitedLinkColor = col.LinkColor;
-                col.ActiveLinkColor = col.LinkColor;
-                col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-
-                switch (this.queryBroker.QueryType)
-                {
-                    case WqlQueryType.AssociatorsOf:
-                        col.Name = "Association";
-                        break;
-
-                    case WqlQueryType.ReferencesOf:
-                        col.Name = "Reference";
-                        break;
-                }
-
-                this.gridQueryResults.Columns.Add(col);
-            }
         }
 
         /// <summary>
