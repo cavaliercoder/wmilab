@@ -41,7 +41,9 @@
     <StartupObject>WMILab.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ScintillaNET, Version=2.6.0.0, Culture=neutral, PublicKeyToken=948d6c9751444115, processorArchitecture=MSIL" />
+    <Reference Include="ScintillaNET">
+      <HintPath>.\ScintillaNET.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
@@ -172,9 +174,6 @@
     <None Include="Resources\PublishToWebHS.png" />
     <None Include="Resources\Properties.bmp" />
     <Content Include="SciLexer.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="SciLexer64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="WmiStudio.ico" />
