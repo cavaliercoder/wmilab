@@ -47,9 +47,10 @@ namespace WMILab
             classListEnumOpts.EnumerateDeep = true;
             classObjGetOpts.UseAmendedQualifiers = true;
 
-            // Observer event handlers
-            nsTreeObserver.ObjectReady += new ObjectReadyEventHandler(OnNamespaceReady);
+            nsObjGetOpts.Timeout = new TimeSpan(0, 0, 3);
+            nsTreeEnumOpts.Timeout = new TimeSpan(0, 0, 3);
 
+            // Observer event handlers
             classListObserver.ObjectReady += new ObjectReadyEventHandler(OnClassReady);
             classListObserver.Completed += new CompletedEventHandler(OnClassSearchCompleted);
 
@@ -62,7 +63,7 @@ namespace WMILab
             resetClassColumnHeader();
 
             // Build local namespace tree
-            this.RefreshNamespaceTree();
+            this.CurrentServerRootScope = new ManagementScope("\\\\.\\ROOT");
 
             // Navigate to default namespace and class
             this.CurrentNamespacePath = @"\\.\ROOT\CIMV2";
@@ -76,19 +77,15 @@ namespace WMILab
 
         private Scintilla txtCode = new Scintilla();
 
-        private ConnectionOptions conOpts = new ConnectionOptions();
-
         private String currentNamespacePath;
 
-        private ManagementScope currentNamespaceScope;
+        private ManagementScope currentServerRootScope;
 
         private ManagementClass currentClass;
 
-        private ManagementScope nsTreeScope;
-
         private TreeNode nsTreeRootNode;
 
-        private ManagementOperationObserver nsTreeObserver = new ManagementOperationObserver();
+        private ManagementOperationObserver nsTreeObserver;
 
         private ManagementOperationObserver classListObserver = new ManagementOperationObserver();
 
@@ -116,6 +113,16 @@ namespace WMILab
 
         #region Properties
 
+        private ManagementScope CurrentServerRootScope
+        {
+            get { return this.currentServerRootScope; }
+            set
+            {
+                this.currentServerRootScope = value;
+                this.RefreshNamespaceTree();
+            }
+        }
+
         /// <summary>
         /// Gets or sets the full path of the WMI Namepace currently displayed in the main window.
         /// </summary>
@@ -137,7 +144,7 @@ namespace WMILab
 
                 try
                 {
-                    this.currentNamespaceScope = new ManagementScope(value, this.conOpts);
+                    this.CurrentNamespaceScope = new ManagementScope(value, this.CurrentServerRootScope.Options);
                     this.CurrentNamespaceScope.Connect();
 
                     currentNamespacePath = value;
@@ -157,7 +164,8 @@ namespace WMILab
         /// </summary>
         private ManagementScope CurrentNamespaceScope
         {
-            get { return this.currentNamespaceScope; }
+            get;
+            set;
         }
 
         /// <summary>
@@ -219,24 +227,51 @@ namespace WMILab
 
         #endregion
 
+        #region Remote connections
+
+        private Boolean ShowConnectDialog()
+        {
+            var scope = ConnectToForm.ShowConnectToServerDialog();
+            if(scope != null)
+            {
+                this.CurrentServerRootScope = scope;
+                this.CurrentNamespacePath = String.Format("{0}\\CIMV2", this.CurrentServerRootScope.Path.Path);
+                this.CurrentClassPath = String.Format("{0}\\CIMV2:Win32_ComputerSystem", this.CurrentServerRootScope.Path.Path);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        #endregion
+
         #region Namespace Tree
 
         /// <summary>
-        /// Refreshes the namespace tree with tree nodes for the currently connected server.
+        /// Refreshes the namespace tree with tree nodes for the currently connected server defined in CurrentServerRootScope.
         /// </summary>
         private void RefreshNamespaceTree() {
-            this.nsTreeObserver.Cancel();
+            var scope = this.CurrentServerRootScope;
 
-            var path = new ManagementPath(@"\\localhost\ROOT");
-            nsTreeScope = new ManagementScope(path, conOpts);
+            this.Log(LogLevel.Information, String.Format("Loading namespaces in: {0}", scope.Path.Path));
 
-            var searchPath = new ManagementPath(String.Format(@"{0}:__NAMESPACE", path.Path));
-            ManagementClass ns = new ManagementClass(nsTreeScope, searchPath, nsObjGetOpts);
+            // Connect to the root namespace
+            var searchPath = new ManagementPath(String.Format(@"{0}:__NAMESPACE", scope.Path.Path));
+            ManagementClass ns = new ManagementClass(scope, searchPath, nsObjGetOpts);
+
+            // Reset namespace query observer
+            if(this.nsTreeObserver != null)
+                this.nsTreeObserver.Cancel();
+            this.nsTreeObserver = new ManagementOperationObserver();
+            this.nsTreeObserver.ObjectReady += new ObjectReadyEventHandler(OnNamespaceReady);
+            this.nsTreeObserver.Completed += new CompletedEventHandler(OnNamespaceSearchComplete);
 
             // TODO: Get hostname of system
 
             // Create classNode node
-            var nodePath = String.Format(@"\\{0}\{1}",ns.Path.Server, ns.Path.NamespacePath);
+            this.treeViewNamespaces.Nodes.Clear();
+            var nodePath = String.Format(@"\\{0}\{1}", ns.Path.Server, ns.Path.NamespacePath);
             nsTreeRootNode = new TreeNode(nodePath);
             nsTreeRootNode.Tag = nodePath;
             nsTreeRootNode.ImageKey = "Home";
@@ -246,12 +281,28 @@ namespace WMILab
 
             // Search for namespaces asyncronously
             ns.GetInstances(nsTreeObserver, nsTreeEnumOpts);
+
+            /*var instances = ns.GetInstances(nsTreeEnumOpts);
+            foreach (var instance in instances)
+            {
+                OnNamespaceReady(instance);
+            }*/
         }
 
         void OnNamespaceReady(object sender, ObjectReadyEventArgs e)
         {
-            var name = (String)e.NewObject.Properties["Name"].Value;
-            var path = String.Format(@"\\{0}\{1}\{2}", e.NewObject.ClassPath.Server, e.NewObject.ClassPath.NamespacePath, name);
+            OnNamespaceReady(e.NewObject);
+        }
+
+        /// <summary>
+        /// Called when a new namespace has been returned for RefreshNamespaceTree. Adds a treenode for the new namespace.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void OnNamespaceReady(ManagementBaseObject obj)
+        {
+            var name = (String)obj.Properties["Name"].Value;
+            var path = String.Format(@"\\{0}\{1}\{2}", obj.ClassPath.Server, obj.ClassPath.NamespacePath, name);
             var parts = path.Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
 
             // Get parent node from tree
@@ -282,7 +333,7 @@ namespace WMILab
 
             // Search for child namespaces asyncronously
             var searchPath = new ManagementPath(String.Format(@"{0}:__NAMESPACE", path));
-            var searchScope = new ManagementScope(path, conOpts);
+            var searchScope = new ManagementScope(path, this.CurrentServerRootScope.Options);
             ManagementClass ns = new ManagementClass(searchScope, searchPath, nsObjGetOpts);
 
             try
@@ -291,6 +342,11 @@ namespace WMILab
             }
             catch (ManagementException)
             { }
+        }
+
+        void OnNamespaceSearchComplete(object sender, CompletedEventArgs e)
+        {
+            this.Log(LogLevel.Information, "Namespace search complete.");
         }
 
         private delegate void appendTreeNodeDelegate(TreeNode parent, TreeNode child);
@@ -326,7 +382,7 @@ namespace WMILab
             classListItems.Clear();
             this.listViewClasses.Items.Clear();
 
-            this.Log(LogLevel.Information, String.Format("Loading class for path: {0}", this.currentNamespacePath));
+            this.Log(LogLevel.Information, String.Format("Loading classes for namespace: {0}", this.currentNamespacePath));
 
             var path = new ManagementPath(this.CurrentNamespacePath);
             var ns = new ManagementClass(this.CurrentNamespaceScope, path, nsObjGetOpts);
@@ -682,12 +738,15 @@ namespace WMILab
                 this.queryBroker.Cancel();
             }
 
-            var query = c.GetDefaultQuery();
+            if (c != null)
+            {
+                var query = c.GetDefaultQuery();
 
-            this.txtQuery.Text = query;
-            this.queryBroker = new ManagementQueryBroker(query, this.CurrentNamespaceScope);
+                this.txtQuery.Text = query;
+                this.queryBroker = new ManagementQueryBroker(query, this.CurrentNamespaceScope);
 
-            InitQueryResultGrid(c);
+                InitQueryResultGrid(c);
+            }
         }
 
         /// <summary>
@@ -1071,8 +1130,7 @@ namespace WMILab
                     // Link was a reference to an instance. Fetch the instance
                     string objectPath = this.queryBroker.Results[e.RowIndex].Properties[propertyName].Value.ToString();
 
-                    var scope = new ManagementScope(this.CurrentNamespacePath, this.conOpts);
-                    mObject = new ManagementObject(scope, new ManagementPath(objectPath), new ObjectGetOptions());
+                    mObject = new ManagementObject(this.CurrentNamespaceScope, new ManagementPath(objectPath), new ObjectGetOptions());
                 }
 
                 else
@@ -1446,6 +1504,11 @@ namespace WMILab
         }
 
         #endregion
+
+        private void btnConnectToServer_Click(object sender, EventArgs e)
+        {
+            this.ShowConnectDialog();
+        }
     }
 
     internal enum LogLevel

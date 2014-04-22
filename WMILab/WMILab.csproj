@@ -82,6 +82,12 @@
     <Compile Include="System\Management\PropertyDataValueMap.cs" />
     <Compile Include="System\Management\WqlQueryType.cs" />
     <Compile Include="System\Reflection\PluginFramework.cs" />
+    <Compile Include="System\Windows\Forms\ConnectToForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="System\Windows\Forms\ConnectToForm.Designer.cs">
+      <DependentUpon>ConnectToForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="System\Windows\Forms\ManagementObjectInspector.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -124,6 +130,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="System\Windows\Forms\ConnectToForm.resx">
+      <DependentUpon>ConnectToForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="System\Windows\Forms\ManagementObjectInspector.resx">
       <DependentUpon>ManagementObjectInspector.cs</DependentUpon>
     </EmbeddedResource>

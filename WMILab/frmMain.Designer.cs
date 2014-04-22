@@ -77,6 +77,8 @@
             this.listViewLog = new System.Windows.Forms.ListView();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnConnectToServer = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuMain.SuspendLayout();
             this.menuQueryRow.SuspendLayout();
             this.splitContainer5.Panel1.SuspendLayout();
@@ -117,6 +119,8 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnConnectToServer,
+            this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -125,7 +129,7 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -580,6 +584,19 @@
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             this.dataGridViewTextBoxColumn1.ReadOnly = true;
             // 
+            // btnConnectToServer
+            // 
+            this.btnConnectToServer.Image = global::WMILab.Properties.Resources.Connect;
+            this.btnConnectToServer.Name = "btnConnectToServer";
+            this.btnConnectToServer.Size = new System.Drawing.Size(167, 22);
+            this.btnConnectToServer.Text = "&Connect to server";
+            this.btnConnectToServer.Click += new System.EventHandler(this.btnConnectToServer_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(164, 6);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -673,6 +690,8 @@
         private System.Windows.Forms.ToolStripMenuItem showSystemClassesToolStripMenuItem;
         private System.Windows.Forms.ToolStripTextBoxEx txtClassFilter;
         private System.Windows.Forms.ToolStripMenuItem showmappedValuesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem btnConnectToServer;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }
 
