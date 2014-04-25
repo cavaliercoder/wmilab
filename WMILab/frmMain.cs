@@ -76,7 +76,7 @@ namespace WMILab
             // Navigate to default namespace and class
             this.CurrentNamespacePath = @"\\.\ROOT\CIMV2";
             this.CurrentClassPath = @"\\.\ROOT\CIMV2:Win32_ComputerSystem";
-            this.CodeGenerator = new CodeGenerators.VBScript.VbBasicConsoleCodeGenerator();
+            this.CurrentCodeGenerator = new CodeGenerators.VBScript.VbBasicConsoleCodeGenerator();
         }
 
         #endregion
@@ -179,7 +179,7 @@ namespace WMILab
 
                     currentNamespacePath = value;
 
-                    RefreshClassList();
+                    RefreshClassListAsync();
                 }
 
                 catch (ManagementException e)
@@ -245,7 +245,8 @@ namespace WMILab
         /// <summary>
         /// Gets or sets the code generator currently used to generate code in the class code tab.
         /// </summary>
-        private ICodeGenerator CodeGenerator
+        /// <remarks>Refreshes the current class script content when set.</remarks>
+        private ICodeGenerator CurrentCodeGenerator
         {
             get { return this.codeGenerator; }
 
@@ -261,6 +262,11 @@ namespace WMILab
 
         #region Remote connections
 
+        /// <summary>
+        /// Shows a connection dialog for connecting to a remote server.
+        /// </summary>
+        /// <returns>Returns true if the user connected to a server.</returns>
+        /// <remarks>Updates CurrentServerRootScope, CurrentNamespacePath and CurrentClassPath to locations on the selected server.</remarks>
         private Boolean ShowConnectDialog()
         {
             var scope = ConnectToForm.ShowConnectToServerDialog();
@@ -321,6 +327,9 @@ namespace WMILab
             }*/
         }
 
+        /// <summary>
+        /// Called when a new namespace has been returned for RefreshNamespaceTree. Adds a treenode for the new namespace.
+        /// </summary>
         void OnNamespaceReady(object sender, ObjectReadyEventArgs e)
         {
             OnNamespaceReady(e.NewObject);
@@ -329,8 +338,6 @@ namespace WMILab
         /// <summary>
         /// Called when a new namespace has been returned for RefreshNamespaceTree. Adds a treenode for the new namespace.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void OnNamespaceReady(ManagementBaseObject obj)
         {
             var name = (String)obj.Properties["Name"].Value;
@@ -376,11 +383,19 @@ namespace WMILab
             { }
         }
 
+        /// <summary>
+        /// Called when all namespaces have been returned for RefreshNamespaceTree.
+        /// </summary>
         void OnNamespaceSearchComplete(object sender, CompletedEventArgs e)
         {
             this.Log(LogLevel.Information, "Namespace search complete.");
         }
 
+        /// <summary>
+        /// Represents the method that will append one tree node to another in a thread safe manner.
+        /// </summary>
+        /// <param name="parent">The parent TreeNode to be appended to.</param>
+        /// <param name="child">The child TreeNode to be appended.</param>
         private delegate void appendTreeNodeDelegate(TreeNode parent, TreeNode child);
 
         /// <summary>
@@ -403,13 +418,13 @@ namespace WMILab
         }
 
         #endregion
-
+        
         #region Class list
 
         /// <summary>
-        /// Refreshes the class list for the currently connected WMI Namespace.
+        /// Asynchronously refreshes the class list cache for the currently connected WMI Namespace.
         /// </summary>
-        private void RefreshClassList()
+        private void RefreshClassListAsync()
         {
             this.Text = String.Format("{0}{1}", WINDOW_TITLE_PREFIX, this.CurrentNamespacePath);
 
@@ -434,35 +449,9 @@ namespace WMILab
         }
 
         /// <summary>
-        /// Applies a filter to the class list based on display options and user searching.
+        /// Called when a new class definition has been returned by RefreshClassListAsync.
         /// </summary>
-        void RefreshClassListFilter()
-        {
-            this.listViewClasses.Items.Clear();
-
-            var filter = this.txtClassFilter.Text;
-            var displayList = new List<ListViewItem>(classListItems.Count);
-            for (int i = 0; i < classListItems.Count; i++)
-            {
-                var className = classListItems[i].Text;
-                
-                bool display = true;
-
-                // Apply user filter
-                display &= String.IsNullOrEmpty(filter) || className.ToLowerInvariant().Contains(filter.ToLowerInvariant());
-
-                // Apply system class filter
-                display &= this.showSystemClasses || !classListItems[i].Text.StartsWith("__");
-
-                if(display)
-                    displayList.Add(classListItems[i]);
-            }
-
-            this.listViewClasses.Items.AddRange(displayList.ToArray());
-
-            this.SelectClassListViewItem(this.CurrentClass.ClassPath.ClassName);
-        }
-
+        /// <remarks>Adds the returned class to the class list cache.</remarks>
         void OnClassReady(object sender, ObjectReadyEventArgs e)
         {
             var c = (ManagementClass)e.NewObject;
@@ -499,6 +488,10 @@ namespace WMILab
             classListItems.Add(item);
         }
 
+        /// <summary>
+        /// Called when all class definitions have been returned by RefreshClassListAsync.
+        /// </summary>
+        /// <remarks>Calls RefreshClassListFilter to refresh the displayed list of classes.</remarks>
         void OnClassSearchCompleted(object sender, CompletedEventArgs e)
         {
             if (this.InvokeRequired)
@@ -510,6 +503,36 @@ namespace WMILab
             RefreshClassListFilter();
         }
 
+        /// <summary>
+        /// Refreshes the class list control from the class list cache based on display options and user searching.
+        /// </summary>
+        void RefreshClassListFilter()
+        {
+            this.listViewClasses.Items.Clear();
+
+            var filter = this.txtClassFilter.Text;
+            var displayList = new List<ListViewItem>(classListItems.Count);
+            for (int i = 0; i < classListItems.Count; i++)
+            {
+                var className = classListItems[i].Text;
+
+                bool display = true;
+
+                // Apply user filter
+                display &= String.IsNullOrEmpty(filter) || className.ToLowerInvariant().Contains(filter.ToLowerInvariant());
+
+                // Apply system class filter
+                display &= this.showSystemClasses || !classListItems[i].Text.StartsWith("__");
+
+                if (display)
+                    displayList.Add(classListItems[i]);
+            }
+
+            this.listViewClasses.Items.AddRange(displayList.ToArray());
+
+            this.SelectClassListViewItem(this.CurrentClass.ClassPath.ClassName);
+        }
+
         #endregion
 
         #region Class view
@@ -517,7 +540,7 @@ namespace WMILab
         /// <summary>
         /// Selects and highlights a class from the class list without changing the current class.
         /// </summary>
-        /// <param name="className">The name of the class item to be deleted.</param>
+        /// <param name="className">The name of the class item to be selected.</param>
         private void SelectClassListViewItem(String className)
         {
             this.updatingNavigation = true;
@@ -874,12 +897,12 @@ namespace WMILab
         }
 
         /// <summary>
-        /// Refreshes the code tab with script details for the specified ManagementClass.
+        /// Refreshes the code tab with content generated by CurrentCodeGenerator for the specified ManagementClass.
         /// </summary>
         /// <param name="c">The System.Management.ManagementClass to be displayed.</param>
         private void RefreshScript(ManagementClass c)
         {
-            if (this.CodeGenerator != null && c != null)
+            if (this.CurrentCodeGenerator != null && c != null)
             {
                 var query = c.GetDefaultQuery();
 
@@ -891,14 +914,14 @@ namespace WMILab
 
                 try
                 {
-                    this.txtCode.Text = this.CodeGenerator.GetScript(c, query);
+                    this.txtCode.Text = this.CurrentCodeGenerator.GetScript(c, query);
 
                     // Update script
-                    this.txtCode.ConfigurationManager.Language = this.CodeGenerator.Lexer;
+                    this.txtCode.ConfigurationManager.Language = this.CurrentCodeGenerator.Lexer;
                     this.txtCode.ConfigurationManager.Configure();
 
                     // Set colors
-                    if (!String.IsNullOrEmpty(this.CodeGenerator.Lexer))
+                    if (!String.IsNullOrEmpty(this.CurrentCodeGenerator.Lexer))
                     {
                         this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["STRING"]].ForeColor = Color.FromArgb(163, 21, 21);
                         this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["COMMENT"]].ForeColor = Color.FromArgb(0, 128, 0);
@@ -907,7 +930,7 @@ namespace WMILab
                         this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["NUMBER"]].ForeColor = SystemColors.WindowText;
                         this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["OPERATOR"]].ForeColor = SystemColors.WindowText;
 
-                        if (this.CodeGenerator.Lexer == "cs")
+                        if (this.CurrentCodeGenerator.Lexer == "cs")
                         {
                             this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["GLOBALCLASS"]].ForeColor = Color.Blue;
                             this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["WORD2"]].ForeColor = Color.Blue;
@@ -934,7 +957,7 @@ namespace WMILab
                     this.menuStripCode.Items.Remove(item);
 
                 // Update actions
-                foreach (var action in this.CodeGenerator.GetActions(c, query))
+                foreach (var action in this.CurrentCodeGenerator.GetActions(c, query))
                 {
                     ToolStripMenuItem item = new ToolStripMenuItem
                     {
@@ -1019,46 +1042,6 @@ namespace WMILab
         }
 
         /// <summary>
-        /// Handles a Completed event when a WMI query has completed.
-        /// </summary>
-        /// <param name="sender">The System.Management.ManagementQueryBroker that owns the completed query.</param>
-        /// <param name="e">The BrokerCompletedEventArgs for this event.</param>
-        private void OnQueryCompleted(object sender, BrokerCompletedEventArgs e)
-        {
-            if (this.InvokeRequired)
-            {
-                this.BeginInvoke(new BrokerCompletedEventHandler(this.OnQueryCompleted), sender, e);
-                return;
-            }
-
-            this.ToggleQueryUI(false);
-
-            if (e.Success)
-            {
-                this.Log(LogLevel.Information, String.Format("Query completed in {0} with {1} results.",this.queryBroker.ExecutionTime, this.queryBroker.ResultCount));
-            }
-
-            else
-            {
-                var code = (UInt32)e.Status;
-                if(Enum.IsDefined(typeof(ManagementError), code))
-                {
-                    var constant = ((ManagementError)code).ToString();
-                    this.Log(LogLevel.Critical, String.Format("Query failed after {0} with {1:G} (0x{1:X}) {2}", this.queryBroker.ExecutionTime, code, constant));
-
-                    var description = ErrorCodes.ResourceManager.GetString(constant);
-                    if (!String.IsNullOrEmpty(description))
-                        this.Log(LogLevel.Information, description);
-                }
-
-                else
-                {
-                    this.Log(LogLevel.Critical, String.Format("Query failed after {0} with {1:G} (0x{1:X}).", this.queryBroker.ExecutionTime, code));
-                }
-            }
-        }
-
-        /// <summary>
         /// Handles an ObjectReady event when a WMI object has been returned from a WMI query.
         /// </summary>
         /// <param name="sender">The System.Management.ManagementQueryBroker that returned this object.</param>
@@ -1102,7 +1085,47 @@ namespace WMILab
         }
 
         /// <summary>
-        /// Reset the query UI by removing previous results and resetting counters.
+        /// Handles a Completed event when a WMI query has completed.
+        /// </summary>
+        /// <param name="sender">The System.Management.ManagementQueryBroker that owns the completed query.</param>
+        /// <param name="e">The BrokerCompletedEventArgs for this event.</param>
+        private void OnQueryCompleted(object sender, BrokerCompletedEventArgs e)
+        {
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new BrokerCompletedEventHandler(this.OnQueryCompleted), sender, e);
+                return;
+            }
+
+            this.ToggleQueryUI(false);
+
+            if (e.Success)
+            {
+                this.Log(LogLevel.Information, String.Format("Query completed in {0} with {1} results.",this.queryBroker.ExecutionTime, this.queryBroker.ResultCount));
+            }
+
+            else
+            {
+                var code = (UInt32)e.Status;
+                if(Enum.IsDefined(typeof(ManagementError), code))
+                {
+                    var constant = ((ManagementError)code).ToString();
+                    this.Log(LogLevel.Critical, String.Format("Query failed after {0} with {1:G} (0x{1:X}) {2}", this.queryBroker.ExecutionTime, code, constant));
+
+                    var description = ErrorCodes.ResourceManager.GetString(constant);
+                    if (!String.IsNullOrEmpty(description))
+                        this.Log(LogLevel.Information, description);
+                }
+
+                else
+                {
+                    this.Log(LogLevel.Critical, String.Format("Query failed after {0} with {1:G} (0x{1:X}).", this.queryBroker.ExecutionTime, code));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reset the query UI by removing previous results.
         /// </summary>
         private void ResetQueryResults()
         {
@@ -1150,6 +1173,10 @@ namespace WMILab
             popup.Show(this);
         }
 
+        /// <summary>
+        /// Shows the object inspector window for a ManagementObject linked to in a result row cell.
+        /// </summary>
+        /// <param name="e">The DataGridViewCellEventArgs describing the result call which contains a link to ManagementObject.</param>
         private void ShowInspectorForLinkedObject(DataGridViewCellEventArgs e)
         {
             Boolean selectMode = this.queryBroker.QueryType == WqlQueryType.Select;
@@ -1195,7 +1222,7 @@ namespace WMILab
         /// <summary>
         /// Initializes the Scintilla.Net code editor control.
         /// </summary>
-        /// <remarks>The control is not added in the designer as it is unable to resolve the unmanaged DLLs</remarks>
+        /// <remarks>The control is not added in the designer as the designer is unable to resolve the unmanaged DLLs in project folder.</remarks>
         private void InitCodeEditor()
         {
             this.txtCode = new Scintilla
@@ -1216,6 +1243,7 @@ namespace WMILab
         /// <summary>
         /// Refreshes the code language menu with menu items for all available code generators.
         /// </summary>
+        /// <remarks>All classes implementing ICodeGenerator in the main assembly will be represented.</remarks>
         private void RefreshCodeGeneratorMenu()
         {
             var generators = CodeGeneratorFactory.CodeGenerators;
@@ -1280,12 +1308,12 @@ namespace WMILab
         /// </summary>
         private void SaveScript()
         {
-            if (this.CodeGenerator == null) return;
+            if (this.CurrentCodeGenerator == null) return;
 
             SaveFileDialog dlg = new SaveFileDialog();
-            dlg.FileName = this.CodeGenerator.Name + "." + this.CodeGenerator.FileExtension;
+            dlg.FileName = this.CurrentCodeGenerator.Name + "." + this.CurrentCodeGenerator.FileExtension;
             dlg.OverwritePrompt = true;
-            dlg.Filter = this.CodeGenerator.Language + " Scripts|*." + this.CodeGenerator.FileExtension + "|All Files|*.*";
+            dlg.Filter = this.CurrentCodeGenerator.Language + " Scripts|*." + this.CurrentCodeGenerator.FileExtension + "|All Files|*.*";
             dlg.CheckPathExists = true;
             dlg.Tag = "Save Script";
 
@@ -1317,60 +1345,57 @@ namespace WMILab
 
         #region UI Event Handlers
 
-        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
+        private void btnCancelQuery_Click(object sender, EventArgs e)
         {
-            resetClassColumnHeader();
+            this.queryBroker.Cancel();
         }
 
-        private void resetClassColumnHeader()
+        private void btnConnectToServer_Click(object sender, EventArgs e)
         {
-            listViewClasses.Columns[0].Width = listViewClasses.ClientRectangle.Width;
+            this.ShowConnectDialog();
         }
 
-        private void treeViewNamespaces_AfterSelect(object sender, TreeViewEventArgs e)
+        private void btnGetAssociatorsOf_Click(object sender, EventArgs e)
         {
-            if (this.updatingNavigation)
-                return;
-
-            this.Cursor = Cursors.WaitCursor;
-            this.CurrentNamespacePath = (String)e.Node.Tag;
-            this.Cursor = Cursors.Default;
-        }
-
-        private void listViewClasses_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (this.updatingNavigation || this.listViewClasses.SelectedItems.Count != 1)
-                return;
-
-            this.Cursor = Cursors.WaitCursor;
-            this.CurrentClassPath = (String) this.listViewClasses.SelectedItems[0].Tag;
-            this.Cursor = Cursors.Default;
-        }
-
-        private void treeViewClassMembers_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            if (this.updatingNavigation)
-                return;
-
-            if (null != treeViewClassMembers.SelectedNode && null != treeViewClassMembers.SelectedNode.Tag)
+            if (this.gridQueryResults.SelectedRows.Count == 1)
             {
-                this.Cursor = Cursors.WaitCursor;
-                this.RefreshClassMembersDetailView(treeViewClassMembers.SelectedNode.Tag);
-                this.Cursor = Cursors.Default;
+                // Execute 'Associators Of' query for selected result
+                var obj = this.queryBroker.Results[this.gridQueryResults.SelectedRows[0].Index];
+                var query = String.Format("ASSOCIATORS OF {{{0}}}", obj.GetRelativePath());
+                this.txtQuery.Text = query;
+                this.ExecuteQuery(query);
             }
         }
 
-        private void txtClassMemberDetail_LinkClicked(object sender, LinkClickedEventArgs e)
+        private void btnGetReferencesOf_Click(object sender, EventArgs e)
         {
-            // RTFex uses # to separate the link text from its href.
-            string[] link = e.LinkText.Split('#');
-            string target = link[link.Length - 1];
-            this.CurrentClassPath = target;
+            if (this.gridQueryResults.SelectedRows.Count == 1)
+            {
+                // Execute 'Associators Of' query for selected result
+                var obj = this.queryBroker.Results[this.gridQueryResults.SelectedRows[0].Index];
+                var query = String.Format("REFERENCES OF {{{0}}}", obj.GetRelativePath());
+                this.txtQuery.Text = query;
+                this.ExecuteQuery(query);
+            }
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnResultProperies_Click(object sender, EventArgs e)
         {
-            this.Close();
+            if (this.gridQueryResults.SelectedRows.Count == 1)
+            {
+                // Find location of top right of the 'property' button for the selected row
+                var index = this.gridQueryResults.SelectedRows[0].Index;
+                var rect = this.gridQueryResults.GetCellDisplayRectangle(1, index, true);
+                var loc = this.gridQueryResults.PointToScreen(new Point(rect.Right, rect.Top));
+
+                // Display object inspector
+                this.ShowInspector(this.queryBroker.Results[index], loc);
+            }
+        }
+
+        private void btnSaveScript_Click(object sender, EventArgs e)
+        {
+            SaveScript();
         }
 
         private void executeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1378,35 +1403,15 @@ namespace WMILab
             this.ExecuteQuery(this.txtQuery.Text);
         }
 
-        private void btnCancelQuery_Click(object sender, EventArgs e)
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.queryBroker.Cancel();
+            this.Close();
         }
 
         private void frmMain_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyValue == 116)
                 this.ExecuteQuery(this.txtQuery.Text);
-        }
-
-        private void txtClassFilter_KeyUp(object sender, KeyEventArgs e)
-        {
-            this.RefreshClassListFilter();
-        }
-
-        private void toolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            this.RefreshClassListFilter();
-        }
-
-        private void gridQueryResults_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex == -1 || e.ColumnIndex == -1) return;
-
-            if (this.gridQueryResults.Rows[e.RowIndex].Cells[e.ColumnIndex].GetType() == typeof(DataGridViewImageCell))
-                this.gridQueryResults.Cursor = Cursors.Hand;
-            else
-                this.gridQueryResults.Cursor = Cursors.Default;
         }
 
         private void gridQueryResults_CellClicked(object sender, DataGridViewCellEventArgs e)
@@ -1447,6 +1452,16 @@ namespace WMILab
             this.ShowInspector(this.queryBroker.Results[e.RowIndex], location);
         }
 
+        private void gridQueryResults_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex == -1 || e.ColumnIndex == -1) return;
+
+            if (this.gridQueryResults.Rows[e.RowIndex].Cells[e.ColumnIndex].GetType() == typeof(DataGridViewImageCell))
+                this.gridQueryResults.Cursor = Cursors.Hand;
+            else
+                this.gridQueryResults.Cursor = Cursors.Default;
+        }
+
         private void gridQueryResults_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
@@ -1467,61 +1482,39 @@ namespace WMILab
             }
         }
 
-        private void btnResultProperies_Click(object sender, EventArgs e)
+        private void listViewClasses_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.gridQueryResults.SelectedRows.Count == 1)
-            {
-                // Find location of top right of the 'property' button for the selected row
-                var index = this.gridQueryResults.SelectedRows[0].Index;
-                var rect = this.gridQueryResults.GetCellDisplayRectangle(1, index, true);
-                var loc = this.gridQueryResults.PointToScreen(new Point(rect.Right, rect.Top));
+            if (this.updatingNavigation || this.listViewClasses.SelectedItems.Count != 1)
+                return;
 
-                // Display object inspector
-                this.ShowInspector(this.queryBroker.Results[index], loc);
-            }
-        }
-
-        private void btnGetAssociatorsOf_Click(object sender, EventArgs e)
-        {
-            if (this.gridQueryResults.SelectedRows.Count == 1)
-            {
-                // Execute 'Associators Of' query for selected result
-                var obj = this.queryBroker.Results[this.gridQueryResults.SelectedRows[0].Index];
-                var query = String.Format("ASSOCIATORS OF {{{0}}}", obj.GetRelativePath());
-                this.txtQuery.Text = query;
-                this.ExecuteQuery(query);
-            }
-        }
-
-        private void btnGetReferencesOf_Click(object sender, EventArgs e)
-        {
-            if (this.gridQueryResults.SelectedRows.Count == 1)
-            {
-                // Execute 'Associators Of' query for selected result
-                var obj = this.queryBroker.Results[this.gridQueryResults.SelectedRows[0].Index];
-                var query = String.Format("REFERENCES OF {{{0}}}", obj.GetRelativePath());
-                this.txtQuery.Text = query;
-                this.ExecuteQuery(query);
-            }
-        }
-
-        private void OnScriptMenuItemClick(object sender, EventArgs e)
-        {
-            this.CodeGenerator = (ICodeGenerator)((ToolStripMenuItem)sender).Tag;
-        }
-
-        private void btnSaveScript_Click(object sender, EventArgs e)
-        {
-            SaveScript();
+            this.Cursor = Cursors.WaitCursor;
+            this.CurrentClassPath = (String)this.listViewClasses.SelectedItems[0].Tag;
+            this.Cursor = Cursors.Default;
         }
 
         private void OnActionClicked(object sender, EventArgs e)
         {
             var action = ((ToolStripMenuItem)sender).Tag as CodeGeneratorAction;
-            if (action == null || this.CodeGenerator == null || this.CurrentClass == null)
+            if (action == null || this.CurrentCodeGenerator == null || this.CurrentClass == null)
                 return;
 
-            this.CodeGenerator.ExecuteAction(action, this.CurrentClass, this.CurrentClass.GetDefaultQuery());
+            this.CurrentCodeGenerator.ExecuteAction(action, this.CurrentClass, this.CurrentClass.GetDefaultQuery());
+        }
+
+        private void OnScriptMenuItemClick(object sender, EventArgs e)
+        {
+            this.CurrentCodeGenerator = (ICodeGenerator)((ToolStripMenuItem)sender).Tag;
+        }
+
+        private void resetClassColumnHeader()
+        {
+            listViewClasses.Columns[0].Width = listViewClasses.ClientRectangle.Width;
+        }
+
+        private void showmappedValuesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.showmappedValuesToolStripMenuItem.Checked = !this.showmappedValuesToolStripMenuItem.Checked;
+            this.showMappedValues = this.showmappedValuesToolStripMenuItem.Checked;
         }
 
         private void showSystemClassesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1531,15 +1524,50 @@ namespace WMILab
             this.RefreshClassListFilter();
         }
 
-        private void showmappedValuesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            this.showmappedValuesToolStripMenuItem.Checked = !this.showmappedValuesToolStripMenuItem.Checked;
-            this.showMappedValues = this.showmappedValuesToolStripMenuItem.Checked;
+            resetClassColumnHeader();
         }
 
-        private void btnConnectToServer_Click(object sender, EventArgs e)
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            this.ShowConnectDialog();
+            this.RefreshClassListFilter();
+        }
+
+        private void treeViewClassMembers_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if (this.updatingNavigation)
+                return;
+
+            if (null != treeViewClassMembers.SelectedNode && null != treeViewClassMembers.SelectedNode.Tag)
+            {
+                this.Cursor = Cursors.WaitCursor;
+                this.RefreshClassMembersDetailView(treeViewClassMembers.SelectedNode.Tag);
+                this.Cursor = Cursors.Default;
+            }
+        }
+
+        private void treeViewNamespaces_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if (this.updatingNavigation)
+                return;
+
+            this.Cursor = Cursors.WaitCursor;
+            this.CurrentNamespacePath = (String)e.Node.Tag;
+            this.Cursor = Cursors.Default;
+        }
+
+        private void txtClassFilter_KeyUp(object sender, KeyEventArgs e)
+        {
+            this.RefreshClassListFilter();
+        }
+
+        private void txtClassMemberDetail_LinkClicked(object sender, LinkClickedEventArgs e)
+        {
+            // RTFex uses # to separate the link text from its href.
+            string[] link = e.LinkText.Split('#');
+            string target = link[link.Length - 1];
+            this.CurrentClassPath = target;
         }
 
         #endregion
