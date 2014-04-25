@@ -36,6 +36,10 @@ __Requirements:__
 
 ### Known issues
 
+* SELECT queries with named fields (ie. not '*') fail
+
+* Occasionaly the class list does not refresh on first load
+
 * Line endings don't appear consistently in all class and member descriptions
 
 * Class view flickers when filtering the class list
@@ -45,8 +49,6 @@ __Requirements:__
   
 ### Todo
 
-* Add support for remote connections
-
 * Add progress indicator for namespace/class list loading
 
 * Add state restoration for UI controls and navigation
@@ -55,11 +57,7 @@ __Requirements:__
 
 * Add about dialog
 
-* Add license details
-
-* Add license details for Scintilla.Net
-
-* Add attribution header to all files
+* Improve scripts
 
 * Improve code documentation and naming
 

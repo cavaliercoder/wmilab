@@ -23,7 +23,10 @@
  */
 namespace System.Windows.Forms
 {
+    using System.Collections.Generic;
     using System.Management;
+    using System.Net;
+    using System.Net.NetworkInformation;
     using System.Runtime.InteropServices;
     using System.Security.Principal;
     
@@ -38,14 +41,30 @@ namespace System.Windows.Forms
             //this.keychain = new KeyChain();
 
             // Set default values
-            this.SetIdentityLocal();
+            this.SuspendControlUpdates();
+
+            // Select default hostname
+            if (this.txtHost.Items.Count > 0)
+                this.txtHost.SelectedIndex = 0;
+            else
+                this.txtHost.Text = "localhost";
+            this.txtHost.SelectAll();
+
+            // Set default user identity
+            this.SetIdentityToLocal();
+
+            this.RefreshHostnameControl();
+            this.RefreshDomainNameControl();
+
+            // Done
+            this.ResumeControlUpdates();
 
             // Get recent Servers
             /*
             foreach (string server in Settings.Default.RecentServers)
             {
-                string[] parts = server.Split('|');
-                this.txtHost.Items.Add(parts[0]);
+                string[] usernameParts = server.Split('|');
+                this.txtHost.Items.Add(usernameParts[0]);
             }
 
             // Add remembered users
@@ -54,10 +73,6 @@ namespace System.Windows.Forms
                 this.txtUserName.Items.Add(key.UserName);
             }
             */
-
-            // Select most recent
-            if(this.txtHost.Items.Count >0)
-                this.txtHost.SelectedIndex = 0;
         }
 
         public static ManagementScope ShowConnectToServerDialog()
@@ -66,13 +81,13 @@ namespace System.Windows.Forms
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                return dialog.newScope;
+                return dialog.NewScope;
             }
 
             return null;
         }
 
-        private void ConnectToForm_Load(object sender, EventArgs e)
+        private void connectToForm_OnShown(object sender, EventArgs e)
         {
             this.txtHost.Focus();
         }
@@ -81,48 +96,164 @@ namespace System.Windows.Forms
 
         #region Fields
 
+        private Int32 uiLockLevel = 0;
+
         // private KeyChain keychain;
 
-        private bool rememberedPassword;
+        private Boolean rememberedPassword;
+
+        private String[] localAddresses;
 
         #endregion
 
         #region Properties
 
-        private ManagementScope newScope;
+        /// <summary>
+        /// Gets the ManagementScope created by this ConnectToForm.
+        /// </summary>
+        public ManagementScope NewScope
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets the username (excluding domain) currently selected by the user
+        /// </summary>
+        public String Username
+        {
+            get
+            {
+                var components = GetUsernameComponents(this.txtUserName.Text);
+                return components[0];
+            }
+        }
+
+        /// <summary>
+        /// Gets the user domain currently selected by the user
+        /// </summary>
+        public String Domain
+        {
+            get
+            {
+                var components = GetUsernameComponents(this.txtUserName.Text);
+                if (!String.IsNullOrEmpty(components[1]))
+                    return components[1];
+
+                return this.txtDomain.Text;
+            }
+        }
+
+        /// <summary>
+        /// Gets a list of all hostnames and IPs that resolve to the local system.
+        /// </summary>
+        public String[] LocalAddresses
+        {
+            get
+            {
+                if (this.localAddresses == null)
+                {
+                    var localAddressList = new List<String>();
+
+                    // Add default addresses
+                    localAddressList.AddRange(new String[] { 
+                        ".",
+                        "localhost",
+                        "loopback",
+                        "::1",
+                        Environment.MachineName ,
+                        Dns.GetHostName()
+                    });
+
+                    // Get FQDN from global IP config
+                    var ipProperties = IPGlobalProperties.GetIPGlobalProperties();
+                    localAddressList.Add(ipProperties.HostName);
+                    if (!ipProperties.HostName.EndsWith(ipProperties.DomainName, StringComparison.InvariantCultureIgnoreCase))
+                        localAddressList.Add(String.Format("{0}.{1}", ipProperties.HostName, ipProperties.DomainName));
+
+                    // Get configured IPs from WMI
+                    var searcher = new ManagementObjectSearcher("SELECT IpAddress from Win32_NetworkAdapterConfiguration");
+                    var results = searcher.Get();
+                    foreach (ManagementObject result in results)
+                    {
+                        var ips = (String[])result.Properties["IpAddress"].Value;
+                        if (ips != null)
+                            localAddressList.AddRange(ips);
+                    }
+
+                    // Convert all to lowercase
+                    for (int i = 0; i < localAddressList.Count; i++)
+                        localAddressList[i] = localAddressList[i].ToLowerInvariant();
+
+                    // Update instance variable
+                    this.localAddresses = localAddressList.ToArray();
+
+                }
+
+                return this.localAddresses;
+            }
+        }
+        
+        #endregion
+
+        #region Control management
+
+        /// <summary>
+        /// Suspends all event handlers for window controls.
+        /// </summary>
+        private void SuspendControlUpdates()
+        {
+            this.uiLockLevel++;
+        }
+
+        /// <summary>
+        /// Releases the suspension of all event handlers for window controls.
+        /// </summary>
+        private void ResumeControlUpdates()
+        {
+            this.uiLockLevel--;
+        }
+
+        /// <summary>
+        /// Returns whether window control event handlers are currently suspended.
+        /// </summary>
+        private Boolean IsControlUpdatesSuspended()
+        {
+            return this.uiLockLevel > 0;
+        }
 
         #endregion
 
-        #region Methods
+        #region Host selection
 
-        private void SetIdentityLocal()
+        private bool IsLocalHost(string host)
         {
-            string[] id = WindowsIdentity.GetCurrent().Name.Split('\\');
-            this.txtUserName.Text = id[1];
-            this.txtDomain.Text = id[0];
-            this.txtPassword.Text = txtPassword.Text = String.Empty;
+            // Is host a 127.0.0.0/8 address?
+            IPAddress dummy;
+            if (IPAddress.TryParse(host, out dummy) && host.StartsWith("127."))
+                return true;
+
+            // Is host in the list of local addresses?
+            return (-1 != Array.IndexOf(this.LocalAddresses, host.ToLower()));
         }
 
-        private bool isLocalHost(string host)
+        private void RefreshHostnameControl()
         {
-            string[] localHosts = new string[] { "localhost", ".", "127.0.0.1" };
-            return (-1 != Array.IndexOf(localHosts, host.ToLower()));
-        }
+            this.SuspendControlUpdates();
 
-        private void HostChanged(object sender, EventArgs e)
-        {
-            bool isLocal = this.isLocalHost(this.txtHost.Text);
+            bool isLocal = this.IsLocalHost(this.txtHost.Text);
 
-            this.txtUserName.Enabled = 
+            this.txtUserName.Enabled =
                 this.txtPassword.Enabled =
-                this.txtDomain.Enabled = 
-                this.chkPacketPrivacy.Enabled = 
-                this.chkRemember.Enabled = 
+                this.txtDomain.Enabled =
+                this.chkPacketPrivacy.Enabled =
+                this.chkRemember.Enabled =
+                this.cmbAuthority.Enabled =
                 !isLocal;
 
             if (isLocal)
             {
-                this.SetIdentityLocal();
+                this.SetIdentityToLocal();
             }
 
             else
@@ -131,27 +262,132 @@ namespace System.Windows.Forms
                 /*
                 for (int i = 0; i < Settings.Default.RecentServers.Count; i++)
                 {
-                    string[] parts = Settings.Default.RecentServers[i].Split('|');
-                    if (parts[0] == this.txtHost.Text)
+                    string[] usernameParts = Settings.Default.RecentServers[i].Split('|');
+                    if (usernameParts[0] == this.txtHost.Text)
                     {
-                        this.txtDomain.Text = parts[2];
-                        this.txtUserName.Text = parts[1];
+                        this.txtDomain.Text = usernameParts[2];
+                        this.txtUserName.Text = usernameParts[1];
                         this.ApplyRememberedPassword();
                         return;
                     }
                 }
                  */
             }
+
+            this.ResumeControlUpdates();
         }
 
-        private void UsernameChanged(object sender, EventArgs e)
+        private void RefreshHostnameControl(object sender, EventArgs e)
         {
+            if (this.IsControlUpdatesSuspended())
+                return;
+
+            RefreshHostnameControl();
+        }
+
+        #endregion
+
+        #region Identity selection
+
+        /// <summary>
+        /// Returns a String[] with format { username, domain } for the users currently selected username.
+        /// </summary>
+        /// <returns>A String[] with format { username, domain }.</returns>
+        private String[] GetUsernameComponents(String username)
+        {
+            String domain = String.Empty;
+            String[] usernameParts;
+
+            // Auto-populate domain field if domain specified in username as DOMAIN\user
+            usernameParts = username.Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
+            if (usernameParts.Length == 2)
+            {
+                username = usernameParts[1];
+                domain = usernameParts[0];
+            }
+
+            // Auto-populate domain field if domain specified in username as user@domain
+            usernameParts = this.txtUserName.Text.Split(new char[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
+            if (usernameParts.Length == 2)
+            {
+                username = usernameParts[0];
+                domain = usernameParts[1];
+            }
+
+            return new String[] { username, domain };
+        }
+
+        private void SetIdentityToLocal()
+        {
+            this.SuspendControlUpdates();
+
+            string[] id = WindowsIdentity.GetCurrent().Name.Split('\\');
+            this.txtUserName.Text = id[1];
+            this.txtDomain.Text = id[0];
+            this.txtPassword.Text = txtPassword.Text = String.Empty;
+            this.cmbAuthority.SelectedIndex = 0;
+
+            this.ResumeControlUpdates();
+        }
+
+        private void RefreshUsernameControl()
+        {
+            this.SuspendControlUpdates();
+
+            String[] components = this.GetUsernameComponents(this.txtUserName.Text);
+
+            if (String.IsNullOrEmpty(components[1]))
+            {
+                this.txtDomain.Enabled = true;
+            }
+
+            else
+            {
+                this.txtDomain.Enabled = false;
+                this.txtDomain.Text = components[1];
+            }
+
             if (this.rememberedPassword)
                 this.txtPassword.Text = String.Empty;
+
+            this.ResumeControlUpdates();
         }
 
-        private void PasswordChanged(object sender, EventArgs e)
+        private void RefreshUsernameControl(object sender, EventArgs e)
         {
+            if (this.IsControlUpdatesSuspended())
+                return;
+
+            RefreshUsernameControl();
+        }
+
+        private void RefreshDomainNameControl()
+        {
+            this.SuspendControlUpdates();
+
+            this.cmbAuthority.Items[1] = String.Format("NTLMDomain:{0}", this.txtDomain.Text);
+            this.cmbAuthority.Items[2] = String.Format("Kerberos:{0}", this.txtDomain.Text);
+
+            this.ResumeControlUpdates();
+        }
+
+        private void RefreshDomainNameControl(object sender, EventArgs e)
+        {
+            if (this.IsControlUpdatesSuspended())
+                return;
+
+            this.RefreshDomainNameControl();
+        }
+
+        #endregion
+
+        #region Password selection
+
+        private void RefreshPasswordControl(object sender, EventArgs e)
+        {
+            if (this.IsControlUpdatesSuspended())
+                return;
+
             this.rememberedPassword = false;
         }
 
@@ -174,8 +410,15 @@ namespace System.Windows.Forms
 
         private void ApplyRememberedPassword(object sender, EventArgs e)
         {
+            if (this.IsControlUpdatesSuspended())
+                return;
+
             this.ApplyRememberedPassword();
         }
+
+        #endregion
+
+        #region Connection management
 
         private void CancelDialog(object sender, EventArgs e)
         {
@@ -191,6 +434,7 @@ namespace System.Windows.Forms
                 this.txtHost.Enabled =
                 this.txtPassword.Enabled =
                 this.txtDomain.Enabled =
+                this.cmbAuthority.Enabled =
                 this.chkPacketPrivacy.Enabled =
                 this.chkRemember.Enabled =
                 this.OK_Button.Enabled =
@@ -198,23 +442,44 @@ namespace System.Windows.Forms
 
             // Build connection options
             ConnectionOptions opts = new ConnectionOptions();
-            if (!this.isLocalHost(this.txtHost.Text))
+            if (!this.IsLocalHost(this.txtHost.Text))
             {
-                opts.Username = String.IsNullOrEmpty(this.txtDomain.Text) ? 
-                    this.txtUserName.Text : 
-                    String.Format("{0}\\{1}", this.txtDomain.Text, this.txtUserName.Text);
+                if (this.cmbAuthority.SelectedIndex > 0)
+                {                    
+                    // User selected an Authority type. 
+                    // Omit domain name from connection options as it should only be specified in the Authority string.
+                    opts.Username = this.Username;
+                    opts.Authority = this.cmbAuthority.Text;
+                }
+
+                else
+                {
+                    if(this.txtUserName.Text.Contains("@"))
+                    {
+                        // User specified auto-negotiate authority and user@domain credentials
+                        opts.Username = String.Format("{0}@{1}", this.Username, this.Domain);
+                    }
+
+                    else
+                    {
+                        // User specified auto-negotiate authority and DOMAIN\user credentials
+                        opts.Username = String.Format("{0}\\{1}", this.Domain, this.Username);
+                    }
+                }
+
                 opts.Password = this.txtPassword.Text;
-                opts.Timeout = new TimeSpan(0, 0, 3);
+                opts.Timeout = new TimeSpan(0, 0, 5);
 
                 if (this.chkPacketPrivacy.Checked)
                     opts.Authentication = AuthenticationLevel.PacketPrivacy;
+
             }
 
             // Connect to remote server and test connection
             try
             {
-                this.newScope = new ManagementScope(String.Format("\\\\{0}\\ROOT", this.txtHost.Text), opts);
-                this.newScope.Connect();
+                this.NewScope = new ManagementScope(String.Format("\\\\{0}\\ROOT", this.txtHost.Text), opts);
+                this.NewScope.Connect();
             }
             catch (UnauthorizedAccessException)
             {
@@ -229,7 +494,7 @@ namespace System.Windows.Forms
                 MessageBox.Show(x.Message, String.Format("Error 0x{0:X}", x.ErrorCode), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            if (this.newScope != null && this.newScope.IsConnected)
+            if (this.NewScope != null && this.NewScope.IsConnected)
             {
                 string newHost = String.Format("{0}|{1}|{2}", this.txtHost.Text, this.txtUserName.Text, this.txtDomain.Text);
                 
@@ -237,8 +502,8 @@ namespace System.Windows.Forms
                 // Remove existin entries for current server in recent servers.
                 for(int i = 0; i< Settings.Default.RecentServers.Count; i++)
                 {
-                    string[] parts = Settings.Default.RecentServers[i].Split('|');
-                    if (parts[0] == this.txtHost.Text)
+                    string[] usernameParts = Settings.Default.RecentServers[i].Split('|');
+                    if (usernameParts[0] == this.txtHost.Text)
                     {
                         Settings.Default.RecentServers.RemoveAt(i);
                         continue;
@@ -273,6 +538,7 @@ namespace System.Windows.Forms
                 this.txtHost.Enabled =
                 this.txtPassword.Enabled =
                 this.txtDomain.Enabled =
+                this.cmbAuthority.Enabled =
                 this.chkPacketPrivacy.Enabled =
                 this.chkRemember.Enabled =
                 this.OK_Button.Enabled =
