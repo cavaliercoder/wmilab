@@ -35,6 +35,12 @@ namespace WMILab
 
     public partial class frmMain : Form
     {
+        #region Constants
+
+        private const String WINDOW_TITLE_PREFIX = "WMI Lab - ";
+
+        #endregion
+
         #region Constructors
 
         public frmMain()
@@ -379,10 +385,12 @@ namespace WMILab
         /// </summary>
         private void RefreshClassList()
         {
+            this.Text = String.Format("{0}{1}", WINDOW_TITLE_PREFIX, this.CurrentNamespacePath);
+
             classListItems.Clear();
             this.listViewClasses.Items.Clear();
 
-            this.Log(LogLevel.Information, String.Format("Loading classes for namespace: {0}", this.currentNamespacePath));
+            this.Log(LogLevel.Information, String.Format("Loading classes for namespace: {0}", this.CurrentNamespacePath));
 
             var path = new ManagementPath(this.CurrentNamespacePath);
             var ns = new ManagementClass(this.CurrentNamespaceScope, path, nsObjGetOpts);
@@ -1503,12 +1511,12 @@ namespace WMILab
             this.showMappedValues = this.showmappedValuesToolStripMenuItem.Checked;
         }
 
-        #endregion
-
         private void btnConnectToServer_Click(object sender, EventArgs e)
         {
             this.ShowConnectDialog();
         }
+
+        #endregion
     }
 
     internal enum LogLevel
