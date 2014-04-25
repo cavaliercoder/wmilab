@@ -37,6 +37,7 @@ namespace WMILab
     {
         #region Constants
 
+        /// <summary>Prefix for the window title. Gets the current namespace path appended.</summary>
         private const String WINDOW_TITLE_PREFIX = "WMI Lab - ";
 
         #endregion
@@ -46,24 +47,25 @@ namespace WMILab
         public frmMain()
         {
             InitializeComponent();
-
             InitCodeEditor();
 
-            // Connection and enumeration options
+            // Connection and enumeration option defaults
             classListEnumOpts.EnumerateDeep = true;
             classObjGetOpts.UseAmendedQualifiers = true;
-
             nsObjGetOpts.Timeout = new TimeSpan(0, 0, 3);
             nsTreeEnumOpts.Timeout = new TimeSpan(0, 0, 3);
 
             // Observer event handlers
-            classListObserver.ObjectReady += new ObjectReadyEventHandler(OnClassReady);
-            classListObserver.Completed += new CompletedEventHandler(OnClassSearchCompleted);
+            this.classListObserver.ObjectReady += new ObjectReadyEventHandler(OnClassReady);
+            this.classListObserver.Completed += new CompletedEventHandler(OnClassSearchCompleted);
 
             // Refresh script template menu
             this.RefreshCodeGeneratorMenu();
         }
 
+        /// <summary>
+        /// Loads default namespace, class and code generator once the window is shown.
+        /// </summary>
         private void OnFormShown(object sender, EventArgs e)
         {
             resetClassColumnHeader();
@@ -81,44 +83,65 @@ namespace WMILab
 
         #region Fields
 
-        private Scintilla txtCode = new Scintilla();
-
-        private String currentNamespacePath;
-
-        private ManagementScope currentServerRootScope;
-
-        private ManagementClass currentClass;
-
-        private TreeNode nsTreeRootNode;
-
-        private ManagementOperationObserver nsTreeObserver;
-
-        private ManagementOperationObserver classListObserver = new ManagementOperationObserver();
-
-        private static ObjectGetOptions nsObjGetOpts = new ObjectGetOptions();
-
-        private static ObjectGetOptions classObjGetOpts = new ObjectGetOptions();
-
-        private static EnumerationOptions nsTreeEnumOpts = new EnumerationOptions();
-
+        /// <summary>Default options for enumerator classes in a namespace.</summary>
         private static EnumerationOptions classListEnumOpts = new EnumerationOptions();
 
-        private List<ListViewItem> classListItems = new List<ListViewItem>();
+        /// <summary>Default options for enumerator child namespaces in a namespace.</summary>
+        private static EnumerationOptions nsTreeEnumOpts = new EnumerationOptions();
 
-        private bool updatingNavigation = false;
+        /// <summary>Default options for getting a class definition.</summary>
+        private static ObjectGetOptions classObjGetOpts = new ObjectGetOptions();
 
-        private ManagementQueryBroker queryBroker;
+        /// <summary>Default options for getting a namespace definition.</summary>
+        private static ObjectGetOptions nsObjGetOpts = new ObjectGetOptions();
 
-        private ICodeGenerator codeGenerator;
+        /// <summary>Determines whether ValueMaps should be translated when displayed object values.</summary>
+        private Boolean showMappedValues = true;
 
+        /// <summary>Determines whether system classes (starting with "__") should be displayed in the class list.</summary>
         private Boolean showSystemClasses = false;
 
-        private Boolean showMappedValues = true;
+        /// <summary>Determines whether the UI is locked while updates are in progress.</summary>
+        private Boolean updatingNavigation = false;
+
+        /// <summary>Current ICodeGenerator used for generating class scripts.</summary>
+        private ICodeGenerator codeGenerator;
+
+        /// <summary>Cache of ListViewItems with an item for each class in the current namespace.</summary>
+        private List<ListViewItem> classListItems = new List<ListViewItem>();
+
+        /// <summary>The currently selected ManagamentClass.</summary>
+        private ManagementClass currentClass;
+
+        /// <summary>The ManagementOperationObserver used for asynchronously building the class list.</summary>
+        private ManagementOperationObserver classListObserver = new ManagementOperationObserver();
+
+        /// <summary>The ManagementOperationObserver used for asynchronously building the namespace tree.</summary>
+        private ManagementOperationObserver nsTreeObserver;
+
+        /// <summary>ManagementQueryBroker for tracking the state of the current WMI query.</summary>
+        private ManagementQueryBroker queryBroker;
+
+        /// <summary>ManagementScope to the "ROOT" path of the currently connected server.</summary>
+        private ManagementScope currentServerRootScope;
+
+        /// <summary>Code editor control</summary>
+        private Scintilla txtCode = new Scintilla();
+
+        /// <summary>Full path of the currently selected namespace.</summary>
+        private String currentNamespacePath;
+
+        /// <summary>Root node of the namespace tree.</summary>
+        private TreeNode nsTreeRootNode;
 
         #endregion
 
         #region Properties
 
+        /// <summary>
+        /// Gets or sets the ManagementScope to the "ROOT" path of the currently connected server.
+        /// </summary>
+        /// <remarks>Updates the namespace tree when set.</remarks>
         private ManagementScope CurrentServerRootScope
         {
             get { return this.currentServerRootScope; }
@@ -132,6 +155,7 @@ namespace WMILab
         /// <summary>
         /// Gets or sets the full path of the WMI Namepace currently displayed in the main window.
         /// </summary>
+        /// <remarks>Updates CurrentNamespaceScope and refreshed the class list when set.</remarks>
         private String CurrentNamespacePath
         {
             get
@@ -177,6 +201,7 @@ namespace WMILab
         /// <summary>
         /// Gets or set the full path of the WMI Class currently displayed in the main window.
         /// </summary>
+        /// <remarks>Updates CurrentClass when set.</remarks>
         private String CurrentClassPath
         {
             get { return this.currentClass == null ? null : this.currentClass.Path.Path; }
@@ -204,6 +229,7 @@ namespace WMILab
         /// <summary>
         /// Gets or sets the WMI Class currently displayed in the main window.
         /// </summary>
+        /// <remarks>Refreshes the class detail display when set.</remarks>
         private ManagementClass CurrentClass
         {
             get { return this.currentClass; }
@@ -251,7 +277,7 @@ namespace WMILab
         }
 
         #endregion
-
+        
         #region Namespace Tree
 
         /// <summary>

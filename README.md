@@ -38,7 +38,7 @@ __Requirements:__
 
 * SELECT queries with named fields (ie. not '*') fail
 
-* Occasionaly the class list does not refresh on first load
+* Occasionally the class list does not refresh on first load
 
 * Line endings don't appear consistently in all class and member descriptions
 
