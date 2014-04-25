@@ -252,7 +252,7 @@ namespace System.Management
         /// <summary>
         /// Returns a named collection of all property maps defined in a ManagementClass.
         /// </summary>
-        /// <param name="obj">The System.Management.ManagementClass for which all property maps will be returned.</param>
+        /// <param name="managementClass">The System.Management.ManagementClass for which all property maps will be returned.</param>
         /// <returns>A System.Management.PropertyDataValueMapCollection for the specified System.Management.ManagementClass.</returns>
         public static PropertyDataValueMapCollection GetValueMaps(this ManagementBaseObject obj)
         {

@@ -36,8 +36,6 @@ __Requirements:__
 
 ### Known issues
 
-* SELECT queries with named fields (ie. not '*') fail
-
 * Occasionally the class list does not refresh on first load
 
 * Line endings don't appear consistently in all class and member descriptions
@@ -64,6 +62,12 @@ __Requirements:__
 * Add WiX Installer project
 
 * Remove nuget configuration
+
+* Add syntax highlighting and code completion to query window
+
+* Improve script generators (C#, C++, C, Powershell, Perl, etc.)
+
+* Add menu to get associators/references of linked objects (such as those in assoc/ref query results)
 
 ### Example Queries
 

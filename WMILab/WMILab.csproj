@@ -80,7 +80,7 @@
     <Compile Include="System\Management\ManagementQueryBroker.cs" />
     <Compile Include="System\Management\PropertyDataHelper.cs" />
     <Compile Include="System\Management\PropertyDataValueMap.cs" />
-    <Compile Include="System\Management\WqlQueryType.cs" />
+    <Compile Include="System\Management\StringExtentions.cs" />
     <Compile Include="System\Reflection\PluginFramework.cs" />
     <Compile Include="System\Windows\Forms\ConnectToForm.cs">
       <SubType>Form</SubType>

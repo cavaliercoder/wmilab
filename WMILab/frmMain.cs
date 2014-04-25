@@ -802,7 +802,7 @@ namespace WMILab
                 this.txtQuery.Text = query;
                 this.queryBroker = new ManagementQueryBroker(query, this.CurrentNamespaceScope);
 
-                InitQueryResultGrid(c);
+                InitQueryResultGrid(c, query);
             }
         }
 
@@ -810,35 +810,44 @@ namespace WMILab
         /// Initializes the query results grid to receive results for the specified ManagementClass.
         /// </summary>
         /// <param name="c">The System.Management.ManagementClass to be displayed.</param>
-        private void InitQueryResultGrid(ManagementClass c)
+        private void InitQueryResultGrid(ManagementClass c, String query)
         {
+            // Get the type of query to build columns for
+            var queryType = query.GetWqlQueryType();
+
+            // Reset grid config
             this.gridQueryResults.Rows.Clear();
             this.gridQueryResults.Columns.Clear();
 
-            // Configure result context menu
+            // Configure grid context menu
             this.btnGetAssociatorsOf.Visible =
                 this.btnGetReferencesOf.Visible =
                 this.btnResultPropertiesSeparater.Visible =
-                this.queryBroker == null || this.queryBroker.QueryType == WqlQueryType.Select;
+                queryType == WqlQueryType.Select;
 
-            // Create count colIndex
+            // Create column for result count
             DataGridViewTextBoxColumn colIndex = new DataGridViewTextBoxColumn();
             colIndex.Name = colIndex.HeaderText = "#";
             colIndex.DefaultCellStyle.BackColor = SystemColors.ControlLight;
             colIndex.DefaultCellStyle.ForeColor = SystemColors.ControlDark;
             colIndex.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
-            // Create result inspector colIndex
+            // Create column for result inspector link
             DataGridViewImageColumn colInspector = new DataGridViewImageColumn();
             colInspector.Image = this.ImageList1.Images["Property"];
             colInspector.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
             this.gridQueryResults.Columns.AddRange(colIndex, colInspector);
 
-            if (this.queryBroker == null || this.queryBroker.QueryType == WqlQueryType.Select)
+            // Add a column for each available result property
+            if (queryType == WqlQueryType.Select)
             {
-                // Add property columns
-                foreach (PropertyData p in c.Properties)
+                // Extract properties from selected fields in the query itself.
+                // This may be all properties or a subset (Eg. SELECT Caption from Win32_ComputerSystem).
+                var properties = query.GetWqlQueryProperties(c);
+
+                // Create a column for each property
+                foreach (PropertyData p in properties)
                 {
                     DataGridViewColumn colProperty;
 
@@ -875,13 +884,14 @@ namespace WMILab
 
             else
             {
+                // Create columns for a ASSOCIATORS OF or REFERENCES OF query
                 DataGridViewLinkColumn col = new DataGridViewLinkColumn();
                 col.LinkBehavior = LinkBehavior.HoverUnderline;
                 col.VisitedLinkColor = col.LinkColor;
                 col.ActiveLinkColor = col.LinkColor;
                 col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
-                switch (this.queryBroker.QueryType)
+                switch (queryType)
                 {
                     case WqlQueryType.AssociatorsOf:
                         col.Name = "Association";
@@ -998,7 +1008,7 @@ namespace WMILab
                 this.queryBroker.Completed += new BrokerCompletedEventHandler(this.OnQueryCompleted);
 
                 // Init the grid view
-                this.InitQueryResultGrid(this.queryBroker.ResultClass);
+                this.InitQueryResultGrid(this.queryBroker.ResultClass, query);
 
                 // Fetch results
                 this.queryBroker.ExecuteAsync();
@@ -1056,6 +1066,8 @@ namespace WMILab
                 this.BeginInvoke(new BrokerObjectReadyEventHandler(this.OnQueryResultReady), sender, e);
                 return;
             }
+            
+            var broker = (ManagementQueryBroker)sender;
 
             // Build an array of values
             var i = 0;
@@ -1064,15 +1076,18 @@ namespace WMILab
             values[i++] = e.Index.ToString();
             values[i++] = null;
 
-            if (WqlQueryType.Select == this.queryBroker.QueryType)
+            if (WqlQueryType.Select == broker.QueryType)
             {
                 // Get the properties from the class, not the object as the returned
                 // object may be a subclass with additional properies for which no
                 // columns have been configured.
-                foreach (PropertyData cProp in this.queryBroker.ResultClass.Properties)
+                foreach (PropertyData cProp in e.NewObject.Properties)
                 {
+                    if (!broker.ResultClass.Properties.Contains(cProp.Name))
+                        continue;
+
                     var oProp = e.NewObject.Properties[cProp.Name];
-                    values[i++] = oProp.GetValueAsString(this.showMappedValues ? this.queryBroker.ResultClassValueMaps : null);
+                    values[i++] = oProp.GetValueAsString(this.showMappedValues ? broker.ResultClassValueMaps : null);
                 }
             }
 
@@ -1097,11 +1112,13 @@ namespace WMILab
                 return;
             }
 
+            var broker = (ManagementQueryBroker)sender;
+
             this.ToggleQueryUI(false);
 
             if (e.Success)
             {
-                this.Log(LogLevel.Information, String.Format("Query completed in {0} with {1} results.",this.queryBroker.ExecutionTime, this.queryBroker.ResultCount));
+                this.Log(LogLevel.Information, String.Format("Query completed in {0} with {1} results.", broker.ExecutionTime, broker.ResultCount));
             }
 
             else
@@ -1110,7 +1127,7 @@ namespace WMILab
                 if(Enum.IsDefined(typeof(ManagementError), code))
                 {
                     var constant = ((ManagementError)code).ToString();
-                    this.Log(LogLevel.Critical, String.Format("Query failed after {0} with {1:G} (0x{1:X}) {2}", this.queryBroker.ExecutionTime, code, constant));
+                    this.Log(LogLevel.Critical, String.Format("Query failed after {0} with {1:G} (0x{1:X}) {2}", broker.ExecutionTime, code, constant));
 
                     var description = ErrorCodes.ResourceManager.GetString(constant);
                     if (!String.IsNullOrEmpty(description))
@@ -1119,7 +1136,7 @@ namespace WMILab
 
                 else
                 {
-                    this.Log(LogLevel.Critical, String.Format("Query failed after {0} with {1:G} (0x{1:X}).", this.queryBroker.ExecutionTime, code));
+                    this.Log(LogLevel.Critical, String.Format("Query failed after {0} with {1:G} (0x{1:X}).", broker.ExecutionTime, code));
                 }
             }
         }
@@ -1313,7 +1330,7 @@ namespace WMILab
             SaveFileDialog dlg = new SaveFileDialog();
             dlg.FileName = this.CurrentCodeGenerator.Name + "." + this.CurrentCodeGenerator.FileExtension;
             dlg.OverwritePrompt = true;
-            dlg.Filter = this.CurrentCodeGenerator.Language + " Scripts|*." + this.CurrentCodeGenerator.FileExtension + "|All Files|*.*";
+            dlg.Filter = String.Format("{0} files|*.{1}|All Files|*.*", this.CurrentCodeGenerator.Language, this.CurrentCodeGenerator.FileExtension);
             dlg.CheckPathExists = true;
             dlg.Tag = "Save Script";
 

@@ -29,6 +29,9 @@ namespace System.Management.CodeGeneration
     {
         private static ICodeGenerator[] codeGenerators;
 
+        /// <summary>
+        /// Gets an array of instances of all classes implementing ICodeGenerator in the executing assembly.
+        /// </summary>
         public static ICodeGenerator[] CodeGenerators
         {
             get

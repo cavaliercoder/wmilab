@@ -68,7 +68,7 @@ namespace System.Management
         /// <summary>
         /// Returns a System.String representation of the specified ManagementBaseObjects instance.
         /// </summary>
-        /// <param name="obj">The System.Management.ManagementBaseObject to be assessed.</param>
+        /// <param name="managementClass">The System.Management.ManagementBaseObject to be assessed.</param>
         /// <returns>A System.String representation of the specified ManagementBaseObjects instance.</returns>
         public static string GetRelativePath(this ManagementBaseObject obj)
         {
@@ -85,7 +85,7 @@ namespace System.Management
         /// <summary>
         /// Return true if the specified qualifier name exists in the specified ManagementBaseObject's qualifier collection.
         /// </summary>
-        /// <param name="obj">The System.Management.ManagementBaseObject to be assessed.</param>
+        /// <param name="managementClass">The System.Management.ManagementBaseObject to be assessed.</param>
         /// <param name="qualifier">The name of the qualifier to be search for.</param>
         /// <returns>True if the specified qualifier name exists in the specified ManagementBaseObject's qualifier collection.</returns>
         public static Boolean HasQualifier(this ManagementBaseObject obj, string qualifier)
@@ -112,7 +112,7 @@ namespace System.Management
         /// <summary>
         /// Returns true if the specified ManagementBaseObject is a system class.
         /// </summary>
-        /// <param name="obj">The System.Management.ManagementBaseObject to be assessed.</param>
+        /// <param name="managementClass">The System.Management.ManagementBaseObject to be assessed.</param>
         /// <returns>True if the ManagementBaseObject is a system class.</returns>
         public static Boolean IsSystemClass(this ManagementBaseObject obj)
         {
@@ -127,7 +127,7 @@ namespace System.Management
         /// <summary>
         /// Returns true if the specified ManagementBaseObject is an event.
         /// </summary>
-        /// <param name="obj">The System.Management.ManagementBaseObject to be assessed.</param>
+        /// <param name="managementClass">The System.Management.ManagementBaseObject to be assessed.</param>
         /// <returns>True if the ManagementBaseObject is an event.</returns>
         public static Boolean IsEvent(this ManagementBaseObject obj)
         {
@@ -147,7 +147,7 @@ namespace System.Management
         /// <summary>
         /// Return the System.String description of the specified ManagementBaseObject.
         /// </summary>
-        /// <param name="obj">The System.Management.ManagementBaseObject for which the description will be returned.</param>
+        /// <param name="managementClass">The System.Management.ManagementBaseObject for which the description will be returned.</param>
         /// <returns>The System.String description of the specified ManagementBaseObject.</returns>
         public static String GetDescription(this ManagementBaseObject obj)
         {
@@ -162,7 +162,7 @@ namespace System.Management
         /// <summary>
         /// Gets a WQL query string to perform as basic query of the specified WMI object.
         /// </summary>
-        /// <param name="obj">The WMI object for which a basic query will be returned.</param>
+        /// <param name="managementClass">The WMI object for which a basic query will be returned.</param>
         /// <returns>A WQL query string to perform as basic query of the specified WMI object.</returns>
         public static String GetDefaultQuery(this ManagementBaseObject obj)
         {

@@ -262,13 +262,13 @@ namespace System.Management
         void queryObserver_Completed(object sender, CompletedEventArgs e)
         {
             var args = new BrokerCompletedEventArgs(e.Status == ManagementStatus.NoError, e.StatusObject, e.Status);
-            this.OnQueryCompleted(sender, args);
+            this.OnQueryCompleted(this, args);
         }
 
         void queryObserver_ObjectReady(object sender, ObjectReadyEventArgs e)
         {
             var args = new BrokerObjectReadyEventArgs(e.NewObject, this.ResultCount + 1);
-            this.OnObjectReady(sender, args);
+            this.OnObjectReady(this, args);
         }
 
         void queryWatcher_Stopped(object sender, StoppedEventArgs e)
@@ -331,6 +331,9 @@ namespace System.Management
             this.Status = status;
         }
 
+        /// <summary>
+        /// Gets a value indicating if the associated query completed successfully.
+        /// </summary>
         public Boolean Success { get; private set; }
 
         public ManagementBaseObject StatusObject { get; private set; }
