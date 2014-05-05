@@ -36,11 +36,11 @@ __Requirements:__
 
 ### Known issues
 
+* Connecting to servers in foreign authentication domains causes and RPC error and fails
+
 * Occasionally the class list does not refresh on first load
 
 * Line endings don't appear consistently in all class and member descriptions
-
-* Class view flickers when filtering the class list
 
 * Value maps are not loaded for subclass results of a base class query 
   eg. the Win32_ComputerSystem result in a CIM_System query
@@ -53,11 +53,9 @@ __Requirements:__
 
 * Add common text functions to query results, inspector, log, detail view, etc.
 
-* Add about dialog
+* Add 'about' dialog
 
-* Improve scripts
-
-* Improve code documentation and naming
+* Improve code documentation and naming standards
 
 * Add WiX Installer project
 
@@ -68,6 +66,8 @@ __Requirements:__
 * Improve script generators (C#, C++, C, Powershell, Perl, etc.)
 
 * Add menu to get associators/references of linked objects (such as those in assoc/ref query results)
+
+* Add MOF Views
 
 ### Example Queries
 
