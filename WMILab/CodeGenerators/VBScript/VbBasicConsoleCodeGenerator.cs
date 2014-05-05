@@ -261,14 +261,15 @@ End Function", comments[7]);
                         values.Add(key);
                         mappings.Add(String.Format("{0} ({1})", map[key], key));
                     }
-
                     string strValues = c.Properties[field].IsNumeric() ?
                         String.Join(", ", values.ToArray()) :
                         String.Format("\"{0}\"", String.Join("\", \"", values.ToArray()));
 
                     string strMappings = String.Join("\", \"", mappings.ToArray());
                     string description = showComments ? String.Format("'Returns the associated value for the specified '{0}.{1}' key\r\n", c.ClassPath.ClassName, field) : String.Empty;
-                    s.AppendFormat(@"
+
+                    if (true)
+                        s.AppendFormat(@"
 
 {3}Function Lookup{0}(key)
     Dim Keys, Values, i
@@ -282,6 +283,15 @@ End Function", comments[7]);
 	Next
 	Lookup{0} = key
 End Function", field, strValues, strMappings, description);
+
+                    else
+                        s.AppendFormat(@"
+
+{0}Function Lookup{1}(key)
+    Dim Values
+    Values = Array(""{2}"")
+    Lookup{1} = Values(CInt(key))
+End Function", description, field, strMappings);
                 }
             }
 

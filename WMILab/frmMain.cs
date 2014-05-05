@@ -68,14 +68,16 @@ namespace WMILab
         /// </summary>
         private void OnFormShown(object sender, EventArgs e)
         {
-            resetClassColumnHeader();
+            String hostname = Environment.MachineName;
 
+            resetClassColumnHeader();
+            
             // Build local namespace tree
-            this.CurrentServerRootScope = new ManagementScope("\\\\.\\ROOT");
+            this.CurrentServerRootScope = new ManagementScope(String.Format("\\\\{0}\\ROOT", hostname));
 
             // Navigate to default namespace and class
-            this.CurrentNamespacePath = @"\\.\ROOT\CIMV2";
-            this.CurrentClassPath = @"\\.\ROOT\CIMV2:Win32_ComputerSystem";
+            this.CurrentNamespacePath = String.Format(@"\\{0}\ROOT\CIMV2", hostname);
+            this.CurrentClassPath = String.Format(@"\\{0}\ROOT\CIMV2:Win32_ComputerSystem", hostname);
             this.CurrentCodeGenerator = new CodeGenerators.VBScript.VbBasicConsoleCodeGenerator();
         }
 
