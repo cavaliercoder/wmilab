@@ -958,7 +958,6 @@ namespace WMILab
                     if (!String.IsNullOrEmpty(this.CurrentCodeGenerator.Lexer))
                     {
                         this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["STRING"]].ForeColor = Color.FromArgb(163, 21, 21);
-                        this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["COMMENT"]].ForeColor = Color.FromArgb(0, 128, 0);
                         this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["LINENUMBER"]].ForeColor = Color.FromArgb(43, 145, 175);
                         this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["LINENUMBER"]].BackColor = SystemColors.Window;
                         this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["NUMBER"]].ForeColor = SystemColors.WindowText;
@@ -973,10 +972,15 @@ namespace WMILab
                             this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["COMMENTDOC"]].ForeColor = Color.FromArgb(0, 128, 0);
                             this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["PREPROCESSOR"]].ForeColor = Color.Blue;
                         }
+
+                        if (this.CurrentCodeGenerator.Lexer != "perl")
+                        {
+                            this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["COMMENT"]].ForeColor = Color.FromArgb(0, 128, 0);
+                        }
                     }
                 }
 
-                catch (Exception e)
+                catch (COMException e)
                 {
                     this.txtCode.Text = e.Message;
                 }
@@ -996,20 +1000,24 @@ namespace WMILab
                     this.menuStripCode.Items.Remove(item);
 
                 // Update actions
-                foreach (var action in this.CurrentCodeGenerator.GetActions(c, query))
+                try
                 {
-                    ToolStripMenuItem item = new ToolStripMenuItem
+                    foreach (var action in this.CurrentCodeGenerator.GetActions(c, query))
                     {
-                        Text = action.Name,
-                        Image = action.Image,
-                        Tag = action,
-                        Alignment = ToolStripItemAlignment.Right
-                    };
+                        ToolStripMenuItem item = new ToolStripMenuItem
+                        {
+                            Text = action.Name,
+                            Image = action.Image,
+                            Tag = action,
+                            Alignment = ToolStripItemAlignment.Right
+                        };
 
-                    item.Click += new EventHandler(OnActionClicked);
+                        item.Click += new EventHandler(OnActionClicked);
 
-                    this.menuStripCode.Items.Add(item);
+                        this.menuStripCode.Items.Add(item);
+                    }
                 }
+                catch (NotImplementedException) { }
             }
         }
 

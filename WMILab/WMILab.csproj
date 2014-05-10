@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="CodeGenerators\DotNet\DotNetWrapperBaseCodeGenerator.cs" />
     <Compile Include="CodeGenerators\MofCodeGenerator.cs" />
+    <Compile Include="CodeGenerators\Perl\PerlBasicConsoleCodeGenerator.cs" />
     <Compile Include="CodeGenerators\VBScript\VbBasicConsoleCodeGenerator.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
