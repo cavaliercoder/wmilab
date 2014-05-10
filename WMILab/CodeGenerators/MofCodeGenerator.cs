@@ -24,6 +24,8 @@
 namespace WMILab.CodeGenerators
 {
     using System;
+    using System.Diagnostics;
+    using System.IO;
     using System.Management;
     using System.Management.CodeGeneration;
     using System.Text;
@@ -38,6 +40,8 @@ namespace WMILab.CodeGenerators
     public class MofCodeGenerator : ICodeGenerator
     {
         private const Int32 MAX_LINE_LEN = 76;
+
+        private const String ACTION_CHECK = "Check syntax";
 
         public MofCodeGenerator()
         {
@@ -77,6 +81,7 @@ namespace WMILab.CodeGenerators
             sb.Append(this.GetCStyleHeader());
 
             sb.AppendFormat(@"#pragma namespace(""{0}"")
+#pragma AUTORECOVER
 
 {1}class {2}{3}
 {{
@@ -245,12 +250,33 @@ namespace WMILab.CodeGenerators
 
         public CodeGeneratorAction[] GetActions(ManagementClass c, string query)
         {
-            return new CodeGeneratorAction[] { };
+            return new CodeGeneratorAction[] {
+                new CodeGeneratorAction {
+                    Name = ACTION_CHECK,
+                    Image = Properties.Resources.ShowHidden
+                }
+            };
         }
 
-        public int ExecuteAction(CodeGeneratorAction action, ManagementClass c, string query)
+        public int ExecuteAction(CodeGeneratorAction action, ManagementClass c, String query)
         {
-            return 0;
+            if (action.Name.Equals(ACTION_CHECK))
+            {
+                String script = this.GetScript(c, query);
+                String path = Path.GetTempFileName().Replace(".tmp", "." + this.FileExtension);
+                File.WriteAllText(path, script);
+
+                //ConsoleForm.StartProcess(null, "cscript", path);
+                Process process = new Process();
+                ProcessStartInfo start = new ProcessStartInfo("cmd.exe", String.Format("/K mofcomp -check \"{0}\"", path));
+
+                process.StartInfo = start;
+                process.Start();
+
+                return 0;
+            }
+
+            return 1;
         }
 
         #region Options

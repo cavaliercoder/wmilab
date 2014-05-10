@@ -980,7 +980,7 @@ namespace WMILab
                     }
                 }
 
-                catch (COMException e)
+                catch (Exception e)
                 {
                     this.txtCode.Text = e.Message;
                 }
@@ -1008,6 +1008,7 @@ namespace WMILab
                         {
                             Text = action.Name,
                             Image = action.Image,
+                            ImageTransparentColor = Color.Magenta,
                             Tag = action,
                             Alignment = ToolStripItemAlignment.Right
                         };
