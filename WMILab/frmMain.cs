@@ -678,11 +678,17 @@ namespace WMILab
                 this.txtClassMemberDetail.AppendText(prop.Name + " ", boldFont);
                 this.txtClassMemberDetail.AppendText("{ " + (prop.IsWritable() ? "set; " : "") + "get; }");
                 this.txtClassMemberDetail.AppendText("\r\n  Member of " + c.Path.NamespacePath + ":" + c.Path.ClassName + "\r\n\r\n");
-                
+
                 if (!String.IsNullOrEmpty(prop.GetDescription()))
                 {
                     this.txtClassMemberDetail.AppendText("Summary:\n", boldFont);
                     this.txtClassMemberDetail.AppendText(prop.GetDescription() + "\r\n\r\n");
+                }
+
+                if (prop.Qualifiers.Exists("Units"))
+                {
+                    this.txtClassMemberDetail.AppendText("Units:\n    ", boldFont);
+                    this.txtClassMemberDetail.AppendText(String.Format("{0}\n\n", prop.Qualifiers["Units"].Value));
                 }
 
                 if (prop.Origin != "" && prop.Origin != c.Path.ClassName)
@@ -696,7 +702,7 @@ namespace WMILab
                 {
                     String[] mappings = prop.Qualifiers["MappingStrings"].Value as String[];
 
-                    if(mappings != null) {
+                    if(mappings != null && mappings.Length > 0 && !String.IsNullOrEmpty(mappings[0])) {
                         this.txtClassMemberDetail.AppendText("Maps to:\n    ", boldFont);
                         this.txtClassMemberDetail.AppendText(String.Join("\n    ", mappings));
                         this.txtClassMemberDetail.AppendText("\n\n");
