@@ -932,6 +932,9 @@ namespace WMILab
                     this.txtCode.ConfigurationManager.Language = this.CurrentCodeGenerator.Lexer;
                     this.txtCode.ConfigurationManager.Configure();
 
+                    // Add CIM Type keywords
+                    this.txtCode.Lexing.Keywords[0] += String.Format(" uint8 uint16 uint32 uint64 sint8 sint16 sint32 sint64 real32 real64 string boolean object datetime reference char16");
+
                     // Set colors
                     if (!String.IsNullOrEmpty(this.CurrentCodeGenerator.Lexer))
                     {
@@ -942,19 +945,24 @@ namespace WMILab
                         this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["NUMBER"]].ForeColor = SystemColors.WindowText;
                         this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["OPERATOR"]].ForeColor = SystemColors.WindowText;
 
-                        if (this.CurrentCodeGenerator.Lexer == "cs")
+                        if (this.CurrentCodeGenerator.Lexer == "cs" || this.CurrentCodeGenerator.Lexer == "cpp")
                         {
                             this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["GLOBALCLASS"]].ForeColor = Color.Blue;
                             this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["WORD2"]].ForeColor = Color.Blue;
+
+                            this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["COMMENTLINE"]].ForeColor = Color.FromArgb(0, 128, 0);
+                            this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["COMMENTDOC"]].ForeColor = Color.FromArgb(0, 128, 0);
+                            this.txtCode.Styles[this.txtCode.Lexing.StyleNameMap["PREPROCESSOR"]].ForeColor = Color.Blue;
                         }
                     }
                 }
-
-                catch (Exception e)
-                {
-                    this.txtCode.Text = e.Message;
-                }
-
+                /*
+                                catch (Exception e)
+                                {
+                                    this.txtCode.Text = e.Message;
+                                }
+                                */
+                finally { }
                 this.txtCode.IsReadOnly = true;
 
                 // Reset actions

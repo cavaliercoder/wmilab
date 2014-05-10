@@ -32,7 +32,7 @@ namespace WMILab.CodeGenerators.VBScript
     using System.Text;
     using System.Windows.Forms;
 
-    class VbBasicConsoleCodeGenerator : ICodeGenerator
+    public class VbBasicConsoleCodeGenerator : ICodeGenerator
     {
         private const string ACTION_RUN = "Run in console";
 
@@ -268,8 +268,7 @@ End Function", comments[7]);
                     string strMappings = String.Join("\", \"", mappings.ToArray());
                     string description = showComments ? String.Format("'Returns the associated value for the specified '{0}.{1}' key\r\n", c.ClassPath.ClassName, field) : String.Empty;
 
-                    if (true)
-                        s.AppendFormat(@"
+                    s.AppendFormat(@"
 
 {3}Function Lookup{0}(key)
     Dim Keys, Values, i
@@ -283,15 +282,6 @@ End Function", comments[7]);
 	Next
 	Lookup{0} = key
 End Function", field, strValues, strMappings, description);
-
-                    else
-                        s.AppendFormat(@"
-
-{0}Function Lookup{1}(key)
-    Dim Values
-    Values = Array(""{2}"")
-    Lookup{1} = Values(CInt(key))
-End Function", description, field, strMappings);
                 }
             }
 

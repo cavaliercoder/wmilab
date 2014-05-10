@@ -69,6 +69,8 @@ __Requirements:__
 
 * Add MOF Views
 
+* Add support for displaying values with a 'Units' qualifier
+
 ### Example Queries
 
 * Grouped Event query
