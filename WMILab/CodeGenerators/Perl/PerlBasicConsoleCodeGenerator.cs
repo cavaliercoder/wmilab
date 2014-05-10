@@ -1,14 +1,20 @@
 ﻿namespace WMILab.CodeGenerators.Perl
 {
     using System;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Management;
     using System.Management.CodeGeneration;
     using System.Text;
-    using System.IO;
-    using System.Diagnostics;
 
     public class PerlBasicConsoleCodeGenerator : ICodeGenerator
     {
         private const string ACTION_RUN = "Run in console";
+
+        public PerlBasicConsoleCodeGenerator()
+        {
+            this.PrintUnitTypes = true;
+        }
 
         public string Name
         {
@@ -52,7 +58,23 @@ while (my @row = $sth->fetchrow) {{
 
             foreach (var property in c.Properties)
             {
-                sb.AppendFormat("    print(\"{0}: $row[0]->{{ {0}  }}\\n\");\r\n", property.Name);
+                if (this.ShowDocumentation)
+                {
+                    string[] description = property.GetDescription().Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (description.Length > 0)
+                    {
+                        sb.AppendLine();
+                        foreach (string line in description)
+                            sb.AppendFormat("    # {0}\r\n", line);
+                    }
+                }
+
+                sb.AppendFormat("    print(\"{0}: $row[0]->{{ {0} }}", property.Name);
+
+                if (this.PrintUnitTypes && property.Qualifiers.Exists("Units"))
+                    sb.AppendFormat(" {0}", property.Qualifiers["Units"].Value);
+
+                sb.Append("\\n\");\r\n");
             }
 
             sb.Append("    print(\"\\n\");\r\n}");
@@ -90,5 +112,15 @@ while (my @row = $sth->fetchrow) {{
 
             return 1;
         }
+
+        #region Options
+
+        [CodeGeneratorOption("Show class documentation", "Show member documentation source from 'Description' qualifiers as code comments.")]
+        public Boolean ShowDocumentation { get; set; }
+
+        [CodeGeneratorOption("Print unit types", "Print the unit type for member which include a unit type qualifier.")]
+        public Boolean PrintUnitTypes { get; set; }
+
+        #endregion
     }
 }
