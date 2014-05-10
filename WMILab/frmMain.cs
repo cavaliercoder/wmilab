@@ -678,10 +678,29 @@ namespace WMILab
                 this.txtClassMemberDetail.AppendText(prop.Name + " ", boldFont);
                 this.txtClassMemberDetail.AppendText("{ " + (prop.IsWritable() ? "set; " : "") + "get; }");
                 this.txtClassMemberDetail.AppendText("\r\n  Member of " + c.Path.NamespacePath + ":" + c.Path.ClassName + "\r\n\r\n");
+                
                 if (!String.IsNullOrEmpty(prop.GetDescription()))
                 {
                     this.txtClassMemberDetail.AppendText("Summary:\n", boldFont);
                     this.txtClassMemberDetail.AppendText(prop.GetDescription() + "\r\n\r\n");
+                }
+
+                if (prop.Origin != "" && prop.Origin != c.Path.ClassName)
+                {
+                    this.txtClassMemberDetail.AppendText("Defined in:\n", boldFont);
+                    this.txtClassMemberDetail.InsertLink(prop.Origin, c.Path.NamespacePath + ":" + prop.Origin);
+                    this.txtClassMemberDetail.AppendText("\r\n\r\n");
+                }
+
+                if (prop.Qualifiers.Exists("MappingStrings"))
+                {
+                    String[] mappings = prop.Qualifiers["MappingStrings"].Value as String[];
+
+                    if(mappings != null) {
+                        this.txtClassMemberDetail.AppendText("Maps to:\n    ", boldFont);
+                        this.txtClassMemberDetail.AppendText(String.Join("\n    ", mappings));
+                        this.txtClassMemberDetail.AppendText("\n\n");
+                    }
                 }
 
                 var map = prop.GetValueMap();
@@ -700,13 +719,6 @@ namespace WMILab
                         }
                     }
                     this.txtClassMemberDetail.AppendText("\r\n");
-                }
-                    
-                if (prop.Origin != "" && prop.Origin != c.Path.ClassName)
-                {
-                    this.txtClassMemberDetail.AppendText("Origin:\n", boldFont);
-                    this.txtClassMemberDetail.InsertLink(prop.Origin, c.Path.NamespacePath + ":" + prop.Origin);
-                    this.txtClassMemberDetail.AppendText("\r\n\r\n");
                 }
             }
 

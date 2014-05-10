@@ -28,6 +28,15 @@ namespace WMILab.CodeGenerators
     using System.Management.CodeGeneration;
     using System.Text;
 
+    [Flags]
+    public enum MofCodeGeneratorOptions
+    {
+        ShowQualifiers = 0x1,
+        ShowInheritedQualifiers = 0x2 | ShowQualifiers,
+        ShowInheritedMembers = 0x4,
+        Default = ShowQualifiers
+    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -63,46 +72,50 @@ namespace WMILab.CodeGenerators
         {
             var sb = new StringBuilder();
 
+            MofCodeGeneratorOptions options = MofCodeGeneratorOptions.Default | MofCodeGeneratorOptions.ShowInheritedQualifiers;
+
             String classname = c.ClassPath.ClassName;
             String ns = String.Format(@"\\\\.\\{0}", c.ClassPath.NamespacePath.Replace("\\", "\\\\"));
-            String quals = GetQualiferDeclaration(c.Qualifiers);
+            String quals = (0 == (options & MofCodeGeneratorOptions.ShowQualifiers)) ? String.Empty : GetQualiferDeclaration(c.Qualifiers, options);
             String baseclass = c.Derivation.Count > 0 ? String.Format(" : {0}", c.Derivation[0]) : String.Empty;
 
             sb.AppendFormat(@"#pragma namespace(""{0}"")
 
-{1}
-class {2}{3}
+{1}class {2}{3}
 {{
 ", ns, quals, classname, baseclass);
 
             var i = 0;
             foreach (var property in c.Properties)
             {
-                if (i++ > 0 && property.Qualifiers.Count > 0)
-                    sb.AppendLine();
+                if (0 != (options & MofCodeGeneratorOptions.ShowInheritedMembers) || property.IsLocal)
+                {
+                    if (i++ > 0 && property.Qualifiers.Count > 0)
+                        sb.AppendLine();
 
-                var propstring = GetPropertyDeclaration(property).Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var line in propstring)
-                    sb.AppendFormat("    {0}\r\n", line);
+                    var propstring = GetPropertyDeclaration(property, options).Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var line in propstring)
+                        sb.AppendFormat("    {0}\r\n", line);
+                }
             }
 
             sb.Append("}");
             return sb.ToString();
         }
 
-        private String GetPropertyDeclaration(PropertyData property)
+        private String GetPropertyDeclaration(PropertyData property, MofCodeGeneratorOptions options)
         {
             var sb = new StringBuilder();
 
-            if(property.Qualifiers.Count > 0)
-                sb.AppendFormat("{0}\r\n", GetQualiferDeclaration(property.Qualifiers));
+            if(0 != (options & MofCodeGeneratorOptions.ShowQualifiers) && property.Qualifiers.Count > 0)
+                sb.AppendFormat("{0}\r\n", GetQualiferDeclaration(property.Qualifiers, options));
 
-            sb.AppendFormat("{0} {1};\r\n", property.Type.ToString().ToLowerInvariant(), property.Name);
+            sb.AppendFormat("{0} {1};", property.Type.ToString().ToLowerInvariant(), property.Name);
             
             return sb.ToString();
         }
 
-        private String GetQualiferDeclaration(QualifierDataCollection qualifiers)
+        private String GetQualiferDeclaration(QualifierDataCollection qualifiers, MofCodeGeneratorOptions options)
         {
             if (qualifiers.Count == 0)
                 return String.Empty;
@@ -113,12 +126,13 @@ class {2}{3}
 
             int count = 0;
             foreach (var qualifier in qualifiers)
-                if (qualifier.IsLocal)
+                if (0 != (options & MofCodeGeneratorOptions.ShowInheritedQualifiers) || qualifier.IsLocal)
                     count++;
 
             foreach (QualifierData qualifier in qualifiers)
             {
-                if(qualifier.IsLocal) {
+                if (0 != (options & MofCodeGeneratorOptions.ShowInheritedQualifiers) || qualifier.IsLocal)
+                {
                     sb.Append(qualifier.Name);
 
                     // Append qualifer value
@@ -179,18 +193,7 @@ class {2}{3}
                     .Replace("\n", @"\n")
                     .Replace("\"", "\"\"")
                     .ToString();
-                /*
-                // Escape quotes without causing a memory error
-                var qsb = new StringBuilder();
-                foreach (char tc in values[i])
-                    if (tc == '"')
-                        qsb.Append(@"""""");
-                    else
-                        qsb.Append(tc);
-
-                values[i] = qsb.ToString();
-                */
-
+                
                 // Get index of the end of the next word
                 while (c < values[i].Length)
                 {
@@ -207,7 +210,7 @@ class {2}{3}
                     else
                     {
                         l = nextc - c;
-                        sb.AppendFormat("\"\r\n\"{0}", values[i].Substring(c, nextc - c));
+                        sb.AppendFormat("\"\r\n    \"{0}", values[i].Substring(c, nextc - c));
                     }
 
                     c = nextc;
