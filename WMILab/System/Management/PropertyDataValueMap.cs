@@ -87,7 +87,7 @@ namespace System.Management
         }
 
         /// <summary>Gets a value indicating whether this value map has keys for each value or simply uses a sequential index.</summary>
-        /// <remarks>Classes with a Key/Value map will defines both a 'ValuesMap' and 'Values' qualifier. If no 'ValuesMap' qualifier is set, the value map uses the zero based index of each value as the key.</remarks>
+        /// <remarks>Classes with a Key/Value map will defines both a 'ValuesMap' and 'AvailableValues' qualifier. If no 'ValuesMap' qualifier is set, the value map uses the zero based index of each value as the key.</remarks>
         public Boolean IsKeyValMap
         {
             get;

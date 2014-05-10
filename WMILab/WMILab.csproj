@@ -76,6 +76,7 @@
     <Compile Include="System\Management\CodeGeneration\CodeGeneratorAction.cs" />
     <Compile Include="System\Management\CodeGeneration\CodeGeneratorFactory.cs" />
     <Compile Include="System\Management\CodeGeneration\ICodeGenerator.cs" />
+    <Compile Include="System\Management\CodeGeneration\CodeGeneratorOptionAttribute.cs" />
     <Compile Include="System\Management\ManagementError.cs" />
     <Compile Include="System\Management\ManagementExtensions.cs" />
     <Compile Include="System\Management\ManagementQueryBroker.cs" />

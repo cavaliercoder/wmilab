@@ -28,15 +28,6 @@ namespace WMILab.CodeGenerators
     using System.Management.CodeGeneration;
     using System.Text;
 
-    [Flags]
-    public enum MofCodeGeneratorOptions
-    {
-        ShowQualifiers = 0x1,
-        ShowInheritedQualifiers = 0x2 | ShowQualifiers,
-        ShowInheritedMembers = 0x4,
-        Default = ShowQualifiers
-    }
-
     /// <summary>
     /// 
     /// </summary>
@@ -47,6 +38,12 @@ namespace WMILab.CodeGenerators
     public class MofCodeGenerator : ICodeGenerator
     {
         private const Int32 MAX_LINE_LEN = 76;
+
+        public MofCodeGenerator()
+        {
+            this.ShowQualifiers = true;
+            this.ShowInheritedMembers = false;
+        }
 
         public string Name
         {
@@ -72,12 +69,10 @@ namespace WMILab.CodeGenerators
         {
             var sb = new StringBuilder();
 
-            MofCodeGeneratorOptions options = MofCodeGeneratorOptions.Default | MofCodeGeneratorOptions.ShowInheritedQualifiers;
-
             String classname = c.ClassPath.ClassName;
             String ns = String.Format(@"\\\\.\\{0}", c.ClassPath.NamespacePath.Replace("\\", "\\\\"));
-            String quals = (0 == (options & MofCodeGeneratorOptions.ShowQualifiers)) ? String.Empty : GetQualiferDeclaration(c.Qualifiers, options);
-            String baseclass = c.Derivation.Count > 0 ? String.Format(" : {0}", c.Derivation[0]) : String.Empty;
+            String quals = this.ShowQualifiers ? GetQualiferDeclaration(c.Qualifiers) + "\r\n" : String.Empty;
+            String baseclass = c.Derivation.Count > 0 && !this.ShowInheritedMembers ? String.Format(" : {0}", c.Derivation[0]) : String.Empty;
 
             sb.AppendFormat(@"#pragma namespace(""{0}"")
 
@@ -88,12 +83,12 @@ namespace WMILab.CodeGenerators
             var i = 0;
             foreach (var property in c.Properties)
             {
-                if (0 != (options & MofCodeGeneratorOptions.ShowInheritedMembers) || property.IsLocal)
+                if (this.ShowInheritedMembers || property.IsLocal)
                 {
                     if (i++ > 0 && property.Qualifiers.Count > 0)
                         sb.AppendLine();
 
-                    var propstring = GetPropertyDeclaration(property, options).Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                    var propstring = GetPropertyDeclaration(property).Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
                     foreach (var line in propstring)
                         sb.AppendFormat("    {0}\r\n", line);
                 }
@@ -103,19 +98,19 @@ namespace WMILab.CodeGenerators
             return sb.ToString();
         }
 
-        private String GetPropertyDeclaration(PropertyData property, MofCodeGeneratorOptions options)
+        private String GetPropertyDeclaration(PropertyData property)
         {
             var sb = new StringBuilder();
 
-            if(0 != (options & MofCodeGeneratorOptions.ShowQualifiers) && property.Qualifiers.Count > 0)
-                sb.AppendFormat("{0}\r\n", GetQualiferDeclaration(property.Qualifiers, options));
+            if(this.ShowQualifiers && property.Qualifiers.Count > 0)
+                sb.AppendFormat("{0}\r\n", GetQualiferDeclaration(property.Qualifiers));
 
             sb.AppendFormat("{0} {1};", property.Type.ToString().ToLowerInvariant(), property.Name);
             
             return sb.ToString();
         }
 
-        private String GetQualiferDeclaration(QualifierDataCollection qualifiers, MofCodeGeneratorOptions options)
+        private String GetQualiferDeclaration(QualifierDataCollection qualifiers)
         {
             if (qualifiers.Count == 0)
                 return String.Empty;
@@ -126,12 +121,12 @@ namespace WMILab.CodeGenerators
 
             int count = 0;
             foreach (var qualifier in qualifiers)
-                if (IncludeQualifier(qualifier, options))
+                if (IncludeQualifier(qualifier))
                     count++;
 
             foreach (QualifierData qualifier in qualifiers)
             {
-                if (IncludeQualifier(qualifier, options))
+                if (IncludeQualifier(qualifier))
                 {
                     sb.Append(qualifier.Name);
 
@@ -166,11 +161,8 @@ namespace WMILab.CodeGenerators
             return sb.ToString();
         }
 
-        private bool IncludeQualifier(QualifierData qualifier, MofCodeGeneratorOptions options)
+        private bool IncludeQualifier(QualifierData qualifier)
         {
-            if (!qualifier.IsLocal && 0 == (options & MofCodeGeneratorOptions.ShowInheritedQualifiers))
-                return false;
-
             if (qualifier.Name.Equals("CIMTYPE", StringComparison.InvariantCultureIgnoreCase))
                 return false;
 
@@ -258,5 +250,15 @@ namespace WMILab.CodeGenerators
         {
             return 0;
         }
+
+        #region Options
+
+        [CodeGeneratorOption("Show Qualifiers")]
+        public Boolean ShowQualifiers { get; set; }
+
+        [CodeGeneratorOption("Show Inherited Members")]
+        public Boolean ShowInheritedMembers { get; set; }
+
+        #endregion
     }
 }

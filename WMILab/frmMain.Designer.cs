@@ -79,6 +79,7 @@
             this.listViewLog = new System.Windows.Forms.ListView();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.mnuCodeOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.menuQueryRow.SuspendLayout();
             this.splitContainer5.Panel1.SuspendLayout();
@@ -543,7 +544,8 @@
             // 
             this.menuStripCode.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuScriptTemplates,
-            this.btnSaveScript});
+            this.btnSaveScript,
+            this.mnuCodeOptions});
             this.menuStripCode.Location = new System.Drawing.Point(3, 3);
             this.menuStripCode.Name = "menuStripCode";
             this.menuStripCode.Size = new System.Drawing.Size(692, 24);
@@ -597,6 +599,15 @@
             this.dataGridViewTextBoxColumn1.HeaderText = "Message";
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // mnuCodeOptions
+            // 
+            this.mnuCodeOptions.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.mnuCodeOptions.Image = global::WMILab.Properties.Resources.Options;
+            this.mnuCodeOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuCodeOptions.Name = "mnuCodeOptions";
+            this.mnuCodeOptions.Size = new System.Drawing.Size(77, 20);
+            this.mnuCodeOptions.Text = "&Options";
             // 
             // frmMain
             // 
@@ -693,6 +704,7 @@
         private System.Windows.Forms.ToolStripMenuItem showmappedValuesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem btnConnectToServer;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem mnuCodeOptions;
     }
 }
 

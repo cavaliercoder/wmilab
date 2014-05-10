@@ -32,6 +32,7 @@ namespace WMILab
     using System.Windows.Forms;
     using ScintillaNET;
     using WMILab.Localization;
+    using System.Reflection;
 
     public partial class frmMain : Form
     {
@@ -974,14 +975,14 @@ namespace WMILab
                         }
                     }
                 }
-                /*
-                                catch (Exception e)
-                                {
-                                    this.txtCode.Text = e.Message;
-                                }
-                                */
-                finally { }
+
+                catch (Exception e)
+                {
+                    this.txtCode.Text = e.Message;
+                }
                 this.txtCode.IsReadOnly = true;
+
+                this.RefreshScriptOptions();
 
                 // Reset actions
                 var toDelete = new List<ToolStripMenuItem>();
@@ -1010,6 +1011,67 @@ namespace WMILab
                     this.menuStripCode.Items.Add(item);
                 }
             }
+        }
+
+        private void RefreshScriptOptions()
+        {
+            this.mnuCodeOptions.Visible = false;
+            this.mnuCodeOptions.DropDownItems.Clear();
+
+            if (this.CurrentCodeGenerator == null)
+                return;
+
+            var properties = this.CurrentCodeGenerator.GetType().GetProperties();
+            foreach (PropertyInfo property in properties)
+            {
+                var options = property.GetCustomAttributes(typeof(CodeGeneratorOptionAttribute), true);
+
+                if (options.Length > 0)
+                {
+                    var option = (CodeGeneratorOptionAttribute) options[0];
+
+                    var item = new ToolStripMenuItem
+                    {
+                        Text = option.Name,
+                        ToolTipText = option.Tooltip,
+                        Tag = property
+                    };
+
+                    if (property.PropertyType == typeof(Boolean))
+                    {
+                        item.Checked = (Boolean)property.GetValue(this.CurrentCodeGenerator, null);
+                        item.Click += new EventHandler(OnScriptOptionMenuItemClicked);
+                    }
+
+                    mnuCodeOptions.DropDownItems.Add(item);
+                    mnuCodeOptions.Visible = true;
+                }
+            }
+        }
+
+        void OnScriptOptionMenuItemClicked(object sender, EventArgs e)
+        {
+            var item = sender as ToolStripMenuItem;
+            if (item == null)
+                return;
+
+            var property = item.Tag as PropertyInfo;
+            if (property == null)
+                return;
+
+            var value = property.GetValue(this.CurrentCodeGenerator, null);
+
+            var codegen = this.CurrentCodeGenerator;
+
+            if (property.PropertyType == typeof(Boolean))
+            {
+                // Option is a simple boolean.
+                property.SetValue(codegen, !(Boolean)value, null);
+                item.Checked = (Boolean) property.GetValue(codegen, null);
+
+                this.RefreshScript(this.CurrentClass);
+            }
+
         }
 
         #endregion
