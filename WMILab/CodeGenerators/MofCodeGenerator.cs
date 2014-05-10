@@ -99,7 +99,7 @@ namespace WMILab.CodeGenerators
                 }
             }
 
-            sb.Append("}");
+            sb.Append("};");
             return sb.ToString();
         }
 
@@ -126,12 +126,12 @@ namespace WMILab.CodeGenerators
 
             int count = 0;
             foreach (var qualifier in qualifiers)
-                if (0 != (options & MofCodeGeneratorOptions.ShowInheritedQualifiers) || qualifier.IsLocal)
+                if (IncludeQualifier(qualifier, options))
                     count++;
 
             foreach (QualifierData qualifier in qualifiers)
             {
-                if (0 != (options & MofCodeGeneratorOptions.ShowInheritedQualifiers) || qualifier.IsLocal)
+                if (IncludeQualifier(qualifier, options))
                 {
                     sb.Append(qualifier.Name);
 
@@ -151,7 +151,7 @@ namespace WMILab.CodeGenerators
 
                         else
                         {
-                            sb.AppendFormat(@"({0})", GetQualifierStringValue(qualifier, 0));
+                            sb.Append(GetQualifierStringValue(qualifier, 0));
                         }
                     }
 
@@ -164,6 +164,17 @@ namespace WMILab.CodeGenerators
 
             sb.Append("]");
             return sb.ToString();
+        }
+
+        private bool IncludeQualifier(QualifierData qualifier, MofCodeGeneratorOptions options)
+        {
+            if (!qualifier.IsLocal && 0 == (options & MofCodeGeneratorOptions.ShowInheritedQualifiers))
+                return false;
+
+            if (qualifier.Name.Equals("CIMTYPE", StringComparison.InvariantCultureIgnoreCase))
+                return false;
+
+            return true;
         }
 
         private String GetQualifierStringValue(QualifierData qualifier, Int32 lineoffset)
@@ -180,6 +191,11 @@ namespace WMILab.CodeGenerators
             else
                 values = new String[] { (String) qualifier.Value };
 
+            if (qualifier.Value.GetType().IsArray)
+                sb.Append("{");
+            else
+                sb.Append("(");
+
             // Print each value
             for (int i = 0; i < values.Length; i++)
             {
@@ -189,6 +205,7 @@ namespace WMILab.CodeGenerators
 
                 // Escape characters
                 values[i] = new StringBuilder(values[i])
+                    .Replace("\\", "\\\\")
                     .Replace("\r", @"\r")
                     .Replace("\n", @"\n")
                     .Replace("\"", "\"\"")
@@ -219,10 +236,16 @@ namespace WMILab.CodeGenerators
                 sb.Append(@"""");
 
                 if (i < values.Length - 1)
-                    sb.Append(", ");
+                    sb.Append(",");
 
                 lineoffset = 0;
             }
+
+            if (qualifier.Value.GetType().IsArray)
+                sb.Append("}");
+            else
+                sb.Append(")");
+
             return sb.ToString();
         }
 
