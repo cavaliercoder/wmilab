@@ -40,8 +40,6 @@ __Requirements:__
 
 * Occasionally the class list does not refresh on first load
 
-* Line endings don't appear consistently in all class and member descriptions
-
 * Value maps are not loaded for subclass results of a base class query 
   eg. the Win32_ComputerSystem result in a CIM_System query
   
@@ -51,7 +49,7 @@ __Requirements:__
 
 * Add state restoration for UI controls and navigation
 
-* Add common text functions to query results, inspector, log, detail view, etc.
+* Add common text functions (copy, paste, etc.) to query results, inspector, log, detail view, etc.
 
 * Add 'about' dialog
 
@@ -66,10 +64,6 @@ __Requirements:__
 * Improve script generators (C#, C++, C, Powershell, Perl, etc.)
 
 * Add menu to get associators/references of linked objects (such as those in assoc/ref query results)
-
-* Add MOF Views
-
-* Add support for displaying values with a 'Units' qualifier
 
 ### Example Queries
 

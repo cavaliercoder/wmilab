@@ -39,7 +39,8 @@ namespace WMILab.CodeGenerators.VBScript
         public VbBasicConsoleCodeGenerator()
         {
             this.ShowComments = true;
-            this.TranslateValueMaps = true;
+            this.PrintUnitTypes = true;
+            this.PrintTranlatedValues = true;
         }
 
         public string Name
@@ -161,7 +162,7 @@ WScript.Echo
             {
                 bool addConvertor = false;
 
-                if (this.TranslateValueMaps)
+                if (this.PrintTranlatedValues)
                 {
                     var map = p.GetValueMap();
                     if(map.Count > 0 && !lookups.ContainsKey(p.Name))
@@ -184,19 +185,24 @@ WScript.Echo
 
                 if (addConvertor)
                 {
-                    s.AppendFormat("    WScript.Echo \"{0}: \" & Lookup{0}(objInstance.{0})\r\n", p.Name);
+                    s.AppendFormat("    WScript.Echo \"{0}: \" & Lookup{0}(objInstance.{0})", p.Name);
                 }
 
                 else if (p.IsArray)
                 {
                     hasArrays = true;
-                    s.AppendFormat("    WScript.Echo \"{0}: \" & ExpandArray(objInstance.{0})\r\n", p.Name);
+                    s.AppendFormat("    WScript.Echo \"{0}: \" & ExpandArray(objInstance.{0})", p.Name);
                 }
 
                 else
                 {
-                    s.AppendFormat("    WScript.Echo \"{0}: \" & objInstance.{0}\r\n", p.Name);
+                    s.AppendFormat("    WScript.Echo \"{0}: \" & objInstance.{0}", p.Name);
                 }
+
+                if(this.PrintUnitTypes && p.Qualifiers.Exists("Units"))
+                        s.AppendFormat(" & \" {0}\"", p.Qualifiers["Units"].Value);
+                
+                s.Append("\r\n");
             }
 
             if(isEvent)
@@ -230,7 +236,7 @@ WScript.StdIn.ReadLine 'Pause");
 {0}Function ExpandArray(array)
 	Dim i
 	If IsNull(array) Then
-		ExpandArray = ""
+		ExpandArray = """"
 		Exit Function
     Else
 	    ExpandArray = ""Array["" & (UBound(array) + 1) & ""]""
@@ -323,11 +329,14 @@ End Function", field, strValues, strMappings, description);
         [CodeGeneratorOption("Enable remote connections", "Enable connections to remote hosts.")]
         public Boolean EnableRemoteConnections { get; set; }
 
+        [CodeGeneratorOption("Print translated values", "Print translated value for members which include a value map qualifier.")]
+        public Boolean PrintTranlatedValues { get; set; }
+
+        [CodeGeneratorOption("Print unit types", "Print the unit type for member which include a unit type qualifier.")]
+        public Boolean PrintUnitTypes { get; set; }
+
         [CodeGeneratorOption("Ignore errors", "Ignore script errors and continue execution.")]
         public Boolean IgnoreErrors { get; set; }
-
-        [CodeGeneratorOption("Translate value maps", "Print translated value for members which include a value map qualifier.")]
-        public Boolean TranslateValueMaps { get; set; }
 
         [CodeGeneratorOption("Confirm exit", "Prevent the window from closing after the script has completed.")]
         public Boolean ConfirmExit { get; set; }
