@@ -27,6 +27,8 @@ namespace WMILab.CodeGenerators.DotNet
     using System.IO;
     using System.Management;
     using System.Management.CodeGeneration;
+    using System.Text;
+    using System.Windows.Forms;
 
     public abstract class DotNetWrapperBaseCodeGenerator : ICodeGenerator
     {
@@ -118,12 +120,24 @@ namespace WMILab.CodeGenerators.DotNet
             // Create temp file
             string tmp = Path.GetTempFileName();
 
+            var sb = new StringBuilder();
+            switch(this.CodeLanguage)
+            {
+                case System.Management.CodeLanguage.VB:
+                    sb.Append(this.GetVbStyleHeader());
+                    break;
+
+                default:
+                    sb.Append(this.GetCStyleHeader());
+                    break;
+            }
+
             // Dump class to file
             c.GetStronglyTypedClassCode(this.CodeLanguage, tmp, "");
-            string code = File.ReadAllText(tmp);
+            sb.Append(File.ReadAllText(tmp));
             File.Delete(tmp);
 
-            return code;
+            return sb.ToString();
         }
 
         public CodeGeneratorAction[] GetActions(ManagementClass c, string query)

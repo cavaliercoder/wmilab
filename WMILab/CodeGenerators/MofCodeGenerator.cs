@@ -74,6 +74,8 @@ namespace WMILab.CodeGenerators
             String quals = this.ShowQualifiers ? GetQualiferDeclaration(c.Qualifiers) + "\r\n" : String.Empty;
             String baseclass = c.Derivation.Count > 0 && !this.ShowInheritedMembers ? String.Format(" : {0}", c.Derivation[0]) : String.Empty;
 
+            sb.Append(this.GetCStyleHeader());
+
             sb.AppendFormat(@"#pragma namespace(""{0}"")
 
 {1}class {2}{3}
