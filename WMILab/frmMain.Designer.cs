@@ -76,10 +76,10 @@
             this.menuStripCode = new System.Windows.Forms.MenuStrip();
             this.mnuScriptTemplates = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSaveScript = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuCodeOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.listViewLog = new System.Windows.Forms.ListView();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.mnuCodeOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.menuQueryRow.SuspendLayout();
             this.splitContainer5.Panel1.SuspendLayout();
@@ -200,6 +200,7 @@
             this.ImageList1.Images.SetKeyName(21, "Information");
             this.ImageList1.Images.SetKeyName(22, "Critical");
             this.ImageList1.Images.SetKeyName(23, "Warning");
+            this.ImageList1.Images.SetKeyName(24, "Success");
             // 
             // menuQueryRow
             // 
@@ -569,6 +570,15 @@
             this.btnSaveScript.Text = "&Save";
             this.btnSaveScript.Click += new System.EventHandler(this.btnSaveScript_Click);
             // 
+            // mnuCodeOptions
+            // 
+            this.mnuCodeOptions.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.mnuCodeOptions.Image = global::WMILab.Properties.Resources.Options;
+            this.mnuCodeOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuCodeOptions.Name = "mnuCodeOptions";
+            this.mnuCodeOptions.Size = new System.Drawing.Size(77, 20);
+            this.mnuCodeOptions.Text = "&Options";
+            // 
             // listViewLog
             // 
             this.listViewLog.Activation = System.Windows.Forms.ItemActivation.OneClick;
@@ -599,15 +609,6 @@
             this.dataGridViewTextBoxColumn1.HeaderText = "Message";
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             this.dataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // mnuCodeOptions
-            // 
-            this.mnuCodeOptions.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.mnuCodeOptions.Image = global::WMILab.Properties.Resources.Options;
-            this.mnuCodeOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mnuCodeOptions.Name = "mnuCodeOptions";
-            this.mnuCodeOptions.Size = new System.Drawing.Size(77, 20);
-            this.mnuCodeOptions.Text = "&Options";
             // 
             // frmMain
             // 

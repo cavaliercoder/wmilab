@@ -241,7 +241,7 @@ namespace WMILab
             {
                 this.currentClass = value;
                 RefreshClassView();
-                this.Log(LogLevel.Information, String.Format("Loaded class: {0}", value));
+                this.Log(LogLevel.Success, String.Format("Loaded class: {0}", value));
             }
         }
 
@@ -391,7 +391,7 @@ namespace WMILab
         /// </summary>
         void OnNamespaceSearchComplete(object sender, CompletedEventArgs e)
         {
-            this.Log(LogLevel.Information, "Namespace search complete.");
+            this.Log(LogLevel.Success, String.Format("Finished loading namespace tree for {0}.", this.CurrentServerRootScope.Path.Server));
         }
 
         /// <summary>
@@ -441,7 +441,7 @@ namespace WMILab
             try
             {
                 ns.GetSubclasses(classListObserver, classListEnumOpts);
-                this.Log(LogLevel.Information, "Finished loading classes.");
+                this.Log(LogLevel.Success, "Finished loading classes.");
             }
 
             catch (ManagementException e)
@@ -1208,7 +1208,7 @@ namespace WMILab
 
             if (e.Success)
             {
-                this.Log(LogLevel.Information, String.Format("Query completed in {0} with {1} results.", broker.ExecutionTime, broker.ResultCount));
+                this.Log(LogLevel.Success, String.Format("Query completed in {0} with {1} results.", broker.ExecutionTime, broker.ResultCount));
             }
 
             else
@@ -1684,6 +1684,7 @@ namespace WMILab
     {
         Information,
         Warning,
-        Critical
+        Critical,
+        Success
     }
 }
