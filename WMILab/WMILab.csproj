@@ -85,6 +85,12 @@
     <Compile Include="System\Management\PropertyDataValueMap.cs" />
     <Compile Include="System\Management\StringExtentions.cs" />
     <Compile Include="System\Reflection\PluginFramework.cs" />
+    <Compile Include="System\Windows\Forms\AboutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="System\Windows\Forms\AboutForm.Designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="System\Windows\Forms\ConnectToForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -133,6 +139,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="System\Windows\Forms\AboutForm.resx">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="System\Windows\Forms\ConnectToForm.resx">
       <DependentUpon>ConnectToForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -153,6 +162,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\COPYING" />
     <None Include="Resources\Warning.bmp" />
     <None Include="Resources\Control_TreeView.bmp" />
     <None Include="Resources\VSObject_Method_Friend.bmp" />

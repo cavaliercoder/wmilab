@@ -9,9 +9,9 @@ using System.Resources;
 [assembly: AssemblyTitle("WMILab")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Ryan Armstrong")]
+[assembly: AssemblyCompany("http://cavaliercoder.com")]
 [assembly: AssemblyProduct("WMILab")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright ©  Ryan Armstrong 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

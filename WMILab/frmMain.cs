@@ -391,7 +391,9 @@ namespace WMILab
         /// </summary>
         void OnNamespaceSearchComplete(object sender, CompletedEventArgs e)
         {
-            this.Log(LogLevel.Success, String.Format("Finished loading namespace tree for {0}.", this.CurrentServerRootScope.Path.Server));
+            // When run outside of VS debugger, the event is called multiple times... and I don't know why.
+            // if(e.Status == ManagementStatus.NoError)
+            //    this.Log(LogLevel.Success, String.Format("Finished loading namespace tree for {0}.", this.CurrentServerRootScope.Path.Server));
         }
 
         /// <summary>
@@ -1684,6 +1686,11 @@ namespace WMILab
             string[] link = e.LinkText.Split('#');
             string target = link[link.Length - 1];
             this.CurrentClassPath = target;
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutForm.ShowAboutForm(this);
         }
 
         #endregion
