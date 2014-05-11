@@ -4,6 +4,12 @@
 
 WMI Lab expands on functions offered in common WMI tools to allow for the inspection, querying, deeper interrogation and code generation of WMI classes on local or remote Windows systems.
 
+### System Requirements
+
+* Windows XP SP3/Windows Server 2003 SP1 or above
+
+* .Net Framework 3.5
+
 ### Contributing
 
 Development contributions are encouraged and welcomed.
@@ -32,8 +38,6 @@ __Minimum Requirements:__
 * Add state restoration for UI controls and navigation
 
 * Add common text functions (copy, paste, etc.) to query results, inspector, log, detail view, etc.
-
-* Add 'about' dialog
 
 * Improve code documentation and naming standards
 
