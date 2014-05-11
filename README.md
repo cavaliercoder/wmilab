@@ -2,25 +2,15 @@
 
 ### Synopsis
 
-WMI Lab expands on functions offered in common WMI tools to allow for the inspection, querying, deeper interrogation and code generation of WMI classes on local or remote Windows systems.
+WMI Lab is a lightweight, open source application based on the .Net Framework 3.5 that expands on functions offered in common WMI tools to allow for the inspection, querying, deeper interrogation and code generation of WMI classes on local or remote Windows systems.
 
-### System Requirements
+### Links
 
-* Windows XP SP3/Windows Server 2003 SP1 or above
+* WMI Lab [author homepage](http://www.cavaliercoder.com/wmilab)
 
-* .Net Framework 3.5
+* Download WMI Lab from [SourceForge](http://sourceforge.net/projects/wmilab)
 
-### Contributing
-
-Development contributions are encouraged and welcomed.
-
-Please see the WMI Lab project on Github (https://github.com/cavaliercoder/wmilab).
-
-__Minimum Requirements:__
-
-* Microsoft Visual Studio 2010 Professional
-
-* WiX Toolset v3.8
+* Clone WMI Lab sources from [Github](https://github.com/cavaliercoder/wmilab)
 
 ### Known issues
 
