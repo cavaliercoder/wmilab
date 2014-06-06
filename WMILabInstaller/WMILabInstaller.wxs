@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="*" Name="$(var.WMILab.ProjectName)" Language="1033" Version="0.1.0.0" Manufacturer="http://cavaliercoder.com" UpgradeCode="402a41a8-10f2-4d06-a339-e9312e01e0ba">
+	<Product Id="*" Name="$(var.WMILab.ProjectName)" Language="1033" Version="0.1.1.0" Manufacturer="http://cavaliercoder.com" UpgradeCode="402a41a8-10f2-4d06-a339-e9312e01e0ba">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <MediaTemplate EmbedCab="yes"/>
@@ -8,6 +8,8 @@
       <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
       <UIRef Id="WixUI_InstallDir" />
     </UI>
+    <Icon Id="WmiLabIcon" SourceFile="$(var.WMILab.ProjectDir)WmiLab.ico" />
+    <Property Id="ARPPRODUCTICON" Value="WmiLabIcon" />
     <WixVariable Id="WixUILicenseRtf" Value="eula.rtf"/>
     <Feature Id="ProductFeature" Title="WMILabInstaller" Level="1">
       <ComponentGroupRef Id="ProductComponents" />
@@ -29,6 +31,9 @@
       </Component>
       <Component Id="ScintillaLib" Guid="*">
         <File Id="ScintillaLibFile" Name="scilexer.dll" Source="$(var.WMILab.TargetDir)\scilexer.dll" />
+      </Component>
+      <Component Id="ScintillaLib64" Guid="*">
+        <File Id="ScintillaLib64File" Name="scilexer64.dll" Source="$(var.WMILab.TargetDir)\scilexer64.dll" />
       </Component>
       <Component Id="ScintillaNetLib" Guid="*">
         <File Id="ScintillaNetLibFile" Name="scintillanet.dll" Source="$(var.WMILab.TargetDir)\scintillanet.dll" />
