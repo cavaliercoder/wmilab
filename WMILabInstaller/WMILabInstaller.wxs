@@ -4,6 +4,8 @@
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <MediaTemplate EmbedCab="yes"/>
+    <PropertyRef Id="NETFRAMEWORK35" />
+    <Condition Message="This setup requires the .NET Framework 3.5 to be installed.">Installed OR NETFRAMEWORK35</Condition>
     <UI>
       <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
       <UIRef Id="WixUI_InstallDir" />
