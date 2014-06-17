@@ -1,29 +1,32 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WMILab", "WMILab\WMILab.csproj", "{C59680EA-F37C-4C48-87BE-71B8ED2AAEA6}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{92117D36-9223-4E63-913F-FD9DC732D4C1}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "WMILabInstaller", "WMILabInstaller\WMILabInstaller.wixproj", "{C790920B-FADC-421F-A34C-0638AD4AC9B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C59680EA-F37C-4C48-87BE-71B8ED2AAEA6}.Debug|x64.ActiveCfg = Debug|x64
+		{C59680EA-F37C-4C48-87BE-71B8ED2AAEA6}.Debug|x64.Build.0 = Debug|x64
 		{C59680EA-F37C-4C48-87BE-71B8ED2AAEA6}.Debug|x86.ActiveCfg = Debug|x86
 		{C59680EA-F37C-4C48-87BE-71B8ED2AAEA6}.Debug|x86.Build.0 = Debug|x86
+		{C59680EA-F37C-4C48-87BE-71B8ED2AAEA6}.Release|x64.ActiveCfg = Release|x64
+		{C59680EA-F37C-4C48-87BE-71B8ED2AAEA6}.Release|x64.Build.0 = Release|x64
 		{C59680EA-F37C-4C48-87BE-71B8ED2AAEA6}.Release|x86.ActiveCfg = Release|x86
 		{C59680EA-F37C-4C48-87BE-71B8ED2AAEA6}.Release|x86.Build.0 = Release|x86
+		{C790920B-FADC-421F-A34C-0638AD4AC9B9}.Debug|x64.ActiveCfg = Debug|x86
 		{C790920B-FADC-421F-A34C-0638AD4AC9B9}.Debug|x86.ActiveCfg = Debug|x86
 		{C790920B-FADC-421F-A34C-0638AD4AC9B9}.Debug|x86.Build.0 = Debug|x86
+		{C790920B-FADC-421F-A34C-0638AD4AC9B9}.Release|x64.ActiveCfg = Release|x86
 		{C790920B-FADC-421F-A34C-0638AD4AC9B9}.Release|x86.ActiveCfg = Release|x86
 		{C790920B-FADC-421F-A34C-0638AD4AC9B9}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
